@@ -1,0 +1,100 @@
+{
+    "version": "0",
+    "id": "bee40856-54e8-136a-28f4-bbaf91295d2e",
+    "detail-type": "AWS API Call via CloudTrail",
+    "source": "aws.ec2",
+    "account": "ACCOUNT_ID",
+    "time": "2022-09-07T12:05:21Z",
+    "region": "us-east-1",
+    "resources": [
+      
+    ],
+    "detail": {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "AssumedRole",
+        "principalId": "ROLE_ID:rexchun",
+        "arn": "arn:aws:sts::ACCOUNT_ID:assumed-role/AWSReservedSSO_AdministratorAccess_5b69846c9a386f10/rexchun",
+        "accountId": "ACCOUNT_ID",
+        "accessKeyId": "ASIAQAJ4MWDUPDGAOA64",
+        "sessionContext": {
+          "sessionIssuer": {
+            "type": "Role",
+            "principalId": "ROLE_ID",
+            "arn": "arn:aws:iam::ACCOUNT_ID:role/aws-reserved/sso.amazonaws.com/ap-northeast-2/AWSReservedSSO_AdministratorAccess_5b69846c9a386f10",
+            "accountId": "ACCOUNT_ID",
+            "userName": "AWSReservedSSO_AdministratorAccess_5b69846c9a386f10"
+          },
+          "webIdFederationData": {
+            
+          },
+          "attributes": {
+            "creationDate": "2022-09-07T11:44:39Z",
+            "mfaAuthenticated": "false"
+          }
+        }
+      },
+      "eventTime": "2022-09-07T12:05:21Z",
+      "eventSource": "ec2.amazonaws.com",
+      "eventName": "AuthorizeSecurityGroupIngress",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "AWS Internal",
+      "userAgent": "AWS Internal",
+      "requestParameters": {
+        "groupId": "sg-08274a1bf996e8f28",
+        "ipPermissions": {
+          "items": [
+            {
+              "ipProtocol": "tcp",
+              "fromPort": 22,
+              "toPort": 22,
+              "groups": {
+                
+              },
+              "ipRanges": {
+                "items": [
+                  {
+                    "cidrIp": "0.0.0.0/0",
+                    "description": "asgsdgs"
+                  }
+                ]
+              },
+              "ipv6Ranges": {
+                
+              },
+              "prefixListIds": {
+                
+              }
+            }
+          ]
+        }
+      },
+      "responseElements": {
+        "requestId": "81cb596e-287d-4846-9e2e-a6c87684dc36",
+        "_return": true,
+        "securityGroupRuleSet": {
+          "items": [
+            {
+              "groupOwnerId": "ACCOUNT_ID",
+              "groupId": "sg-08274a1bf996e8f28",
+              "securityGroupRuleId": "sgr-01baf5dc3671978fb",
+              "description": "asgsdgs",
+              "isEgress": false,
+              "ipProtocol": "tcp",
+              "fromPort": 22,
+              "toPort": 22,
+              "cidrIpv4": "0.0.0.0/0"
+            }
+          ]
+        }
+      },
+      "requestID": "81cb596e-287d-4846-9e2e-a6c87684dc36",
+      "eventID": "c429a23a-9af1-475c-b1a8-09d6470abeb1",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "managementEvent": true,
+      "recipientAccountId": "ACCOUNT_ID",
+      "eventCategory": "Management",
+      "sessionCredentialFromConsole": "true"
+    }
+  }
