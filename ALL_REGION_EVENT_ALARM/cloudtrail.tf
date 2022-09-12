@@ -30,7 +30,15 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3_lifecycle" {
 
     expiration {
       days                         = 365
-      expired_object_delete_marker = true
+      expired_object_delete_marker = false
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 1
+    }
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
     }
 
     status = "Enabled"
