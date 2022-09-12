@@ -15,7 +15,4 @@ def get_available_instances(ec2_client):
     if not reservations:
         return instances
 
-    for reservation in reservations:
-        instances = [instance for instance in reservation["Instances"]]
-
-    return instances
+    return [instance for reservation in reservations for instance in reservation["Instances"]]
