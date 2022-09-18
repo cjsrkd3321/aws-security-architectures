@@ -1,0 +1,22 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-east-1:000663531752:sadggsadgsdgdasg:29b94fd4-132b-4456-bf8f-534350c96dc6",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "a42d9cc7-518c-5af0-96df-c759564122a7",
+        "TopicArn": "arn:aws:sns:us-east-1:000663531752:sadggsadgsdgdasg",
+        "Subject": "EC2 Run Command Notification us-east-1",
+        "Message": "{\"commandId\":\"ced40583-ef98-4606-a9a6-d010b1e36648\",\"documentName\":\"AWS-RunShellScript\",\"instanceIds\":[\"i-033e6c12f16d08f1a\",\"i-068f4cf3e7a62b5dd\"],\"requestedDateTime\":\"2022-09-16T05:11:40.078Z\",\"expiresAfter\":\"2022-09-16T06:21:40.078Z\",\"outputS3BucketName\":\"\",\"outputS3KeyPrefix\":\"\",\"status\":\"Success\",\"eventTime\":\"2022-09-16T05:11:41.008Z\"}",
+        "Timestamp": "2022-09-16T05:11:41.069Z",
+        "SignatureVersion": "1",
+        "Signature": "b5tvO5pVpDenm0/gRnhWy3Zt8cZvfWF02SAIfr2eNoehdiv9b0IMGRsqcQ28O0GB+Cv+cERAsGU7WHnUbKqXtexkhD4u35IrV+WZGp4L7Q6vnIsUsLq6r8ioS+/CL2A43PsArCsNMiK5A8DRlTsDME/SfbD/tJ32pNj42ICJtu2lAdgWYkXzZsnPndry4anrp5psH6XxQNfRgkBo1K6XcYBATtUtPkoe3BosMwufFzJOxcEVHq6+16pNnIOHv8xk6ATaigyXobR0fKpOWC7oICN9wohYKyEPuP7rMhglwn7YzBqbhSKCOuGu893ZT+MR9SlvKe33sBuUBFe9y34kzQ==",
+        "SigningCertUrl": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-56e67fcb41f6fec09b0196692625d385.pem",
+        "UnsubscribeUrl": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:000663531752:sadggsadgsdgdasg:29b94fd4-132b-4456-bf8f-534350c96dc6",
+        "MessageAttributes": {}
+      }
+    }
+  ]
+}
