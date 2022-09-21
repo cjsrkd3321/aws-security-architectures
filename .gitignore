@@ -135,3 +135,8 @@ dmypy.json
 terraform.tfvars
 
 builds
+
+*.crt
+*.key
+
+.DS_Store
