@@ -1,7 +1,7 @@
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
 
-  function_name = "macie-test-lambda"
+  function_name = "macie-analyzer-lambda"
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
 
@@ -19,6 +19,10 @@ module "lambda_function" {
     EventBridge = {
       principal  = "events.amazonaws.com"
       source_arn = aws_cloudwatch_event_rule.use1.arn
+    }
+    EventBridge-warn = {
+      principal  = "events.amazonaws.com"
+      source_arn = aws_cloudwatch_event_rule.use1_warm.arn
     }
     SNS = {
       principal  = "sns.amazonaws.com"
@@ -93,13 +97,14 @@ module "lambda_function" {
   cloudwatch_logs_retention_in_days = 1
 
   environment_variables = {
-    SLACK_HOOK_URL      = var.hook_url
-    SLACK_CHANNEL       = var.channel
-    SNS_ASSUME_ROLE_ARN = aws_iam_role.sns_role.arn
-    SNS_TOPIC_ARN       = aws_sns_topic.ssm_topic.arn
-    PRIAVTE_INFO_BUCKET = module.private_info_bucket.s3_bucket_arn
-    RESULT_BUCKET       = module.detect_result_bucket.s3_bucket_arn
-    S3_ACCOUNT_ID       = data.aws_caller_identity.current.account_id
+    SLACK_HOOK_URL       = var.hook_url
+    SLACK_CHANNEL        = var.channel
+    SNS_ASSUME_ROLE_ARN  = aws_iam_role.sns_role.arn
+    SNS_TOPIC_ARN        = aws_sns_topic.ssm_topic.arn
+    PRIAVTE_INFO_BUCKET  = module.private_info_bucket.s3_bucket_arn
+    RESULT_BUCKET        = module.detect_result_bucket.s3_bucket_arn
+    S3_ACCOUNT_ID        = data.aws_caller_identity.current.account_id
+    EVENTBRIDGE_WARM_ARN = aws_cloudwatch_event_rule.use1_warm.arn
   }
 
   attach_policy_json = true

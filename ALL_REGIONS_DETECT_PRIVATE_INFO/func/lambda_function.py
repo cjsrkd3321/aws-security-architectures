@@ -21,6 +21,7 @@ SNS_TOPIC_ARN = os.getenv("SNS_TOPIC_ARN")
 PRIAVTE_INFO_BUCKET = os.getenv("PRIAVTE_INFO_BUCKET")
 RESULT_BUCKET = os.getenv("RESULT_BUCKET")
 S3_ACCOUNT_ID = os.getenv("S3_ACCOUNT_ID")
+EVENTBRIDGE_WARM_ARN = os.getenv("EVENTBRIDGE_WARM_ARN")
 
 s3 = boto3.client("s3", config=Config(region_name="us-east-1"))
 macie2 = boto3.client("macie2", config=Config(region_name="us-east-1"))
@@ -29,12 +30,20 @@ COMMAND_COMPLETED_REGIONS = []
 
 
 def lambda_handler(event, context):
+    global COMMAND_COMPLETED_REGIONS
+
     today = date.today().isoformat()
     uuid_v4 = uuid.uuid4().hex
     detect_results = []
     csv_data = "CATEGORY,TYPE,OBJECT,VALUE\n"
     private_info_bucket_name = PRIAVTE_INFO_BUCKET.split(":")[-1]
     result_bucket_name = RESULT_BUCKET.split(":")[-1]
+
+    ################################################################
+    # FOR WARMING CONDITION
+    ################################################################
+    if "resources" in event and EVENTBRIDGE_WARM_ARN in event["resources"][0]:
+        return
 
     # https://docs.aws.amazon.com/ko_kr/macie/latest/user/discovery-jobs-monitor-cw-logs.html
     # { "awslogs": {"data": "BASE64ENCODED_GZIP_COMPRESSED_DATA"} }
@@ -123,7 +132,6 @@ def lambda_handler(event, context):
             for result_key, result_values in detect_result.items():
                 [type_, category, object] = result_key.split("|")
                 for result_value in result_values:
-                    print(len(result_value), result_value)
                     csv_data += f"{type_},{category},{object},{result_value}\n"
 
         s3.put_object(
@@ -212,6 +220,7 @@ def lambda_handler(event, context):
     # INITIAL EXECUTION (FIRST)
     ################################################################
     else:
+        COMMAND_COMPLETED_REGIONS = []
         for region in get_available_regions():
             ec2 = boto3.client("ec2", config=Config(region_name=region))
             ssm = boto3.client("ssm", config=Config(region_name=region))
