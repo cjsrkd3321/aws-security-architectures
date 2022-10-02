@@ -43,7 +43,7 @@ data "aws_iam_policy_document" "base" {
     sid       = "BaseIpDenyAccess"
     actions   = ["*"]
     resources = ["*"]
-    effect    = "Allow"
+    effect    = "Deny"
 
     condition {
       test     = "NotIpAddressIfExists"

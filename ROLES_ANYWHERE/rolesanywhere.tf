@@ -18,15 +18,21 @@ resource "aws_rolesanywhere_profile" "this" {
       Action = [
         "*"
       ]
-      Effect   = "Allow"
+      Effect   = "Deny"
       Resource = ["*"]
 
       Condition = {
-        IpAddressIfExists = {
+        NotIpAddressIfExists = {
           "aws:SourceIp"    = var.public_ip_ranges
           "aws:VpcSourceIp" = ["10.0.0.0/8", "172.16.0.0/12"]
         }
       }
+      }, {
+      Action = [
+        "*"
+      ]
+      Effect   = "Allow"
+      Resource = ["*"]
     }]
   })
   role_arns = [for role in aws_iam_role.this : role.arn]
