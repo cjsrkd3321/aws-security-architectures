@@ -1,8 +1,31 @@
+variable "public_ip_ranges" {
+  type    = list(string)
+  default = ["1.1.1.0/24"]
+}
+
 variable "users" {
-  description = "User names and IPs. This variable will update someday."
-  type        = map(string)
+  description = "User names, policies and IPs"
+  type = map(object({
+    public_ips          = list(string)
+    private_ips         = list(string)
+    managed_policy_arns = list(string)
+    inline_policy       = map(any)
+  }))
   default = {
-    "rex.chun" : "1.1.1.1/32"
+    "rex.chun" : {
+      public_ips          = ["1.1.1.1/32"]
+      private_ips         = []
+      managed_policy_arns = ["arn:aws:iam::aws:policy/ReadOnlyAccess"]
+      inline_policy = {
+        Statement = [
+          {
+            Action   = ["sts:GetCallerIdentity"] # This is no meaning(GetCallerIdentity API can call always whether has permission or not)
+            Effect   = "Allow"
+            Resource = "*"
+          },
+        ]
+      }
+    }
   }
 }
 
