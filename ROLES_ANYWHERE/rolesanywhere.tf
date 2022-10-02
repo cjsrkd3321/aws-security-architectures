@@ -14,25 +14,27 @@ resource "aws_rolesanywhere_profile" "this" {
   enabled = var.profile_enabled
   session_policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Action = [
-        "*"
-      ]
-      Effect   = "Deny"
-      Resource = ["*"]
+    Statement = [
+      {
+        Action = [
+          "*"
+        ]
+        Effect   = "Deny"
+        Resource = ["*"]
 
-      Condition = {
-        NotIpAddressIfExists = {
-          "aws:SourceIp"    = var.public_ip_ranges
-          "aws:VpcSourceIp" = ["10.0.0.0/8", "172.16.0.0/12"]
+        Condition = {
+          NotIpAddressIfExists = {
+            "aws:SourceIp"    = var.public_ip_ranges
+            "aws:VpcSourceIp" = ["10.0.0.0/8", "172.16.0.0/12"]
+          }
         }
-      }
-      }, {
-      Action = [
-        "*"
-      ]
-      Effect   = "Allow"
-      Resource = ["*"]
+      },
+      {
+        Action = [
+          "*"
+        ]
+        Effect   = "Allow"
+        Resource = ["*"]
     }]
   })
   role_arns = [for role in aws_iam_role.this : role.arn]
