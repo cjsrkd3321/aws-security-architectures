@@ -91,6 +91,10 @@ def detect_sensitive_port_open(
             src_ips.append(src_ip)
             descs.append(desc)
             protocols.append(protocol)
+        
+        # 값이 없을 경우 종료
+        if not port_ranges:
+            return
 
     elif event_name == "ModifySecurityGroupRules":
         ### 성공하지 못했으면 알람 보내지 않음 ###
