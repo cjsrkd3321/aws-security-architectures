@@ -11,20 +11,29 @@ class IAMRole(ResourceBase):
 
     def list(self):
         try:
-            paginator = self.svc.get_paginator("list_roles")
-            iterator = paginator.paginate()
+            iterator = self.svc.get_paginator("list_roles").paginate()
             if not iterator:
                 return []
-            return [
-                {
-                    "id": role["RoleName"],
-                    "tags": role.get("Tags"),
-                    "name": role["RoleName"],
-                    "path": role["Path"],
-                }
-                for roles in iterator
-                for role in roles["Roles"]
-            ]
+
+            results = []
+            roles = [roles for roles in iterator for role in roles["Roles"]]
+            for role in roles:
+                role_name = role["RoleName"]
+
+                try:
+                    r = self.svc.get_role(RoleName=role_name)["Role"]
+                except self.exceptions.NoSuchEntityException:
+                    continue
+
+                results.append(
+                    {
+                        "id": role_name,
+                        "name": role_name,
+                        "path": r["Path"],
+                        "tags": r.get("Tags"),
+                    }
+                )
+            return results
         except Exception as e:
             return e
 
