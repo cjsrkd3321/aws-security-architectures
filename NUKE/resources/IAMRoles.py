@@ -16,7 +16,7 @@ class IAMRole(ResourceBase):
                 return []
 
             results = []
-            roles = [roles for roles in iterator for role in roles["Roles"]]
+            roles = [role for roles in iterator for role in roles["Roles"]]
             for role in roles:
                 role_name = role["RoleName"]
 
