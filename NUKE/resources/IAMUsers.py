@@ -21,7 +21,7 @@ class IAMUser(ResourceBase):
                 }
                 for users in iterator
                 for user in users["Users"]
-            ]
+            ], None
         except Exception as e:
             return [], e
 
