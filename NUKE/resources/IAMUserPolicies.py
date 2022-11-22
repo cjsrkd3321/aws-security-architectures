@@ -40,7 +40,7 @@ class IAMUserPolicy(ResourceBase):
                     ]
                 except self.exceptions.NoSuchEntityException:
                     continue
-            return results
+            return results, None
         except Exception as e:
             return [], e
 
