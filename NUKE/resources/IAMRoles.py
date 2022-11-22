@@ -58,6 +58,10 @@ class IAMRole(ResourceBase):
             for r in resources
             if not r["path"].startswith("/aws-service-role/")
             and not r["path"].startswith("/aws-reserved/")
+            and not (
+                r["name"].startswith("Amazon")
+                and r["path"].startswith("/service-role/")
+            )
         ]
         if filter_func:
             filtered_resources = filter_func(filtered_resources)
