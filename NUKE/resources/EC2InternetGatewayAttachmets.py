@@ -55,8 +55,5 @@ class EC2InternetGatewayAttachmet(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    vpc = EC2InternetGatewayAttachmet()
-    print(vpc.filter(vpc.list()))
-else:
+if __name__ != "__main__":
     resources.append(EC2InternetGatewayAttachmet)

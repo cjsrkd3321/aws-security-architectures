@@ -58,8 +58,5 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    sg = EC2NetworkInterfaceAttachmet()
-    print(sg.filter(sg.list()))
-else:
+if __name__ != "__main__":
     resources.append(EC2NetworkInterfaceAttachmet)

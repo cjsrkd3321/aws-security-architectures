@@ -53,8 +53,5 @@ class IAMUser(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    user = IAMUser()
-    print(user.filter(user.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMUser)

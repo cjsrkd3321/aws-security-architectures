@@ -52,8 +52,5 @@ class IAMLoginProfile(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMLoginProfile()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMLoginProfile)

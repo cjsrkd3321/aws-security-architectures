@@ -72,10 +72,5 @@ class IAMUserPolicy(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMUserPolicy()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMUserPolicy)
-    if IAMUser in resources:
-        resources.remove(IAMUser)

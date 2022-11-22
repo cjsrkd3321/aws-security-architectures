@@ -73,10 +73,5 @@ class IAMUserSshKey(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMUserSshKey()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMUserSshKey)
-    if IAMUser in resources:
-        resources.remove(IAMUser)
