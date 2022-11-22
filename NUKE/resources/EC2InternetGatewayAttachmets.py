@@ -12,10 +12,7 @@ class EC2InternetGatewayAttachmet(ResourceBase):
 
     def list(self):
         try:
-            paginator = self.svc.get_paginator("describe_internet_gateways")
-            iterator = paginator.paginate()
-            if not iterator:
-                return []
+            iterator = self.svc.get_paginator("describe_internet_gateways").paginate()
             return [
                 {
                     "id": igw["InternetGatewayId"],
@@ -26,9 +23,9 @@ class EC2InternetGatewayAttachmet(ResourceBase):
                 }
                 for igws in iterator
                 for igw in igws["InternetGateways"]
-            ]
+            ], None
         except Exception as e:
-            return e
+            return [], e
 
     def remove(self, resource):
         try:
@@ -37,19 +34,22 @@ class EC2InternetGatewayAttachmet(ResourceBase):
                     InternetGatewayId=resource["id"], VpcId=resource["vpc_id"]
                 )["ResponseMetadata"]["HTTPStatusCode"]
                 == 200
-            )
+            ), None
         except Exception as e:
-            return e
+            return False, e
 
     def filter(self, resources, filter_func=None):
         if not resources:
-            return []
+            return [], None
         filtered_resources = [
             r for r in resources if (s := r["state"]) and not s.startswith("detach")
         ]
         if filter_func:
-            filtered_resources = filter_func(filtered_resources)
-        return filtered_resources
+            try:
+                filtered_resources = filter_func(filtered_resources)
+            except Exception as e:
+                return [], e
+        return filtered_resources, None
 
     def properties(self):
         pass

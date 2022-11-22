@@ -12,10 +12,7 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
 
     def list(self):
         try:
-            paginator = self.svc.get_paginator("describe_network_interfaces")
-            iterator = paginator.paginate()
-            if not iterator:
-                return []
+            iterator = self.svc.get_paginator("describe_network_interfaces").paginate()
             return [
                 {
                     "id": [
@@ -29,9 +26,9 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]
-            ]
+            ], None
         except Exception as e:
-            return e
+            return [], e
 
     def remove(self, resource):
         try:
@@ -40,19 +37,22 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
                     AttachmentId=resource["id"], Force=True
                 )["ResponseMetadata"]["HTTPStatusCode"]
                 == 200
-            )
+            ), None
         except Exception as e:
-            return e
+            return False, e
 
     def filter(self, resources, filter_func=None):
         if not resources:
-            return []
+            return [], None
         filtered_resources = [
             r for r in resources if not r.get("state").startswith("detach")
         ]
         if filter_func:
-            filtered_resources = filter_func(filtered_resources)
-        return filtered_resources
+            try:
+                filtered_resources = filter_func(filtered_resources)
+            except Exception as e:
+                return [], e
+        return filtered_resources, None
 
     def properties(self):
         pass

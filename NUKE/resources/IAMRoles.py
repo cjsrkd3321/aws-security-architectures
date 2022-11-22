@@ -12,8 +12,6 @@ class IAMRole(ResourceBase):
     def list(self):
         try:
             iterator = self.svc.get_paginator("list_roles").paginate()
-            if not iterator:
-                return []
 
             results = []
             roles = [role for roles in iterator for role in roles["Roles"]]
@@ -33,9 +31,9 @@ class IAMRole(ResourceBase):
                         "tags": r.get("Tags"),
                     }
                 )
-            return results
+            return results, None
         except Exception as e:
-            return e
+            return [], e
 
     def remove(self, resource):
         try:
@@ -44,15 +42,15 @@ class IAMRole(ResourceBase):
                     "HTTPStatusCode"
                 ]
                 == 200
-            )
+            ), None
         except self.exceptions.NoSuchEntityException:
-            return True
+            return True, None
         except Exception as e:
-            return e
+            return False, e
 
     def filter(self, resources, filter_func=None):
         if not resources:
-            return []
+            return [], None
         filtered_resources = [
             r
             for r in resources
@@ -64,8 +62,11 @@ class IAMRole(ResourceBase):
             )
         ]
         if filter_func:
-            filtered_resources = filter_func(filtered_resources)
-        return filtered_resources
+            try:
+                filtered_resources = filter_func(filtered_resources)
+            except Exception as e:
+                return [], e
+        return filtered_resources, None
 
     def properties(self):
         pass
