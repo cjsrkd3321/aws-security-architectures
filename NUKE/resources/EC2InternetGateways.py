@@ -51,8 +51,5 @@ class EC2InternetGateway(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    vpc = EC2InternetGateway()
-    print(vpc.filter(vpc.list()))
-else:
+if __name__ != "__main__":
     resources.append(EC2InternetGateway)

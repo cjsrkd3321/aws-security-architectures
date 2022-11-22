@@ -52,8 +52,5 @@ class EC2VPC(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    vpc = EC2VPC()
-    print(vpc.filter(vpc.list()))
-else:
+if __name__ != "__main__":
     resources.append(EC2VPC)

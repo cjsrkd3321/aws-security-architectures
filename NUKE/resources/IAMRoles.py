@@ -72,8 +72,5 @@ class IAMRole(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMRole()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMRole)

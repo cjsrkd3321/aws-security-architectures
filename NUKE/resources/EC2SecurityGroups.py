@@ -50,8 +50,5 @@ class EC2SecurityGroup(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    sg = EC2SecurityGroup()
-    print(sg.filter(sg.list()))
-else:
+if __name__ != "__main__":
     resources.append(EC2SecurityGroup)

@@ -72,10 +72,5 @@ class IAMUserAccessKey(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMUserAccessKey()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMUserAccessKey)
-    if IAMUser in resources:
-        resources.remove(IAMUser)

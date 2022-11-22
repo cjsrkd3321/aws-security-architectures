@@ -53,8 +53,5 @@ class IAMServerCertificate(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    user = IAMServerCertificate()
-    print(user.filter(user.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMServerCertificate)

@@ -77,10 +77,5 @@ class IAMVirtualMfaDevice(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMVirtualMfaDevice()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMVirtualMfaDevice)
-    if IAMUser in resources:
-        resources.remove(IAMUser)

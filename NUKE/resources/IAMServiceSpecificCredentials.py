@@ -75,10 +75,5 @@ class IAMServiceSpecificCredential(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMServiceSpecificCredential()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMServiceSpecificCredential)
-    if IAMUser in resources:
-        resources.remove(IAMUser)

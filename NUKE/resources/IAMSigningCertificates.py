@@ -72,10 +72,5 @@ class IAMSigningCertificate(ResourceBase):
         pass
 
 
-if __name__ == "__main__":
-    role = IAMSigningCertificate()
-    print(role.filter(role.list()))
-else:
+if __name__ != "__main__":
     resources.append(IAMSigningCertificate)
-    if IAMUser in resources:
-        resources.remove(IAMUser)
