@@ -37,7 +37,7 @@ class IAMSigningCertificate(ResourceBase):
                             "create_date": cert["UploadDate"],
                             "tags": [],
                         }
-                        for cert in certs["MFADevices"]
+                        for cert in certs["Certificates"]
                     ]
                 except self.exceptions.NoSuchEntityException:
                     continue
