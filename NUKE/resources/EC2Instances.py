@@ -12,10 +12,7 @@ class EC2Instance(ResourceBase):
 
     def list(self):
         try:
-            paginator = self.svc.get_paginator("describe_instances")
-            iterator = paginator.paginate()
-            if not iterator:
-                return []
+            iterator = self.svc.get_paginator("describe_instances").paginate()
             return [
                 {
                     "id": (i := instance)["InstanceId"],
@@ -26,9 +23,9 @@ class EC2Instance(ResourceBase):
                 for instances in iterator
                 for reservations in instances["Reservations"]
                 for instance in reservations["Instances"]
-            ]
+            ], None
         except Exception as e:
-            return e
+            return [], e
 
     def remove(self, resource):
         try:
@@ -37,19 +34,22 @@ class EC2Instance(ResourceBase):
                     "ResponseMetadata"
                 ]["HTTPStatusCode"]
                 == 200
-            )
+            ), None
         except Exception as e:
-            return e
+            return False, e
 
     def filter(self, resources, filter_func=None):
         if not resources:
-            return []
+            return [], None
         filtered_resources = [
             r for r in resources if not r["state"] in ["shutting-down", "terminated"]
         ]
         if filter_func:
-            filtered_resources = filter_func(filtered_resources)
-        return filtered_resources
+            try:
+                filtered_resources = filter_func(filtered_resources)
+            except Exception as e:
+                return [], e
+        return filtered_resources, None
 
     def properties(self):
         pass

@@ -15,7 +15,12 @@ class IAMUserPolicyAttachment(ResourceBase):
     def list(self):
         try:
             iam_user = IAMUser()
-            filtered_users = iam_user.filter(iam_user.list(), filter_func)
+            users, err = iam_user.list()
+            if err:
+                return [], err
+            filtered_users, err = iam_user.filter(users, filter_func)
+            if err:
+                return [], err
 
             results = []
             for user in filtered_users:
@@ -25,7 +30,7 @@ class IAMUserPolicyAttachment(ResourceBase):
                         UserName=user_name
                     )
                     if not attached_policies:
-                        return []
+                        return [], None
                     results += [
                         {
                             "id": policy["PolicyArn"],
@@ -37,9 +42,9 @@ class IAMUserPolicyAttachment(ResourceBase):
                     ]
                 except self.exceptions.NoSuchEntityException:
                     continue
-            return results
+            return results, None
         except Exception as e:
-            return e
+            return [], e
 
     def remove(self, resource):
         try:
@@ -48,19 +53,22 @@ class IAMUserPolicyAttachment(ResourceBase):
                     UserName=resource["user_name"], PolicyArn=resource["id"]
                 )["ResponseMetadata"]["HTTPStatusCode"]
                 == 200
-            )
+            ), None
         except self.exceptions.NoSuchEntityException:
-            return True
+            return True, None
         except Exception as e:
-            return e
+            return False, e
 
     def filter(self, resources, filter_func=None):
         if not resources:
-            return []
+            return [], None
         filtered_resources = resources
         if filter_func:
-            filtered_resources = filter_func(filtered_resources)
-        return filtered_resources
+            try:
+                filtered_resources = filter_func(filtered_resources)
+            except Exception as e:
+                return [], e
+        return filtered_resources, None
 
     def properties(self):
         pass
