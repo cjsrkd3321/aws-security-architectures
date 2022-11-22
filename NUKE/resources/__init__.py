@@ -14,11 +14,15 @@ from .EC2Subnets import EC2Subnet
 from .EC2VPC import EC2VPC
 
 from .IAMLoginProfiles import IAMLoginProfile
-from .IAMUserPolicies import IAMUserPolicy
-from .IAMUserPolicyAttachments import IAMUserPolicyAttachment
 from .IAMUserAccessKeys import IAMUserAccessKey
 from .IAMVirtualMfaDevices import IAMVirtualMfaDevice
-
+from .IAMUserSshKeys import IAMUserSshKey
+from .IAMSigningCertificates import IAMSigningCertificate
+from .IAMServiceSpecificCredentials import IAMServiceSpecificCredential
+from .IAMServerCertificates import IAMServerCertificate
+from .IAMUserPolicyAttachments import IAMUserPolicyAttachment
+from .IAMUserPolicies import IAMUserPolicy
+from .IAMListUserGroupAttachments import IAMListUserGroupAttachment
 from .IAMUsers import IAMUser
 
-# from .IAMRoles import IAMRole
+from .IAMRoles import IAMRole
