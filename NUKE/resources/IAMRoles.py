@@ -5,9 +5,10 @@ import boto3
 
 
 class IAMRole(ResourceBase):
-    def __init__(self, region="ap-northeast-2") -> None:
+    def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("iam", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
+        self.filter_func = default_filter_func
 
     def list(self):
         try:
@@ -28,7 +29,7 @@ class IAMRole(ResourceBase):
                         "id": role_name,
                         "name": role_name,
                         "path": r["Path"],
-                        "tags": r.get("Tags"),
+                        "tags": r.get("Tags", []),
                     }
                 )
             return results, None
@@ -48,7 +49,7 @@ class IAMRole(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, filter_func=None):
+    def filter(self, resources, *filters):
         if not resources:
             return [], None
         filtered_resources = [
@@ -61,11 +62,13 @@ class IAMRole(ResourceBase):
                 and r["path"].startswith("/service-role/")
             )
         ]
-        if filter_func:
+        if self.filter_func:
             try:
-                filtered_resources = filter_func(filtered_resources)
+                filtered_resources = self.filter_func(filtered_resources)
             except Exception as e:
                 return [], e
+        for filter in filters:
+            filtered_resources = filter(filtered_resources)
         return filtered_resources, None
 
     def properties(self):

@@ -1,6 +1,5 @@
 from . import resources, Config
 from ._base import ResourceBase
-from ._utils import filter_func
 from .IAMUsers import IAMUser
 
 
@@ -8,17 +7,18 @@ import boto3
 
 
 class IAMVirtualMfaDevice(ResourceBase):
-    def __init__(self, region="ap-northeast-2") -> None:
+    def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("iam", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
+        self.filter_func = default_filter_func
 
     def list(self):
         try:
-            iam_user = IAMUser()
+            iam_user = IAMUser(default_filter_func=self.filter_func)
             users, err = iam_user.list()
             if err:
                 return [], err
-            filtered_users, err = iam_user.filter(users, filter_func)
+            filtered_users, err = iam_user.filter(users)
             if err:
                 return [], err
 
@@ -34,7 +34,7 @@ class IAMVirtualMfaDevice(ResourceBase):
                             "id": device["SerialNumber"],
                             "name": device["SerialNumber"],
                             "user_name": user_name,
-                            "tags": [],
+                            "tags": None,
                         }
                         for device in devices["MFADevices"]
                     ]
@@ -60,17 +60,19 @@ class IAMVirtualMfaDevice(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, filter_func=None):
+    def filter(self, resources, *filters):
         if not resources:
             return [], None
         filtered_resources = [
             r for r in resources if not r["id"].endswith("/root-account-mfa-device")
         ]
-        if filter_func:
+        if self.filter_func:
             try:
-                filtered_resources = filter_func(filtered_resources)
+                filtered_resources = self.filter_func(filtered_resources)
             except Exception as e:
                 return [], e
+        for filter in filters:
+            filtered_resources = filter(filtered_resources)
         return filtered_resources, None
 
     def properties(self):

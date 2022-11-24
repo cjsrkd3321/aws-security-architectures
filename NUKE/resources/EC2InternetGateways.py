@@ -6,9 +6,10 @@ import boto3
 
 
 class EC2InternetGateway(ResourceBase):
-    def __init__(self, region="ap-northeast-2"):
+    def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("ec2", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
+        self.filter_func = default_filter_func
 
     def list(self):
         try:
@@ -16,7 +17,7 @@ class EC2InternetGateway(ResourceBase):
             return [
                 {
                     "id": igw["InternetGatewayId"],
-                    "tags": (tags := igw.get("Tags")),
+                    "tags": (tags := igw.get("Tags", [])),
                     "name": get_name_from_tags(tags),
                 }
                 for igws in iterator
@@ -36,15 +37,17 @@ class EC2InternetGateway(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, filter_func=None):
+    def filter(self, resources, *filters):
         if not resources:
             return [], None
         filtered_resources = resources
-        if filter_func:
+        if self.filter_func:
             try:
-                filtered_resources = filter_func(filtered_resources)
+                filtered_resources = self.filter_func(filtered_resources)
             except Exception as e:
                 return [], e
+        for filter in filters:
+            filtered_resources = filter(filtered_resources)
         return filtered_resources, None
 
     def properties(self):
