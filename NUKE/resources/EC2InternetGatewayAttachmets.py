@@ -6,9 +6,10 @@ import boto3
 
 
 class EC2InternetGatewayAttachmet(ResourceBase):
-    def __init__(self, region="ap-northeast-2"):
+    def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("ec2", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
+        self.filter_func = default_filter_func
 
     def list(self):
         try:
@@ -16,8 +17,8 @@ class EC2InternetGatewayAttachmet(ResourceBase):
             return [
                 {
                     "id": igw["InternetGatewayId"],
-                    "tags": igw.get("Tags"),
-                    "name": get_name_from_tags(igw.get("Tags")),
+                    "tags": igw.get("Tags", []),
+                    "name": get_name_from_tags(igw.get("Tags", [])),
                     "state": a[0]["State"] if (a := igw["Attachments"]) else None,
                     "vpc_id": a[0]["VpcId"] if a else None,
                 }
@@ -38,17 +39,19 @@ class EC2InternetGatewayAttachmet(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, filter_func=None):
+    def filter(self, resources, *filters):
         if not resources:
             return [], None
         filtered_resources = [
             r for r in resources if (s := r["state"]) and not s.startswith("detach")
         ]
-        if filter_func:
+        if self.filter_func:
             try:
-                filtered_resources = filter_func(filtered_resources)
+                filtered_resources = self.filter_func(filtered_resources)
             except Exception as e:
                 return [], e
+        for filter in filters:
+            filtered_resources = filter(filtered_resources)
         return filtered_resources, None
 
     def properties(self):

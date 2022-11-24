@@ -1,7 +1,6 @@
 from pprint import pprint
 from typing import Optional, List, Callable, Dict
 from concurrent import futures
-from resources._utils import filter_func
 
 import time
 import boto3
@@ -11,20 +10,22 @@ import resources
 results: Dict = {}
 
 
+# identifies untagged resources
+def default_filter(resources):
+    return [r for r in resources if r["tags"] == []]
+
+
 def get_regions(ec2) -> List[Optional[str]]:
     return [region.get("RegionName") for region in ec2.describe_regions()["Regions"]]
 
 
 def work(resources: List[Callable], region):
-    if region not in ["ap-northeast-2", "us-east-1"]:
-        return
-
     try:
         global results
         results[region] = {}
         for resource in resources:
             start_time = time.time()
-            r = resource(region=region)
+            r = resource(region=region, default_filter_func=default_filter)
 
             class_name = r.__class__.__name__
             if class_name.startswith("IAM") and region != "us-east-1":
@@ -37,7 +38,7 @@ def work(resources: List[Callable], region):
                 print("[ERR_LIST]", class_name, err)
                 continue
 
-            filtered_resources, err = r.filter(rs, filter_func)
+            filtered_resources, err = r.filter(rs)
             if err:
                 print("[ERR_FILTER]", class_name, err)
                 continue
@@ -54,7 +55,6 @@ if __name__ == "__main__":
     ec2 = boto3.client("ec2")
     regions = get_regions(ec2)
 
-    # regions = ["ap-northeast-2"]
     pool = futures.ThreadPoolExecutor(max_workers=len(regions))
     threads = []
     for region in regions:
@@ -62,4 +62,4 @@ if __name__ == "__main__":
 
     futures.wait(threads)
 
-    # pprint(results)
+    pprint(results)

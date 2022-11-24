@@ -5,9 +5,10 @@ import boto3
 
 
 class EC2SecurityGroup(ResourceBase):
-    def __init__(self, region="ap-northeast-2") -> None:
+    def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("ec2", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
+        self.filter_func = default_filter_func
 
     def list(self):
         try:
@@ -16,7 +17,7 @@ class EC2SecurityGroup(ResourceBase):
                 {
                     "id": (sg := security_group)["GroupId"],
                     "name": sg["GroupName"],
-                    "tags": sg.get("Tags"),
+                    "tags": sg.get("Tags", []),
                 }
                 for security_groups in iterator
                 for security_group in security_groups["SecurityGroups"]
@@ -35,15 +36,17 @@ class EC2SecurityGroup(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, filter_func=None):
+    def filter(self, resources, *filters):
         if not resources:
             return [], None
-        filtered_resources = resources
-        if filter_func:
+        filtered_resources = [r for r in resources if r["name"] != "default"]
+        if self.filter_func:
             try:
-                filtered_resources = filter_func(filtered_resources)
+                filtered_resources = self.filter_func(filtered_resources)
             except Exception as e:
                 return [], e
+        for filter in filters:
+            filtered_resources = filter(filtered_resources)
         return filtered_resources, None
 
     def properties(self):
