@@ -20,6 +20,14 @@ class EC2Instance(ResourceBase):
                     "tags": (tags := i.get("Tags", [])),
                     "name": get_name_from_tags(tags),
                     "state": i["State"]["Name"],
+                    "type": i["InstanceType"],
+                    "create_date": i["LaunchTime"],
+                    "architecture": i.get("Architecture"),
+                    "instance_profile": i.get("IamInstanceProfile"),
+                    "lifecycle": i["InstanceLifecycle"],
+                    "security_groups": i.get("SecurityGroups"),
+                    "cpu_core_count": i["CpuOptions"]["CoreCount"],
+                    "platform": i.get("Platform"),
                 }
                 for instances in iterator
                 for reservations in instances["Reservations"]

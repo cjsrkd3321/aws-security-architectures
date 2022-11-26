@@ -13,15 +13,26 @@ class IAMLoginProfile(ResourceBase):
     def list(self):
         try:
             iterator = self.svc.get_paginator("list_users").paginate()
-            return [
-                {
-                    "id": user["UserName"],
-                    "tags": user.get("Tags", []),
-                    "name": user["UserName"],
-                }
-                for users in iterator
-                for user in users["Users"]
-            ], None
+
+            results = []
+            users = [user for users in iterator for user in users["Users"]]
+            for user in users:
+                user_name = user["UserName"]
+
+                try:
+                    p = self.svc.get_login_profile(UserName=user_name)["LoginProfile"]
+                except self.exceptions.NoSuchEntityException:
+                    continue
+
+                results.append(
+                    {
+                        "id": user_name,
+                        "name": user_name,
+                        "create_date": p["CreateDate"],
+                        "password_reset_required": p["PasswordResetRequired"],
+                    }
+                )
+            return results, None
         except Exception as e:
             return [], e
 

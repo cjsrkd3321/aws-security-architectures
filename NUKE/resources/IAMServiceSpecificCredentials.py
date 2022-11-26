@@ -37,7 +37,7 @@ class IAMServiceSpecificCredential(ResourceBase):
                             "name": cred["ServiceName"],
                             "user_name": user_name,
                             "create_date": cred["CreateDate"],
-                            "tags": None,
+                            "state": cred["Status"],
                         }
                         for cred in creds["ServiceSpecificCredentials"]
                     ]

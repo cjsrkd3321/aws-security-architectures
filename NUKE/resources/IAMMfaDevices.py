@@ -6,7 +6,7 @@ from .IAMUsers import IAMUser
 import boto3
 
 
-class IAMVirtualMfaDevice(ResourceBase):
+class IAMMfaDevice(ResourceBase):
     def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("iam", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
@@ -34,7 +34,7 @@ class IAMVirtualMfaDevice(ResourceBase):
                             "id": device["SerialNumber"],
                             "name": device["SerialNumber"],
                             "user_name": user_name,
-                            "tags": None,
+                            # "tags": None,  # list_mfa_device_tags()
                         }
                         for device in devices["MFADevices"]
                     ]
@@ -80,4 +80,4 @@ class IAMVirtualMfaDevice(ResourceBase):
 
 
 if __name__ != "__main__":
-    resources.append(IAMVirtualMfaDevice)
+    resources.append(IAMMfaDevice)

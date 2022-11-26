@@ -13,16 +13,30 @@ class IAMUser(ResourceBase):
     def list(self):
         try:
             iterator = self.svc.get_paginator("list_users").paginate()
-            return [
-                {
-                    "id": user["UserName"],
-                    "tags": user.get("Tags", []),
-                    "name": user["UserName"],
-                    "create_date": user["CreateDate"],
-                }
-                for users in iterator
-                for user in users["Users"]
-            ], None
+
+            results = []
+            users = [user for users in iterator for user in users["Users"]]
+            for user in users:
+                user_name = user["UserName"]
+
+                try:
+                    u = self.svc.get_user(UserName=user_name)["User"]
+                except self.exceptions.NoSuchEntityException:
+                    continue
+
+                results.append(
+                    {
+                        "id": user_name,
+                        "tags": u.get("Tags", []),
+                        "name": user_name,
+                        "create_date": user["CreateDate"],
+                        "last_used_date": user.get("PasswordLastUsed"),
+                        "unique_id": user["UserId"],
+                        "path": user["Path"],
+                        "arn": user["Arn"],
+                    }
+                )
+            return results, None
         except Exception as e:
             return [], e
 

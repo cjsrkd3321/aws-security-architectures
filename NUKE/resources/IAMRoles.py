@@ -30,6 +30,11 @@ class IAMRole(ResourceBase):
                         "name": role_name,
                         "path": r["Path"],
                         "tags": r.get("Tags", []),
+                        "arn": r["Arn"],
+                        "unique_id": r["RoleId"],
+                        "create_date": r["CreateDate"],
+                        "last_used_date": r["RoleLastUsed"].get("LastUsedDate"),
+                        "description": r.get("Description"),
                     }
                 )
             return results, None

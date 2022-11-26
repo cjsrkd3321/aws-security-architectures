@@ -34,7 +34,6 @@ class IAMUserPolicy(ResourceBase):
                             "id": policy,
                             "name": policy,
                             "user_name": user_name,
-                            "tags": None,
                         }
                         for policy in policies["PolicyNames"]
                     ]

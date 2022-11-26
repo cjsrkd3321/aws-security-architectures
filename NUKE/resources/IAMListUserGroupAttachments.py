@@ -36,7 +36,9 @@ class IAMListUserGroupAttachment(ResourceBase):
                             "name": group["GroupName"],
                             "user_name": user_name,
                             "create_date": group["CreateDate"],
-                            "tags": None,
+                            "arn": group["Arn"],
+                            "path": group["Path"],
+                            "unique_id": group["GroupId"],
                         }
                         for group in groups["Groups"]
                     ]

@@ -35,9 +35,9 @@ class IAMUserSshKey(ResourceBase):
                             "name": key["SSHPublicKeyId"],
                             "user_name": user_name,
                             "create_date": key["UploadDate"],
-                            "tags": None,
+                            "state": key["Status"],
                         }
-                        for key in keys["MFADevices"]
+                        for key in keys["SSHPublicKeys"]
                     ]
                 except self.exceptions.NoSuchEntityException:
                     continue

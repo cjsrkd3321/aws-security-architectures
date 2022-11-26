@@ -19,9 +19,7 @@ class EC2NetworkInterface(ResourceBase):
                     "id": (ni := network_interface)["NetworkInterfaceId"],
                     "tags": (tags := ni.get("TagSet")),
                     "name": get_name_from_tags(tags),
-                    "state": [
-                        ni["Attachment"]["Status"] if ni.get("Attachment") else None
-                    ][0],
+                    "state": ni["Status"],
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]

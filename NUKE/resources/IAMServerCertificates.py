@@ -13,16 +13,36 @@ class IAMServerCertificate(ResourceBase):
     def list(self):
         try:
             iterator = self.svc.get_paginator("list_server_certificates").paginate()
-            return [
-                {
-                    "id": cert["ServerCertificateName"],
-                    "tags": None,
-                    "name": cert["ServerCertificateName"],
-                    "create_date": cert["UploadDate"],
-                }
+
+            results = []
+            certs = [
+                cert
                 for certs in iterator
                 for cert in certs["ServerCertificateMetadataList"]
-            ], None
+            ]
+            for cert in certs:
+                cert_name = cert["ServerCertificateName"]
+
+                try:
+                    c = self.svc.get_server_certificate(RoleName=cert_name)[
+                        "ServerCertificate"
+                    ]
+                except self.exceptions.NoSuchEntityException:
+                    continue
+
+                results.append(
+                    {
+                        "id": cert_name,
+                        "name": cert_name,
+                        "path": (meta := c["ServerCertificateMetadata"])["Path"],
+                        "tags": c.get("Tags", []),
+                        "arn": meta["Arn"],
+                        "unique_id": meta["ServerCertificateId"],
+                        "create_date": meta["UploadDate"],
+                        "expire_date": meta["Expiration"],
+                    }
+                )
+            return results, None
         except Exception as e:
             return [], e
 

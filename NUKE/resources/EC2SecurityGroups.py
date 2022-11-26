@@ -18,6 +18,8 @@ class EC2SecurityGroup(ResourceBase):
                     "id": (sg := security_group)["GroupId"],
                     "name": sg["GroupName"],
                     "tags": sg.get("Tags", []),
+                    "description": sg.get("Description"),
+                    "vpc_id": sg.get("VpcId"),
                 }
                 for security_groups in iterator
                 for security_group in security_groups["SecurityGroups"]
@@ -28,9 +30,9 @@ class EC2SecurityGroup(ResourceBase):
     def remove(self, resource):
         try:
             return (
-                self.svc.delete_security_group(
-                    GroupId=resource["id"], GroupName=resource["name"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
+                self.svc.delete_security_group(GroupId=resource["id"])[
+                    "ResponseMetadata"
+                ]["HTTPStatusCode"]
                 == 200
             ), None
         except Exception as e:

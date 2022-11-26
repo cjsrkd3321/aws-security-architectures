@@ -20,6 +20,7 @@ class EC2Subnet(ResourceBase):
                     "tags": (tags := subnet.get("Tags", [])),
                     "name": get_name_from_tags(tags),
                     "state": subnet["State"],
+                    "arn": subnet["SubnetArn"],
                 }
                 for subnets in iterator
                 for subnet in subnets["Subnets"]
