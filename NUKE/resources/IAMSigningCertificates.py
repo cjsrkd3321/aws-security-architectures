@@ -35,7 +35,7 @@ class IAMSigningCertificate(ResourceBase):
                             "name": cert["CertificateId"],
                             "user_name": user_name,
                             "create_date": cert["UploadDate"],
-                            "tags": None,
+                            "state": cert["Status"],
                         }
                         for cert in certs["Certificates"]
                     ]

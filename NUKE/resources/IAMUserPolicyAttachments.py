@@ -36,7 +36,7 @@ class IAMUserPolicyAttachment(ResourceBase):
                             "id": policy["PolicyArn"],
                             "name": policy["PolicyName"],
                             "user_name": user_name,
-                            "tags": None,
+                            "arn": policy["PolicyArn"],
                         }
                         for policy in attached_policies["AttachedPolicies"]
                     ]

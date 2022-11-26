@@ -12,7 +12,13 @@ results: Dict = {}
 
 # identifies untagged resources
 def default_filter(resources):
-    return [r for r in resources if r["tags"] == []]
+    word = "tags"
+    return [r for r in resources if word not in r or not r.get(word)]
+
+
+def last_used_date_filter(resources):
+    word = "last_used_date"
+    return [r for r in resources if word in r and r.get(word) is None]
 
 
 def get_regions(ec2) -> List[Optional[str]]:
@@ -34,18 +40,24 @@ def work(resources: List[Callable], region):
             results[region][class_name] = []
 
             rs, err = r.list()
+            # print(class_name, rs, err)
             if err:
                 print("[ERR_LIST]", class_name, err)
                 continue
 
             filtered_resources, err = r.filter(rs)
+            # print(class_name, filtered_resources, err)
             if err:
                 print("[ERR_FILTER]", class_name, err)
                 continue
 
             for fr in filtered_resources:
-                results[region][class_name].append(fr)
-            print(f"{region} {class_name} Elapsed {time.time() - start_time:.2f}s")
+                res, err = r.remove(fr)
+                print(region, class_name, res, err, fr)
+                print()
+            # results[region][class_name].append(fr)
+            # print(f"{region} {class_name} Elapsed {time.time() - start_time:.2f}s")
+            # print()
     except Exception as e:
         print(e)
         pass
@@ -62,4 +74,4 @@ if __name__ == "__main__":
 
     futures.wait(threads)
 
-    pprint(results)
+    # pprint(results)

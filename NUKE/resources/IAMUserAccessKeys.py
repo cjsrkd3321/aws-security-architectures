@@ -17,11 +17,9 @@ class IAMUserAccessKey(ResourceBase):
             iam_user = IAMUser(default_filter_func=self.filter_func)
             users, err = iam_user.list()
             if err:
-                print(1, err)
                 return [], err
             filtered_users, err = iam_user.filter(users)
             if err:
-                print(2, err)
                 return [], err
 
             results = []
@@ -31,15 +29,26 @@ class IAMUserAccessKey(ResourceBase):
                     access_keys = self.svc.list_access_keys(UserName=user_name)
                     if not access_keys:
                         return [], None
-                    results += [
-                        {
-                            "id": access_key["AccessKeyId"],
-                            "name": access_key["AccessKeyId"],
-                            "user_name": user_name,
-                            "tags": None,
-                        }
-                        for access_key in access_keys["AccessKeyMetadata"]
-                    ]
+
+                    results = []
+                    for access_key in access_keys["AccessKeyMetadata"]:
+                        try:
+                            k = self.svc.get_access_key_last_used(
+                                AccessKeyId=access_key["AccessKeyId"]
+                            )["AccessKeyLastUsed"]
+                        except self.exceptions.NoSuchEntityException:
+                            k = {}
+
+                        results.append(
+                            {
+                                "id": access_key["AccessKeyId"],
+                                "name": access_key["AccessKeyId"],
+                                "user_name": user_name,
+                                "state": access_key["Status"],
+                                "create_date": access_key["CreateDate"],
+                                "last_used_date": k.get("LastUsedDate"),
+                            }
+                        )
                 except self.exceptions.NoSuchEntityException:
                     continue
             return results, None

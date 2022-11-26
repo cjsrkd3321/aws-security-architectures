@@ -17,9 +17,10 @@ class EC2VPC(ResourceBase):
             return [
                 {
                     "id": vpc["VpcId"],
-                    "tags": (tags := vpc.get("Tags")),
+                    "tags": (tags := vpc.get("Tags", [])),
                     "name": get_name_from_tags(tags),
                     "is_default": vpc["IsDefault"],
+                    "state": vpc["State"],
                 }
                 for vpcs in iterator
                 for vpc in vpcs["Vpcs"]

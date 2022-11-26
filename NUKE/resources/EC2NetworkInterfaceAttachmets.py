@@ -16,17 +16,17 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
             iterator = self.svc.get_paginator("describe_network_interfaces").paginate()
             return [
                 {
-                    "id": [
-                        ni["Attachment"]["AttachmentId"]
-                        if (ni := network_interface).get("Attachment")
-                        else None
-                    ][0],
+                    "id": (ni := network_interface)["Attachment"]["AttachmentId"],
                     "tags": (tags := ni.get("TagSet")),
                     "name": get_name_from_tags(tags),
-                    "state": ni["Status"],
+                    "state": ni["Attachment"]["Status"],
+                    "create_date": ni["Attachment"]["AttachTime"],
+                    "type": ni["InterfaceType"],
+                    "delete_on_termination": ni["Attachment"]["DeleteOnTermination"],
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]
+                if "Attachment" in network_interface
             ], None
         except Exception as e:
             return [], e
@@ -46,7 +46,9 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
         if not resources:
             return [], None
         filtered_resources = [
-            r for r in resources if not r.get("state").startswith("detach")
+            r
+            for r in resources
+            if not (r["state"].startswith("detach") or r["delete_on_termination"])
         ]
         if self.filter_func:
             try:
