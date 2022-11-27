@@ -20,9 +20,11 @@ class EC2NetworkInterface(ResourceBase):
                     "tags": (tags := ni.get("TagSet")),
                     "name": get_name_from_tags(tags),
                     "state": ni["Status"],
+                    "type": ni["InterfaceType"],
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]
+                if "Attachment" not in network_interface
             ], None
         except Exception as e:
             return [], e
@@ -41,7 +43,7 @@ class EC2NetworkInterface(ResourceBase):
     def filter(self, resources, *filters):
         if not resources:
             return [], None
-        filtered_resources = resources
+        filtered_resources = [r for r in resources if r["state"].startswith("detach")]
         if self.filter_func:
             try:
                 filtered_resources = self.filter_func(filtered_resources)
