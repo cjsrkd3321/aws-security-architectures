@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from enum import Enum
 
 
 class ResourceBase(metaclass=ABCMeta):
@@ -21,3 +22,11 @@ class ResourceBase(metaclass=ABCMeta):
     @abstractmethod
     def properties(self):
         pass
+
+
+class StateBase(str, Enum):
+    def __repr__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
