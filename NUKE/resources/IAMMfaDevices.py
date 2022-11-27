@@ -34,7 +34,6 @@ class IAMMfaDevice(ResourceBase):
                             "id": device["SerialNumber"],
                             "name": device["SerialNumber"],
                             "user_name": user_name,
-                            # "tags": None,  # list_mfa_device_tags()
                         }
                         for device in devices["MFADevices"]
                     ]
