@@ -30,3 +30,6 @@ from .IAMRolePolicyAttachments import IAMRolePolicyAttachment
 from .IAMInstanceProfileRoles import IAMInstanceProfileRole
 from .IAMInstanceProfiles import IAMInstanceProfile
 from .IAMRoles import IAMRole
+
+from .IAMPolicyVersions import IAMPolicyVersion
+from .IAMPolicies import IAMPolicy
