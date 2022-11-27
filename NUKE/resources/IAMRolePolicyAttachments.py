@@ -49,7 +49,7 @@ class IAMRolePolicyAttachment(ResourceBase):
     def remove(self, resource):
         try:
             return (
-                self.svc.detach_user_policy(
+                self.svc.detach_role_policy(
                     RoleName=resource["role_name"], PolicyArn=resource["id"]
                 )["ResponseMetadata"]["HTTPStatusCode"]
                 == 200
