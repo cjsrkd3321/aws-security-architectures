@@ -26,5 +26,5 @@ from .IAMListUserGroupAttachments import IAMListUserGroupAttachment
 from .IAMUsers import IAMUser
 
 from .IAMRolePolicies import IAMRolePolicy
-from .IAMRolePolicyAttachments import IAMRolePolicyAttachments
+from .IAMRolePolicyAttachments import IAMRolePolicyAttachment
 from .IAMRoles import IAMRole
