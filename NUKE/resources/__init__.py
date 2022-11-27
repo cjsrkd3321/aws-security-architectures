@@ -1,8 +1,7 @@
-from typing import List
 from botocore.config import Config
 
 # resources
-resources: List = []
+resources: list = []
 
 from .EC2Instances import EC2Instance
 from .EC2NetworkInterfaceAttachmets import EC2NetworkInterfaceAttachmet
