@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from enum import Enum
+from enum import Enum, auto
 
 
 class ResourceBase(metaclass=ABCMeta):
@@ -30,3 +30,10 @@ class StateBase(str, Enum):
 
     def __str__(self):
         return self.name
+
+
+class ResourceState(StateBase):
+    New = auto()
+    Failed = auto()
+    Removed = auto()
+    Filtered = auto()
