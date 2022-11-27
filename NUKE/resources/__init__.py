@@ -15,7 +15,7 @@ from .EC2VPC import EC2VPC
 
 from .IAMLoginProfiles import IAMLoginProfile
 from .IAMUserAccessKeys import IAMUserAccessKey
-from .IAMVirtualMfaDevices import IAMVirtualMfaDevice
+from .IAMMfaDevices import IAMMfaDevice
 from .IAMUserSshKeys import IAMUserSshKey
 from .IAMSigningCertificates import IAMSigningCertificate
 from .IAMServiceSpecificCredentials import IAMServiceSpecificCredential
