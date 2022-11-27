@@ -1,77 +1,65 @@
-from pprint import pprint
-from typing import Optional, List, Callable, Dict
 from concurrent import futures
+from resources import resources
+from filters import have_tags
+from items import Item, items
 
 import time
 import boto3
-import resources
 
 
-results: Dict = {}
+MAX_WORKERS = 16
 
 
-# identifies untagged resources
-def default_filter(resources):
-    word = "tags"
-    return [r for r in resources if word not in r or not r.get(word)]
-
-
-def last_used_date_filter(resources):
-    word = "last_used_date"
-    return [r for r in resources if word in r and r.get(word) is None]
-
-
-def get_regions(ec2) -> List[Optional[str]]:
+def get_regions(ec2):
     return [region.get("RegionName") for region in ec2.describe_regions()["Regions"]]
 
 
-def work(resources: List[Callable], region):
-    try:
-        global results
-        results[region] = {}
-        for resource in resources:
-            start_time = time.time()
-            r = resource(region=region, default_filter_func=default_filter)
+def lister(resource, region):
+    global items
 
-            class_name = r.__class__.__name__
-            if class_name.startswith("IAM") and region != "us-east-1":
-                continue
+    r = resource(region, default_filter_func=have_tags)
+    name = r.__class__.__name__
 
-            results[region][class_name] = []
+    if name.startswith("IAM") and region != "us-east-1":
+        return
 
-            rs, err = r.list()
-            # print(class_name, rs, err)
-            if err:
-                print("[ERR_LIST]", class_name, err)
-                continue
+    results, err = r.list()
+    if err:
+        print("[ERR_LIST]", name, err)
 
-            filtered_resources, err = r.filter(rs)
-            # print(class_name, filtered_resources, err)
-            if err:
-                print("[ERR_FILTER]", class_name, err)
-                continue
-
-            for fr in filtered_resources:
-                res, err = r.remove(fr)
-                print(region, class_name, res, err, fr)
-                print()
-            # results[region][class_name].append(fr)
-            # print(f"{region} {class_name} Elapsed {time.time() - start_time:.2f}s")
-            # print()
-    except Exception as e:
-        print(e)
-        pass
+    for result in results:
+        item = Item(
+            resource=result,
+            region=region,
+            name=name,
+            filterer=r.filter,
+            remover=r.remove,
+        )
+        items.append(item)
 
 
 if __name__ == "__main__":
-    ec2 = boto3.client("ec2")
-    regions = get_regions(ec2)
+    try:
+        ec2 = boto3.client("ec2")
+        regions = get_regions(ec2)
 
-    pool = futures.ThreadPoolExecutor(max_workers=len(regions))
-    threads = []
-    for region in regions:
-        threads.append(pool.submit(work, resources.resources, region))
+        threads = []
 
-    futures.wait(threads)
+        pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
+        for region in regions:
+            for resource in resources:
+                threads.append(pool.submit(lister, resource, region))
+        futures.wait(threads)
 
-    # pprint(results)
+        for _ in range(60):
+            for sr in items:
+                if sr.is_skip():
+                    continue
+
+                sr.filter()
+                sr.remove()
+                print(sr.current)
+            time.sleep(1)
+    except Exception as e:
+        print(e)
+        exit(1)
