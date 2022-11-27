@@ -4,6 +4,9 @@ from . import resources, Config
 import boto3
 
 
+cache = None
+
+
 class IAMRole(ResourceBase):
     def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("iam", config=Config(region_name=region))
@@ -11,6 +14,10 @@ class IAMRole(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        global cache
+        if cache:
+            return cache, None
+
         try:
             iterator = self.svc.get_paginator("list_roles").paginate()
 
@@ -37,6 +44,7 @@ class IAMRole(ResourceBase):
                         "description": r.get("Description"),
                     }
                 )
+                cache = results
             return results, None
         except Exception as e:
             return [], e
