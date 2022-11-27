@@ -27,4 +27,5 @@ from .IAMUsers import IAMUser
 
 from .IAMRolePolicies import IAMRolePolicy
 from .IAMRolePolicyAttachments import IAMRolePolicyAttachment
+from .IAMInstanceProfileRoles import IAMInstanceProfileRole
 from .IAMRoles import IAMRole
