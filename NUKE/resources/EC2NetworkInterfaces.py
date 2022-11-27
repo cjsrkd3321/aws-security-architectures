@@ -41,8 +41,6 @@ class EC2NetworkInterface(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if resource["state"].startswith("detach") or resource["is_attached"]:
             return "default rule", None
         if self.filter_func:

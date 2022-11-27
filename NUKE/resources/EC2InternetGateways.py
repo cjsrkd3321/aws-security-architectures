@@ -39,8 +39,6 @@ class EC2InternetGateway(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if resource["is_attached"]:
             return "default rule", None
         if self.filter_func:

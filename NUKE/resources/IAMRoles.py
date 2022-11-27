@@ -63,8 +63,6 @@ class IAMRole(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if resource["path"].startswith("/aws-service-role/") or resource[
             "path"
         ].startswith("/aws-reserved/"):

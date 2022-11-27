@@ -59,8 +59,6 @@ class IAMSigningCertificate(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
