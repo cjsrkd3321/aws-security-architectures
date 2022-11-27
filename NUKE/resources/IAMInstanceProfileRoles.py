@@ -39,6 +39,7 @@ class IAMInstanceProfileRole(ResourceBase):
                             "arn": instance_profile["Arn"],
                             "create_date": instance_profile["CreateDate"],
                             "path": instance_profile["Path"],
+                            "unique_id": instance_profile["InstanceProfileId"],
                         }
                         for instance_profile in instance_profiles["InstanceProfiles"]
                         if "Roles" in instance_profile
