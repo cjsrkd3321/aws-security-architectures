@@ -67,8 +67,6 @@ class IAMPolicy(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if resource["attachment_count"] == 0:
             return "default rule", None
         if self.filter_func:

@@ -41,8 +41,6 @@ class EC2InternetGatewayAttachmet(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if (s := resource["state"]) and s.startswith("detach"):
             return "default rule", None
         if self.filter_func:

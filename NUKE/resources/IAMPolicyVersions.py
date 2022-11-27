@@ -59,8 +59,6 @@ class IAMPolicyVersion(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if not resource:
-            return "Invalid resource", None
         if resource["is_default"]:
             return "default rule", None
         if self.filter_func:
