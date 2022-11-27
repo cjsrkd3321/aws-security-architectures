@@ -60,18 +60,19 @@ class IAMServiceSpecificCredential(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, *filters):
-        if not resources:
-            return [], None
-        filtered_resources = resources
+    def filter(self, resource, *filters):
+        if not resource:
+            return "Invalid resource", None
         if self.filter_func:
             try:
-                filtered_resources = self.filter_func(filtered_resources)
+                if self.filter_func(resource):
+                    return self.filter_func.__name__, None
             except Exception as e:
-                return [], e
+                return False, e
         for filter in filters:
-            filtered_resources = filter(filtered_resources)
-        return filtered_resources, None
+            if filter(resource):
+                return filter.__name__, None
+        return False, None
 
     def properties(self):
         pass
