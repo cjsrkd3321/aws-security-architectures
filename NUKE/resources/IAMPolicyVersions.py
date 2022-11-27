@@ -17,12 +17,13 @@ class IAMPolicyVersion(ResourceBase):
             policies, err = iam_policy.list()
             if err:
                 return [], err
-            filtered_policies, err = iam_policy.filter(policies)
-            if err:
-                return [], err
 
             results = []
-            for policy in filtered_policies:
+            for policy in policies:
+                policy, err = iam_policy.filter(policy)
+                if err or policy:
+                    continue
+
                 policy_arn = policy["arn"]
                 try:
                     versions = self.svc.list_policy_versions(PolicyArn=policy_arn)

@@ -18,12 +18,13 @@ class IAMRolePolicyAttachment(ResourceBase):
             roles, err = iam_role.list()
             if err:
                 return [], err
-            filtered_roles, err = iam_role.filter(roles)
-            if err:
-                return [], err
 
             results = []
-            for role in filtered_roles:
+            for role in roles:
+                role, err = iam_role.filter(role)
+                if err or role:
+                    continue
+
                 role_name = role["id"]
                 try:
                     attached_policies = self.svc.list_attached_role_policies(
