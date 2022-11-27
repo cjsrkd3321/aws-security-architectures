@@ -16,7 +16,7 @@ class ResourceBase(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def filter(self, resources, *filters):
+    def filter(self, resource, *filters):
         pass
 
     @abstractmethod

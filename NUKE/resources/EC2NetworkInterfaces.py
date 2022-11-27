@@ -40,22 +40,21 @@ class EC2NetworkInterface(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resources, *filters):
-        if not resources:
-            return [], None
-        filtered_resources = [
-            r
-            for r in resources
-            if r["state"].startswith("detach") or not r["is_attached"]
-        ]
+    def filter(self, resource, *filters):
+        if not resource:
+            return "Invalid resource", None
+        if resource["state"].startswith("detach") or resource["is_attached"]:
+            return "default rule", None
         if self.filter_func:
             try:
-                filtered_resources = self.filter_func(filtered_resources)
+                if self.filter_func(resource):
+                    return self.filter_func.__name__, None
             except Exception as e:
-                return [], e
+                return False, e
         for filter in filters:
-            filtered_resources = filter(filtered_resources)
-        return filtered_resources, None
+            if filter(resource):
+                return filter.__name__, None
+        return False, None
 
     def properties(self):
         pass
