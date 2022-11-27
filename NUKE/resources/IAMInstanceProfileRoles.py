@@ -18,12 +18,13 @@ class IAMInstanceProfileRole(ResourceBase):
             roles, err = iam_role.list()
             if err:
                 return [], err
-            filtered_roles, err = iam_role.filter(roles)
-            if err:
-                return [], err
 
             results = []
-            for role in filtered_roles:
+            for role in roles:
+                role, err = iam_role.filter(role)
+                if err or role:
+                    continue
+
                 role_name = role["id"]
                 try:
                     instance_profiles = self.svc.list_instance_profiles_for_role(

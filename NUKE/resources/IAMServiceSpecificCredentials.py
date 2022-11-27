@@ -18,12 +18,13 @@ class IAMServiceSpecificCredential(ResourceBase):
             users, err = iam_user.list()
             if err:
                 return [], err
-            filtered_users, err = iam_user.filter(users)
-            if err:
-                return [], err
 
             results = []
-            for user in filtered_users:
+            for user in users:
+                user, err = iam_user.filter(user)
+                if err or user:
+                    continue
+
                 user_name = user["id"]
                 try:
                     creds = self.svc.list_service_specific_credentials(

@@ -19,12 +19,13 @@ class IAMListUserGroupAttachment(ResourceBase):
             users, err = iam_user.list()
             if err:
                 return [], err
-            filtered_users, err = iam_user.filter(users)
-            if err:
-                return [], err
 
             results = []
-            for user in filtered_users:
+            for user in users:
+                user, err = iam_user.filter(user)
+                if err or user:
+                    continue
+
                 user_name = user["id"]
                 try:
                     groups = self.svc.list_groups_for_user(UserName=user_name)
