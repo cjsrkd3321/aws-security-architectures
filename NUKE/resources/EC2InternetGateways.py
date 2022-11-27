@@ -19,6 +19,7 @@ class EC2InternetGateway(ResourceBase):
                     "id": igw["InternetGatewayId"],
                     "tags": (tags := igw.get("Tags", [])),
                     "name": get_name_from_tags(tags),
+                    "is_attached": True if igw["Attachments"] else False,
                 }
                 for igws in iterator
                 for igw in igws["InternetGateways"]
@@ -40,7 +41,7 @@ class EC2InternetGateway(ResourceBase):
     def filter(self, resources, *filters):
         if not resources:
             return [], None
-        filtered_resources = resources
+        filtered_resources = [r for r in resources if not r["is_attached"]]
         if self.filter_func:
             try:
                 filtered_resources = self.filter_func(filtered_resources)

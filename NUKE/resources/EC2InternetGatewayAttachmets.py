@@ -19,11 +19,12 @@ class EC2InternetGatewayAttachmet(ResourceBase):
                     "id": igw["InternetGatewayId"],
                     "tags": igw.get("Tags", []),
                     "name": get_name_from_tags(igw.get("Tags", [])),
-                    "state": a[0]["State"] if (a := igw["Attachments"]) else None,
-                    "vpc_id": a[0]["VpcId"] if a else None,
+                    "state": (a := igw["Attachments"][0])["State"],
+                    "vpc_id": a["VpcId"],
                 }
                 for igws in iterator
                 for igw in igws["InternetGateways"]
+                if igw["Attachments"]
             ], None
         except Exception as e:
             return [], e
