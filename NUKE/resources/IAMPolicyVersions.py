@@ -20,8 +20,8 @@ class IAMPolicyVersion(ResourceBase):
 
             results = []
             for policy in policies:
-                policy, err = iam_policy.filter(policy)
-                if err or policy:
+                filtered_policy, err = iam_policy.filter(policy)
+                if err or filtered_policy:
                     continue
 
                 policy_arn = policy["arn"]

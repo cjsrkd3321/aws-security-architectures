@@ -21,8 +21,8 @@ class IAMInstanceProfileRole(ResourceBase):
 
             results = []
             for role in roles:
-                role, err = iam_role.filter(role)
-                if err or role:
+                filtered_role, err = iam_role.filter(role)
+                if err or filtered_role:
                     continue
 
                 role_name = role["id"]

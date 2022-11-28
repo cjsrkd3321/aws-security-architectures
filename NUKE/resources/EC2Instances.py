@@ -24,7 +24,7 @@ class EC2Instance(ResourceBase):
                     "create_date": i["LaunchTime"],
                     "architecture": i.get("Architecture"),
                     "instance_profile": i.get("IamInstanceProfile"),
-                    "lifecycle": i["InstanceLifecycle"],
+                    "lifecycle": i.get("InstanceLifecycle"),
                     "security_groups": i.get("SecurityGroups"),
                     "cpu_core_count": i["CpuOptions"]["CoreCount"],
                     "platform": i.get("Platform"),

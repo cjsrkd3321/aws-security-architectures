@@ -20,7 +20,7 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
                     "tags": (tags := ni.get("TagSet")),
                     "name": get_name_from_tags(tags),
                     "state": ni["Attachment"]["Status"],
-                    "create_date": ni["Attachment"]["AttachTime"],
+                    "create_date": ni["Attachment"].get("AttachTime"),
                     "delete_on_termination": ni["Attachment"]["DeleteOnTermination"],
                 }
                 for network_interfaces in iterator
