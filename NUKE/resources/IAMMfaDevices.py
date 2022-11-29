@@ -15,7 +15,7 @@ class IAMMfaDevice(ResourceBase):
     def list(self):
         try:
             iam_user = IAMUser(default_filter_func=self.filter_func)
-            users, err = iam_user.list()
+            users, err = iam_user.list(has_cache=True)
             if err:
                 return [], err
 
@@ -62,7 +62,7 @@ class IAMMfaDevice(ResourceBase):
 
     def filter(self, resource, *filters):
         if resource["id"].endswith("/root-account-mfa-device"):
-            return "default rule", None
+            return "DEFAULT(IMPOSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

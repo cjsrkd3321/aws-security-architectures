@@ -13,9 +13,9 @@ class IAMRole(ResourceBase):
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self):
+    def list(self, has_cache=False):
         global cache
-        if cache:
+        if cache and has_cache:
             return cache, None
 
         try:
@@ -44,7 +44,7 @@ class IAMRole(ResourceBase):
                         "description": r.get("Description"),
                     }
                 )
-                cache = results
+                cache = results if has_cache else None
             return results, None
         except Exception as e:
             return [], e
@@ -63,10 +63,10 @@ class IAMRole(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if resource["path"].startswith("/aws-service-role/") or resource[
-            "path"
-        ].startswith("/aws-reserved/"):
-            return "default rule", None
+        if (rp := resource["path"]).startswith("/aws-service-role/") or rp.startswith(
+            "/aws-reserved/"
+        ):
+            return "DEFAULT(IMPOSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

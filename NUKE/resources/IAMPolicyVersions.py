@@ -14,7 +14,7 @@ class IAMPolicyVersion(ResourceBase):
     def list(self):
         try:
             iam_policy = IAMPolicy(default_filter_func=self.filter_func)
-            policies, err = iam_policy.list()
+            policies, err = iam_policy.list(has_cache=True)
             if err:
                 return [], err
 
@@ -60,7 +60,7 @@ class IAMPolicyVersion(ResourceBase):
 
     def filter(self, resource, *filters):
         if resource["is_default"]:
-            return "default rule", None
+            return "DEFAULT(IMPOSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

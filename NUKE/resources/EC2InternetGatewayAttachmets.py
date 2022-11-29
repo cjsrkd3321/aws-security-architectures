@@ -42,7 +42,7 @@ class EC2InternetGatewayAttachmet(ResourceBase):
 
     def filter(self, resource, *filters):
         if (s := resource["state"]) and s.startswith("detach"):
-            return "default rule", None
+            return "DEFAULT(IMPOSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

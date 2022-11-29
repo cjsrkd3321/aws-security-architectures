@@ -16,7 +16,7 @@ class IAMListUserGroupAttachment(ResourceBase):
     def list(self):
         try:
             iam_user = IAMUser(default_filter_func=self.filter_func)
-            users, err = iam_user.list()
+            users, err = iam_user.list(has_cache=True)
             if err:
                 return [], err
 
