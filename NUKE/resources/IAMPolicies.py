@@ -13,9 +13,9 @@ class IAMPolicy(ResourceBase):
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self):
+    def list(self, has_cache=False):
         global cache
-        if cache:
+        if cache and has_cache:
             return cache, None
 
         try:
@@ -48,7 +48,7 @@ class IAMPolicy(ResourceBase):
                         "is_attachable": p["IsAttachable"],
                     }
                 )
-                cache = results
+                cache = results if has_cache else None
             return results, None
         except Exception as e:
             return [], e
