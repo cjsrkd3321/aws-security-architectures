@@ -8,6 +8,8 @@ import boto3
 
 
 MAX_WORKERS = 16
+MAX_ITER_COUNTS = 3
+MAX_SLEEP = 5
 
 
 def get_regions(ec2):
@@ -39,10 +41,10 @@ def lister(resource, region):
 
 
 if __name__ == "__main__":
-    try:
-        ec2 = boto3.client("ec2")
-        regions = get_regions(ec2)
+    ec2 = boto3.client("ec2")
+    regions = get_regions(ec2)
 
+    for _ in range(MAX_ITER_COUNTS):
         threads = []
 
         pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
@@ -51,15 +53,19 @@ if __name__ == "__main__":
                 threads.append(pool.submit(lister, resource, region))
         futures.wait(threads)
 
-        for _ in range(60):
-            for sr in items:
-                if sr.is_skip():
-                    continue
+        for item in items:
+            item.filter()
 
-                sr.filter()
-                sr.remove()
-                print(sr.current)
-            time.sleep(1)
-    except Exception as e:
-        print(e)
-        exit(1)
+            if item.is_skip():
+                print(item.current)
+                continue
+            else:
+                print(item.current)
+
+            # item.remove()
+            # print(item.current)
+
+        items.clear()
+
+        print(f"\nWaiting {MAX_SLEEP} seconds...\n")
+        time.sleep(MAX_SLEEP)
