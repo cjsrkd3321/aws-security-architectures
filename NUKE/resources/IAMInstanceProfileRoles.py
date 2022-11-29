@@ -15,7 +15,7 @@ class IAMInstanceProfileRole(ResourceBase):
     def list(self):
         try:
             iam_role = IAMRole(default_filter_func=self.filter_func)
-            roles, err = iam_role.list()
+            roles, err = iam_role.list(has_cache=True)
             if err:
                 return [], err
 
