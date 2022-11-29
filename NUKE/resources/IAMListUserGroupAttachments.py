@@ -22,8 +22,8 @@ class IAMListUserGroupAttachment(ResourceBase):
 
             results = []
             for user in users:
-                user, err = iam_user.filter(user)
-                if err or user:
+                reason, err = iam_user.filter(user)
+                if err or reason:
                     continue
 
                 user_name = user["id"]
