@@ -20,8 +20,6 @@ class Item:
 
     def remove(self):
         is_removed, err = self.__remover(self.__item["resource"])
-        if err:
-            print(f"{self.__item['type']} | {err}")
         self.__item["state"] = rs.Removed if is_removed else rs.Failed
         self.__item["reason"] = None if is_removed else err
 
