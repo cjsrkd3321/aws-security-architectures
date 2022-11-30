@@ -32,3 +32,5 @@ from .IAMRoles import IAMRole
 
 from .IAMPolicyVersions import IAMPolicyVersion
 from .IAMPolicies import IAMPolicy
+
+from .IAMGroups import IAMGroup
