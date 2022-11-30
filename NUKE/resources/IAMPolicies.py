@@ -48,7 +48,7 @@ class IAMPolicy(ResourceBase):
                         "is_attachable": p["IsAttachable"],
                     }
                 )
-                cache = results if has_cache else None
+            cache = results if has_cache else None
             return results, None
         except Exception as e:
             return [], e
@@ -67,8 +67,6 @@ class IAMPolicy(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if resource["attachment_count"] != 0:
-            return "DEFAULT(POSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

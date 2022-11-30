@@ -44,7 +44,7 @@ class IAMUser(ResourceBase):
                         "permissions_boundary": user.get("PermissionsBoundary"),
                     }
                 )
-                cache = results if has_cache else None
+            cache = results if has_cache else None
             return results, None
         except Exception as e:
             return [], e

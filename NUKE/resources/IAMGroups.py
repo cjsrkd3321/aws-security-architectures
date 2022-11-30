@@ -36,7 +36,7 @@ class IAMGroup(ResourceBase):
                         "create_date": group["CreateDate"],
                     }
                 )
-                cache = results if has_cache else None
+            cache = results if has_cache else None
             return results, None
         except Exception as e:
             return [], e

@@ -25,6 +25,7 @@ class EC2SecurityGroup(ResourceBase):
                 }
                 for security_groups in iterator
                 for security_group in security_groups["SecurityGroups"]
+                if security_group["GroupName"] != "default"
             ], None
         except Exception as e:
             return [], e
@@ -51,8 +52,6 @@ class EC2SecurityGroup(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if resource["name"] == "default":
-            return "DEFAULT(IMPOSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

@@ -42,8 +42,8 @@ class EC2NetworkInterfaceAttachmet(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if resource["state"].startswith("detach") or resource["delete_on_termination"]:
-            return "DEFAULT(IMPOSSIBLE)", None
+        if resource["delete_on_termination"]:
+            return "DEFAULT(INSTANCE DEPENDENCY)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
