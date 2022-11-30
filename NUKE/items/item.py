@@ -34,4 +34,4 @@ class Item:
 
     @property
     def current(self):
-        return f"{self.__item['region']} - {self.__item['type']} - {self.__item['resource']['id']} | {self.__item['state']} - {self.__item['reason']}"
+        return f"{self.__item['region']} - {self.__item['type']} - {self.__item['resource']['id']} - {self.__item['resource']['name']} | {self.__item['state']} - {self.__item['reason']}"
