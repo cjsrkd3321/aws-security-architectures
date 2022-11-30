@@ -13,6 +13,7 @@ from .EC2InternetGateways import EC2InternetGateway
 from .EC2Subnets import EC2Subnet
 from .EC2VPC import EC2VPC
 
+from .IAMUserPermissionsBoundaries import IAMUserPermissionsBoundary
 from .IAMLoginProfiles import IAMLoginProfile
 from .IAMUserAccessKeys import IAMUserAccessKey
 from .IAMMfaDevices import IAMMfaDevice
