@@ -51,7 +51,7 @@ class EC2Instance(ResourceBase):
 
     def filter(self, resource, *filters):
         if resource["state"] in ["shutting-down", "terminated"]:
-            return "DEFAULT(IMPOSSIBLE)", None
+            return f"DEFAULT(IMPOSSIBLE: {resource['state']})", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

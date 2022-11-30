@@ -4,7 +4,7 @@ from . import resources, Config
 import boto3
 
 
-cache = None
+cache: dict = {}
 
 
 class IAMRole(ResourceBase):
@@ -12,11 +12,12 @@ class IAMRole(ResourceBase):
         self.svc = boto3.client("iam", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
+        self.region = region
 
     def list(self, has_cache=False):
         global cache
-        if cache and has_cache:
-            return cache, None
+        if cache.get(self.region) and has_cache:
+            return cache[self.region], None
 
         results = []
         try:
@@ -44,7 +45,7 @@ class IAMRole(ResourceBase):
                         "description": r.get("Description"),
                     }
                 )
-            cache = results if has_cache else None
+            cache[self.region] = results if has_cache else None
             return results, None
         except Exception as e:
             return results, e

@@ -11,11 +11,12 @@ class IAMInstanceProfileRole(ResourceBase):
         self.svc = boto3.client("iam", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
+        self.region = region
 
     def list(self):
         results = []
         try:
-            iam_role = IAMRole(default_filter_func=self.filter_func)
+            iam_role = IAMRole(region=self.region, default_filter_func=self.filter_func)
             roles, err = iam_role.list(has_cache=True)
             if err:
                 return results, err
