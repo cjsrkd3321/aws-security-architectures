@@ -2,6 +2,8 @@ from ._base import ResourceBase
 from ._utils import get_name_from_tags
 from . import resources, Config
 
+from .EC2VPC import EC2VPC
+
 import boto3
 
 
@@ -12,22 +14,43 @@ class EC2InternetGatewayAttachmet(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
-            iterator = self.svc.get_paginator("describe_internet_gateways").paginate()
-            return [
-                {
-                    "id": igw["InternetGatewayId"],
-                    "tags": igw.get("Tags", []),
-                    "name": get_name_from_tags(igw.get("Tags", [])),
-                    "state": (a := igw["Attachments"][0])["State"],
-                    "vpc_id": a["VpcId"],
-                }
-                for igws in iterator
-                for igw in igws["InternetGateways"]
-                if igw["Attachments"]
-            ], None
+            ec2_vpc = EC2VPC(default_filter_func=self.filter_func)
+            vpcs, err = ec2_vpc.list(has_cache=True)
+            if err:
+                return results, err
+
+            for vpc in vpcs:
+                reason, err = ec2_vpc.filter(vpc)
+                if err or reason:
+                    continue
+
+                vpc_id = vpc["id"]
+                igws = self.svc.describe_internet_gateways(
+                    Filters=[
+                        {
+                            "Name": "attachment.vpc-id",
+                            "Values": [vpc_id],
+                        }
+                    ]
+                )
+                if not igws:
+                    return results, None
+
+                results += [
+                    {
+                        "id": igw["InternetGatewayId"],
+                        "name": get_name_from_tags(igw.get("Tags", [])),
+                        "state": igw["Attachments"][0]["State"],
+                        "vpc_id": vpc_id,
+                    }
+                    for igw in igws["InternetGateways"]
+                    if igw.get("Attachments")
+                ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:
@@ -41,8 +64,6 @@ class EC2InternetGatewayAttachmet(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if (s := resource["state"]) and s.startswith("detach"):
-            return "DEFAULT(IMPOSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

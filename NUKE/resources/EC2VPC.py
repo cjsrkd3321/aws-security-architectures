@@ -4,6 +4,8 @@ from . import resources, Config
 
 import boto3
 
+cache = None
+
 
 class EC2VPC(ResourceBase):
     def __init__(self, region="ap-northeast-2", default_filter_func=None):
@@ -11,22 +13,31 @@ class EC2VPC(ResourceBase):
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self):
+    def list(self, has_cache=False):
+        global cache
+        if cache and has_cache:
+            return cache, None
+
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_vpcs").paginate()
-            return [
-                {
-                    "id": vpc["VpcId"],
-                    "tags": (tags := vpc.get("Tags", [])),
-                    "name": get_name_from_tags(tags),
-                    "is_default": vpc["IsDefault"],
-                    "state": vpc["State"],
-                }
-                for vpcs in iterator
-                for vpc in vpcs["Vpcs"]
-            ], None
+            vpcs = [vpc for vpcs in iterator for vpc in vpcs["Vpcs"]]
+
+            for vpc in vpcs:
+                results.append(
+                    {
+                        "id": vpc["VpcId"],
+                        "tags": (tags := vpc.get("Tags", [])),
+                        "name": get_name_from_tags(tags),
+                        "is_default": vpc["IsDefault"],
+                        "state": vpc["State"],
+                    }
+                )
+            cache = results if has_cache else None
         except Exception as e:
-            return [], e
+            return results, e
+
+        return results, None
 
     def remove(self, resource):
         try:

@@ -60,8 +60,6 @@ class IAMInstanceProfile(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if resource["have_roles"]:
-            return "DEFAULT(POSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

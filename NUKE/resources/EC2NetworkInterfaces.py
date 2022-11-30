@@ -41,8 +41,6 @@ class EC2NetworkInterface(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if resource["state"].startswith("attach") or resource["is_attached"]:
-            return "DEFAULT(POSSIBLE)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

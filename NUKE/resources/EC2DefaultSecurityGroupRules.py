@@ -27,10 +27,10 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
             return [
                 {
                     "id": (sgr := security_group_rule)["SecurityGroupRuleId"],
-                    "name": sgr["SecurityGroupRuleId"],
+                    "name": "default",
                     "group_id": sgr["GroupId"],
                     "is_egress": sgr["IsEgress"],
-                    "description": sgr["Description"],
+                    "description": sgr.get("Description"),
                     "unique_id": sgr["SecurityGroupRuleId"],
                 }
                 for security_group_rules in iterator
@@ -55,15 +55,6 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
-        if self.filter_func:
-            try:
-                if self.filter_func(resource):
-                    return self.filter_func.__name__, None
-            except Exception as e:
-                return False, e
-        for filter in filters:
-            if filter(resource):
-                return filter.__name__, None
         return False, None
 
     def properties(self):
