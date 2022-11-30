@@ -41,6 +41,7 @@ class IAMUser(ResourceBase):
                         "unique_id": user["UserId"],
                         "path": user["Path"],
                         "arn": user["Arn"],
+                        "permissions_boundary": user.get("PermissionsBoundary"),
                     }
                 )
                 cache = results if has_cache else None
