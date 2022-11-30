@@ -20,6 +20,8 @@ class EC2SecurityGroup(ResourceBase):
                     "tags": sg.get("Tags", []),
                     "description": sg.get("Description"),
                     "vpc_id": sg.get("VpcId"),
+                    "ingress": sg["IpPermissions"],
+                    "egress": sg["IpPermissionsEgress"],
                 }
                 for security_groups in iterator
                 for security_group in security_groups["SecurityGroups"]
@@ -29,6 +31,16 @@ class EC2SecurityGroup(ResourceBase):
 
     def remove(self, resource):
         try:
+            if not (
+                self.svc.revoke_security_group_ingress(
+                    GroupId=resource["id"], IpPermissions=resource["ingress"]
+                )["Return"]
+                and self.svc.revoke_security_group_egress(
+                    GroupId=resource["id"], IpPermissions=resource["egress"]
+                )["Return"]
+            ):
+                raise (f"{resource['id']} have(has) invincible rules.")
+
             return (
                 self.svc.delete_security_group(GroupId=resource["id"])[
                     "ResponseMetadata"
