@@ -3,6 +3,7 @@ from botocore.config import Config
 # resources
 resources: list = []
 
+from .EC2DefaultSecurityGroupRules import EC2DefaultSecurityGroupRule
 from .EC2Instances import EC2Instance
 from .EC2NetworkInterfaceAttachmets import EC2NetworkInterfaceAttachmet
 from .EC2NetworkInterfaces import EC2NetworkInterface
