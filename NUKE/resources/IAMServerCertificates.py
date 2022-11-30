@@ -11,10 +11,9 @@ class IAMServerCertificate(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("list_server_certificates").paginate()
-
-            results = []
             certs = [
                 cert
                 for certs in iterator
@@ -44,7 +43,7 @@ class IAMServerCertificate(ResourceBase):
                 )
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

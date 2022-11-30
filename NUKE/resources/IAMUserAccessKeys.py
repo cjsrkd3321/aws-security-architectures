@@ -13,13 +13,13 @@ class IAMUserAccessKey(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iam_user = IAMUser(default_filter_func=self.filter_func)
             users, err = iam_user.list(has_cache=True)
             if err:
-                return [], err
+                return results, err
 
-            results = []
             for user in users:
                 reason, err = iam_user.filter(user)
                 if err or reason:
@@ -29,9 +29,8 @@ class IAMUserAccessKey(ResourceBase):
                 try:
                     access_keys = self.svc.list_access_keys(UserName=user_name)
                     if not access_keys:
-                        return [], None
+                        return results, None
 
-                    results = []
                     for access_key in access_keys["AccessKeyMetadata"]:
                         try:
                             k = self.svc.get_access_key_last_used(
@@ -54,7 +53,7 @@ class IAMUserAccessKey(ResourceBase):
                     continue
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

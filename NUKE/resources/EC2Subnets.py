@@ -12,9 +12,10 @@ class EC2Subnet(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_subnets").paginate()
-            return [
+            results += [
                 {
                     "id": subnet["SubnetId"],
                     "tags": (tags := subnet.get("Tags", [])),
@@ -24,9 +25,10 @@ class EC2Subnet(ResourceBase):
                 }
                 for subnets in iterator
                 for subnet in subnets["Subnets"]
-            ], None
+            ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

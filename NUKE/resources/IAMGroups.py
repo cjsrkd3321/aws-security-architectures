@@ -18,11 +18,11 @@ class IAMGroup(ResourceBase):
         if cache and has_cache:
             return cache, None
 
+        results = []
         try:
-            iterator = self.svc.get_paginator("list_groups").paginate(Scope="Local")
-
-            results = []
+            iterator = self.svc.get_paginator("list_groups").paginate()
             groups = [group for groups in iterator for group in groups["Groups"]]
+
             for group in groups:
                 group_name = group["GroupName"]
 
@@ -39,7 +39,7 @@ class IAMGroup(ResourceBase):
             cache = results if has_cache else None
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

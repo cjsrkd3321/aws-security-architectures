@@ -18,10 +18,10 @@ class IAMRole(ResourceBase):
         if cache and has_cache:
             return cache, None
 
+        results = []
         try:
             iterator = self.svc.get_paginator("list_roles").paginate()
 
-            results = []
             roles = [role for roles in iterator for role in roles["Roles"]]
             for role in roles:
                 role_name = role["RoleName"]
@@ -47,7 +47,7 @@ class IAMRole(ResourceBase):
             cache = results if has_cache else None
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

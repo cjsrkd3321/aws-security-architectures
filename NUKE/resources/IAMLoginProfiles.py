@@ -11,10 +11,9 @@ class IAMLoginProfile(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("list_users").paginate()
-
-            results = []
             users = [user for users in iterator for user in users["Users"]]
             for user in users:
                 user_name = user["UserName"]
@@ -34,7 +33,7 @@ class IAMLoginProfile(ResourceBase):
                 )
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:
