@@ -12,9 +12,10 @@ class EC2Instance(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_instances").paginate()
-            return [
+            results += [
                 {
                     "id": (i := instance)["InstanceId"],
                     "tags": (tags := i.get("Tags", [])),
@@ -32,9 +33,10 @@ class EC2Instance(ResourceBase):
                 for instances in iterator
                 for reservations in instances["Reservations"]
                 for instance in reservations["Instances"]
-            ], None
+            ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

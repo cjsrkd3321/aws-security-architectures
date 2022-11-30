@@ -13,13 +13,13 @@ class IAMSigningCertificate(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iam_user = IAMUser(default_filter_func=self.filter_func)
             users, err = iam_user.list(has_cache=True)
             if err:
-                return [], err
+                return results, err
 
-            results = []
             for user in users:
                 reason, err = iam_user.filter(user)
                 if err or reason:
@@ -29,7 +29,7 @@ class IAMSigningCertificate(ResourceBase):
                 try:
                     certs = self.svc.list_signing_certificates(UserName=user_name)
                     if not certs:
-                        return [], None
+                        return results, None
                     results += [
                         {
                             "id": cert["CertificateId"],
@@ -44,7 +44,7 @@ class IAMSigningCertificate(ResourceBase):
                     continue
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

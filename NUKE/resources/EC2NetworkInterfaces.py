@@ -12,9 +12,10 @@ class EC2NetworkInterface(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_network_interfaces").paginate()
-            return [
+            results += [
                 {
                     "id": (ni := network_interface)["NetworkInterfaceId"],
                     "tags": (tags := ni.get("TagSet")),
@@ -25,9 +26,10 @@ class EC2NetworkInterface(ResourceBase):
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]
-            ], None
+            ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

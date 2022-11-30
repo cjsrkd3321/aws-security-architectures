@@ -34,10 +34,9 @@ class EC2VPC(ResourceBase):
                     }
                 )
             cache = results if has_cache else None
+            return results, None
         except Exception as e:
             return results, e
-
-        return results, None
 
     def remove(self, resource):
         try:

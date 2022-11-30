@@ -13,13 +13,13 @@ class IAMUserPermissionsBoundary(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iam_user = IAMUser(default_filter_func=self.filter_func)
             users, err = iam_user.list(has_cache=True)
             if err:
-                return [], err
+                return results, err
 
-            results = []
             for user in users:
                 reason, err = iam_user.filter(user)
                 if err or reason:
@@ -41,7 +41,7 @@ class IAMUserPermissionsBoundary(ResourceBase):
                 )
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

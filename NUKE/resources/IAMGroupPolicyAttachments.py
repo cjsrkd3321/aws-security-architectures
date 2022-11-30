@@ -15,13 +15,13 @@ class IAMGroupPolicyAttachment(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iam_group = IAMGroup(default_filter_func=self.filter_func)
             groups, err = iam_group.list(has_cache=True)
             if err:
-                return [], err
+                return results, err
 
-            results = []
             for group in groups:
                 reason, err = iam_group.filter(group)
                 if err or reason:
@@ -33,7 +33,7 @@ class IAMGroupPolicyAttachment(ResourceBase):
                         GroupName=group_name
                     )
                     if not attached_policies:
-                        return [], None
+                        return results, None
                     results += [
                         {
                             "id": policy["PolicyArn"],
@@ -47,7 +47,7 @@ class IAMGroupPolicyAttachment(ResourceBase):
                     continue
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

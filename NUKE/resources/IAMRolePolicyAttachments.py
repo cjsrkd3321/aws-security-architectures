@@ -13,13 +13,13 @@ class IAMRolePolicyAttachment(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iam_role = IAMRole(default_filter_func=self.filter_func)
             roles, err = iam_role.list(has_cache=True)
             if err:
-                return [], err
+                return results, err
 
-            results = []
             for role in roles:
                 reason, err = iam_role.filter(role)
                 if err or reason:
@@ -31,7 +31,7 @@ class IAMRolePolicyAttachment(ResourceBase):
                         RoleName=role_name
                     )
                     if not attached_policies:
-                        return [], None
+                        return results, None
                     results += [
                         {
                             "id": policy["PolicyArn"],
@@ -45,7 +45,7 @@ class IAMRolePolicyAttachment(ResourceBase):
                     continue
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

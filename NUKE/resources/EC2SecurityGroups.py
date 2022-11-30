@@ -11,9 +11,10 @@ class EC2SecurityGroup(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_security_groups").paginate()
-            return [
+            results += [
                 {
                     "id": (sg := security_group)["GroupId"],
                     "name": sg["GroupName"],
@@ -26,9 +27,10 @@ class EC2SecurityGroup(ResourceBase):
                 for security_groups in iterator
                 for security_group in security_groups["SecurityGroups"]
                 if security_group["GroupName"] != "default"
-            ], None
+            ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

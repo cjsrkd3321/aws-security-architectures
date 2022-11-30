@@ -12,13 +12,13 @@ class IAMPolicyVersion(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iam_policy = IAMPolicy(default_filter_func=self.filter_func)
             policies, err = iam_policy.list(has_cache=True)
             if err:
-                return [], err
+                return results, err
 
-            results = []
             for policy in policies:
                 filtered_policy, err = iam_policy.filter(policy)
                 if err or filtered_policy:
@@ -28,7 +28,7 @@ class IAMPolicyVersion(ResourceBase):
                 try:
                     versions = self.svc.list_policy_versions(PolicyArn=policy_arn)
                     if not versions:
-                        return [], None
+                        return results, None
                     results += [
                         {
                             "id": version["VersionId"],
@@ -43,7 +43,7 @@ class IAMPolicyVersion(ResourceBase):
                     continue
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

@@ -12,9 +12,10 @@ class EC2InternetGateway(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_internet_gateways").paginate()
-            return [
+            results += [
                 {
                     "id": igw["InternetGatewayId"],
                     "tags": (tags := igw.get("Tags", [])),
@@ -23,9 +24,10 @@ class EC2InternetGateway(ResourceBase):
                 }
                 for igws in iterator
                 for igw in igws["InternetGateways"]
-            ], None
+            ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

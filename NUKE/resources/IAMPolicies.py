@@ -18,10 +18,9 @@ class IAMPolicy(ResourceBase):
         if cache and has_cache:
             return cache, None
 
+        results = []
         try:
             iterator = self.svc.get_paginator("list_policies").paginate(Scope="Local")
-
-            results = []
             policies = [
                 policy for policies in iterator for policy in policies["Policies"]
             ]
@@ -51,7 +50,7 @@ class IAMPolicy(ResourceBase):
             cache = results if has_cache else None
             return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         try:

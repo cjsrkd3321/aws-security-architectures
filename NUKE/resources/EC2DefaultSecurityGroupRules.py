@@ -11,6 +11,7 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        results = []
         try:
             iterator = self.svc.get_paginator("describe_security_groups").paginate(
                 Filters=[{"Name": "group-name", "Values": ["default"]}]
@@ -24,7 +25,7 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
             iterator = self.svc.get_paginator("describe_security_group_rules").paginate(
                 Filters=[{"Name": "group-id", "Values": group_ids}]
             )
-            return [
+            results += [
                 {
                     "id": (sgr := security_group_rule)["SecurityGroupRuleId"],
                     "name": "default",
@@ -35,9 +36,10 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
                 }
                 for security_group_rules in iterator
                 for security_group_rule in security_group_rules["SecurityGroupRules"]
-            ], None
+            ]
+            return results, None
         except Exception as e:
-            return [], e
+            return results, e
 
     def remove(self, resource):
         res = False
@@ -54,7 +56,7 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, _, *__):
         return False, None
 
     def properties(self):
