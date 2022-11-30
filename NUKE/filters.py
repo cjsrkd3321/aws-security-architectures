@@ -9,4 +9,6 @@ def have_tags(resource):
 
 
 def have_no_nuke_project_tag(resource):
+    if "tags" not in resource:
+        return False
     return not get_value_from_tags(resource.get("tags"), "Project", "nuke")

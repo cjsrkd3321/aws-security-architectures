@@ -5,19 +5,19 @@ from .IAMGroups import IAMGroup
 import boto3
 
 
-cache = None
-
-
 class IAMGroupPolicyAttachment(ResourceBase):
     def __init__(self, region="ap-northeast-2", default_filter_func=None):
         self.svc = boto3.client("iam", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
+        self.region = region
 
     def list(self):
         results = []
         try:
-            iam_group = IAMGroup(default_filter_func=self.filter_func)
+            iam_group = IAMGroup(
+                region=self.region, default_filter_func=self.filter_func
+            )
             groups, err = iam_group.list(has_cache=True)
             if err:
                 return results, err

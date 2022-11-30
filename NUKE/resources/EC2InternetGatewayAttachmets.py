@@ -12,11 +12,12 @@ class EC2InternetGatewayAttachmet(ResourceBase):
         self.svc = boto3.client("ec2", config=Config(region_name=region))
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
+        self.region = region
 
     def list(self):
         results = []
         try:
-            ec2_vpc = EC2VPC(default_filter_func=self.filter_func)
+            ec2_vpc = EC2VPC(region=self.region, default_filter_func=self.filter_func)
             vpcs, err = ec2_vpc.list(has_cache=True)
             if err:
                 return results, err
