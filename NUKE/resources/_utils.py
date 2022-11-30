@@ -11,6 +11,15 @@ def get_name_from_tags(tags):
     return None
 
 
+def get_value_from_tags(tags, key, value):
+    if not tags:
+        return False
+    for tag in tags:
+        if tag.get("Key") == key:
+            return tag.get("Value") == value
+    return False
+
+
 def timeit(func):
     @wraps(func)
     def timeit_wrapper(*args, **kwargs):
