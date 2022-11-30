@@ -33,4 +33,5 @@ from .IAMRoles import IAMRole
 from .IAMPolicyVersions import IAMPolicyVersion
 from .IAMPolicies import IAMPolicy
 
+from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
