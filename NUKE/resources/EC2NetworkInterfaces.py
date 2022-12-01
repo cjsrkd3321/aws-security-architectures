@@ -22,7 +22,7 @@ class EC2NetworkInterface(ResourceBase):
                     "name": get_name_from_tags(tags),
                     "state": ni["Status"],
                     "type": ni["InterfaceType"],
-                    "is_attached": True if "Attachment" in ni else False,
+                    "attachment": ni.get("Attachment", {}),
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]
@@ -33,6 +33,10 @@ class EC2NetworkInterface(ResourceBase):
 
     def remove(self, resource):
         try:
+            if resource["attachment"]:
+                self.svc.detach_network_interface(
+                    AttachmentId=resource["id"], Force=True
+                )
             return (
                 self.svc.delete_network_interface(NetworkInterfaceId=resource["id"])[
                     "ResponseMetadata"
@@ -43,6 +47,8 @@ class EC2NetworkInterface(ResourceBase):
             return False, e
 
     def filter(self, resource, *filters):
+        if resource["attachment"].get("DeleteOnTermination"):
+            return "DEFAULT(INSTANCE DEPENDENCY)", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
