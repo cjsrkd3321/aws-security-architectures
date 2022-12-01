@@ -52,3 +52,12 @@ resource "aws_security_group" "this" {
     ipv6_cidr_blocks = ["::/0"]
   }
 }
+
+resource "aws_eip" "this" {
+  vpc = true
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id       = aws_vpc.this.id
+  service_name = "com.amazonaws.ap-southeast-1.s3"
+}
