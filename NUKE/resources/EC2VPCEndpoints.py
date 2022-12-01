@@ -2,7 +2,6 @@ from ._base import ResourceBase
 from ._utils import get_name_from_tags
 from . import resources, Config
 
-from .EC2VPC import EC2VPC
 
 import boto3
 
@@ -26,9 +25,10 @@ class EC2VPCEndpoint(ResourceBase):
                         "type": vpce["VpcEndpointType"],
                         "vpc_id": vpce["VpcId"],
                         "state": vpce["State"],
-                        "name": vpce["ServiceName"],
-                        "tags": vpce.get("Tags", []),
+                        "tags": (tags := vpce.get("Tags", [])),
+                        "name": get_name_from_tags(tags),
                         "create_date": vpce["CreationTimestamp"],
+                        "service_name": vpce["ServiceName"],
                     }
                 )
             return results, None
