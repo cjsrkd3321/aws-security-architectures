@@ -5,7 +5,6 @@ resources: list = []
 
 from .EC2DefaultSecurityGroupRules import EC2DefaultSecurityGroupRule
 from .EC2Instances import EC2Instance
-from .EC2NetworkInterfaceAttachmets import EC2NetworkInterfaceAttachmet
 from .EC2NetworkInterfaces import EC2NetworkInterface
 from .EC2SecurityGroups import EC2SecurityGroup
 from .EC2InternetGatewayAttachmets import EC2InternetGatewayAttachmet
