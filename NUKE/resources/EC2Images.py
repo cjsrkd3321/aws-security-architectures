@@ -35,7 +35,7 @@ class EC2Image(ResourceBase):
     def remove(self, resource):
         try:
             return (
-                self.svc.deregister_image(ImageId=[resource["id"]])["ResponseMetadata"][
+                self.svc.deregister_image(ImageId=resource["id"])["ResponseMetadata"][
                     "HTTPStatusCode"
                 ]
                 == 200
