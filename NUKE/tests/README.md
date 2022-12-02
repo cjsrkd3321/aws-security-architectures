@@ -18,7 +18,7 @@
 - [x] IAMUserPermissionsBoundaries
 - [x] IAMLoginProfiles
 - [x] IAMUserAccessKeys
-- [-] IAMMfaDevices # If you wanna test this function then, You will set it manually.
+- [ ] IAMMfaDevices # If you wanna test this function then, You will set it manually.
 - [x] IAMUserSshKeys
 - [x] IAMSigningCertificates
 - [x] IAMServiceSpecificCredentials
