@@ -49,8 +49,8 @@ class IAMGroupPolicy(ResourceBase):
     def remove(self, resource):
         try:
             return (
-                self.svc.detach_group_policy(
-                    GroupName=resource["id"], PolicyArn=resource["group_name"]
+                self.svc.delete_group_policy(
+                    PolicyName=resource["id"], GroupName=resource["group_name"]
                 )["ResponseMetadata"]["HTTPStatusCode"]
                 == 200
             ), None
