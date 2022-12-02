@@ -1,5 +1,6 @@
 # TEST LIST
 
+## EC2
 - [x] EC2KeyPairs
 - [x] EC2Images
 - [x] EC2EIP
@@ -13,28 +14,29 @@
 - [x] EC2Subnets
 - [x] EC2VPC
 
-- [ ] IAMUserPermissionsBoundaries
-- [ ] IAMLoginProfiles
-- [ ] IAMUserAccessKeys
-- [ ] IAMMfaDevices
-- [ ] IAMUserSshKeys
-- [ ] IAMSigningCertificates
-- [ ] IAMServiceSpecificCredentials
-- [ ] IAMServerCertificates
-- [ ] IAMUserPolicyAttachments
-- [ ] IAMUserPolicies
-- [ ] IAMListUserGroupAttachments
-- [ ] IAMUsers
+## IAM
+- [x] IAMUserPermissionsBoundaries
+- [x] IAMLoginProfiles
+- [x] IAMUserAccessKeys
+- [-] IAMMfaDevices # If you wanna test this function then, You will set it manually.
+- [x] IAMUserSshKeys
+- [x] IAMSigningCertificates
+- [x] IAMServiceSpecificCredentials
+- [x] IAMServerCertificates
+- [x] IAMUserPolicyAttachments
+- [x] IAMUserPolicies
+- [x] IAMListUserGroupAttachments
+- [x] IAMUsers
 
-- [ ] IAMRolePolicies
-- [ ] IAMRolePolicyAttachments
-- [ ] IAMInstanceProfileRoles
-- [ ] IAMInstanceProfiles
-- [ ] IAMRoles
+- [x] IAMRolePolicies
+- [x] IAMRolePolicyAttachments
+- [x] IAMInstanceProfileRoles
+- [x] IAMInstanceProfiles
+- [x] IAMRoles
 
-- [ ] IAMPolicyVersions
-- [ ] IAMPolicies
+- [x] IAMPolicyVersions # If you wanna test this function then, You have to deploy it twice.
+- [x] IAMPolicies
 
-- [ ] IAMGroupPolicyAttachments
-- [ ] IAMGroupPolicies
-- [ ] IAMGroups
+- [x] IAMGroupPolicyAttachments
+- [x] IAMGroupPolicies
+- [x] IAMGroups
