@@ -23,9 +23,9 @@ class IAMServerCertificate(ResourceBase):
                 cert_name = cert["ServerCertificateName"]
 
                 try:
-                    c = self.svc.get_server_certificate(RoleName=cert_name)[
-                        "ServerCertificate"
-                    ]
+                    c = self.svc.get_server_certificate(
+                        ServerCertificateName=cert_name
+                    )["ServerCertificate"]
                 except self.exceptions.NoSuchEntityException:
                     continue
 
