@@ -109,3 +109,8 @@ resource "aws_nat_gateway" "this" {
   subnet_id     = aws_subnet.this.id
   depends_on    = [aws_internet_gateway.this]
 }
+
+# EC2EgressOnlyInternetGateways
+resource "aws_egress_only_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
+}
