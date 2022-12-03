@@ -6,7 +6,7 @@ resource "aws_key_pair" "this" {
 # EC2Instances
 resource "aws_instance" "this" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+  instance_type = "t3.medium"
   subnet_id     = aws_subnet.this.id
 }
 
@@ -69,4 +69,24 @@ resource "aws_vpc_endpoint" "s3" {
 # EC2NetworkInterfaces
 resource "aws_network_interface" "this" {
   subnet_id = aws_subnet.this.id
+}
+
+resource "aws_launch_template" "this" {
+  name = "nuke-launch-template"
+  capacity_reservation_specification {
+    capacity_reservation_preference = "open"
+  }
+  cpu_options {
+    core_count       = 4
+    threads_per_core = 2
+  }
+  image_id                             = data.aws_ami.ubuntu.id
+  instance_initiated_shutdown_behavior = "terminate"
+  instance_type                        = "t3.medium"
+  network_interfaces {
+    associate_public_ip_address = true
+  }
+  placement {
+    availability_zone = "${var.region}a"
+  }
 }
