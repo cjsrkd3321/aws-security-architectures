@@ -71,6 +71,7 @@ resource "aws_network_interface" "this" {
   subnet_id = aws_subnet.this.id
 }
 
+# EC2LaunchTemplates
 resource "aws_launch_template" "this" {
   name = "nuke-launch-template"
   capacity_reservation_specification {
@@ -91,11 +92,13 @@ resource "aws_launch_template" "this" {
   }
 }
 
+# EC2Volumes
 resource "aws_ebs_volume" "this" {
   availability_zone = "${var.region}a"
   size              = 10
 }
 
+# EC2Snapshots
 resource "aws_ebs_snapshot" "this" {
   volume_id = aws_ebs_volume.this.id
 }

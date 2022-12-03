@@ -13,6 +13,9 @@
 - [x] EC2InternetGateways
 - [x] EC2Subnets
 - [x] EC2VPC
+- [x] EC2LaunchTemplates
+- [x] EC2Snapshots
+- [x] EC2Volumes
 
 ## IAM
 - [x] IAMUserPermissionsBoundaries
