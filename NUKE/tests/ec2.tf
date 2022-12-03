@@ -114,3 +114,8 @@ resource "aws_nat_gateway" "this" {
 resource "aws_egress_only_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 }
+
+# EC2TransitGateways
+resource "aws_ec2_transit_gateway" "this" {
+  description = "this"
+}
