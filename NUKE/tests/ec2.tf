@@ -22,6 +22,11 @@ resource "aws_vpc" "this" {
   cidr_block = "10.0.0.0/16"
 }
 
+# EC2VPC
+resource "aws_vpc" "this2" {
+  cidr_block = "10.1.0.0/16"
+}
+
 # EC2Subnets
 resource "aws_subnet" "this" {
   vpc_id     = aws_vpc.this.id
@@ -118,4 +123,10 @@ resource "aws_egress_only_internet_gateway" "this" {
 # EC2TransitGateways
 resource "aws_ec2_transit_gateway" "this" {
   description = "this"
+}
+
+# EC2VPCPeeringConnections
+resource "aws_vpc_peering_connection" "foo" {
+  peer_vpc_id = aws_vpc.this.id
+  vpc_id      = aws_vpc.this2.id
 }

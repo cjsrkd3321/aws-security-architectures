@@ -3,6 +3,7 @@ from botocore.config import Config
 # resources
 resources: list = []
 
+from .EC2VPCPeeringConnections import EC2VPCPeeringConnection
 from .EC2TransitGateways import EC2TransitGateway
 from .EC2EgressOnlyInternetGateways import EC2EgressOnlyInternetGateway
 from .EC2NatGateways import EC2NatGateway
