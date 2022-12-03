@@ -16,6 +16,7 @@
 - [x] EC2LaunchTemplates
 - [x] EC2Snapshots
 - [x] EC2Volumes
+- [x] EC2NatGateways
 
 ## IAM
 - [x] IAMUserPermissionsBoundaries
