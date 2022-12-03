@@ -25,7 +25,7 @@ class EC2VPCPeeringConnection(ResourceBase):
                     "name": get_name_from_tags(tags),
                     "unique_id": peering["VpcPeeringConnectionId"],
                     "state": peering["Status"]["Code"],
-                    "expire_date": peering["ExpirationTime"],
+                    "expire_date": peering.get("ExpirationTime"),
                 }
                 for peerings in iterator
                 for peering in peerings["VpcPeeringConnections"]
