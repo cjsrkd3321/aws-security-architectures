@@ -19,6 +19,7 @@
 - [x] EC2NatGateways
 - [x] EC2EgressOnlyInternetGateways
 - [x] EC2TransitGateways
+- [x] EC2VPCPeeringConnections
 
 ## IAM
 - [x] IAMUserPermissionsBoundaries
