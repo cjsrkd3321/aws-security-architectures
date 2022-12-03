@@ -18,6 +18,7 @@
 - [x] EC2Volumes
 - [x] EC2NatGateways
 - [x] EC2EgressOnlyInternetGateways
+- [x] EC2TransitGateways
 
 ## IAM
 - [x] IAMUserPermissionsBoundaries
