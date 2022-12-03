@@ -3,6 +3,7 @@ from botocore.config import Config
 # resources
 resources: list = []
 
+from .EC2Snapshots import EC2Snapshot
 from .EC2LaunchTemplates import EC2LaunchTemplate
 from .EC2KeyPairs import EC2KeyPair
 from .EC2Images import EC2Image
