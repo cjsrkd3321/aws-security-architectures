@@ -102,3 +102,10 @@ resource "aws_ebs_volume" "this" {
 resource "aws_ebs_snapshot" "this" {
   volume_id = aws_ebs_volume.this.id
 }
+
+# EC2NatGateways
+resource "aws_nat_gateway" "this" {
+  allocation_id = aws_eip.this.id
+  subnet_id     = aws_subnet.this.id
+  depends_on    = [aws_internet_gateway.this]
+}
