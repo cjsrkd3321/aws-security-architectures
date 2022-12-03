@@ -17,6 +17,7 @@
 - [x] EC2Snapshots
 - [x] EC2Volumes
 - [x] EC2NatGateways
+- [x] EC2EgressOnlyInternetGateways
 
 ## IAM
 - [x] IAMUserPermissionsBoundaries
