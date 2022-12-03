@@ -28,6 +28,11 @@ class Item:
             return True
         return False
 
+    def is_failed(self):
+        if self.__item["state"] == rs.Failed:
+            return True
+        return False
+
     @property
     def item(self):
         return self.__item
