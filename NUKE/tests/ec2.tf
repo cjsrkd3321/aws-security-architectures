@@ -90,3 +90,12 @@ resource "aws_launch_template" "this" {
     availability_zone = "${var.region}a"
   }
 }
+
+resource "aws_ebs_volume" "this" {
+  availability_zone = "${var.region}a"
+  size              = 10
+}
+
+resource "aws_ebs_snapshot" "this" {
+  volume_id = aws_ebs_volume.this.id
+}
