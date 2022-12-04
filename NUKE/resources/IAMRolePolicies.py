@@ -13,7 +13,7 @@ class IAMRolePolicy(ResourceBase):
     def list(self):
         results = []
         try:
-            iam_role = IAMRole(sess=self.svc, default_filter_func=self.filter_func)
+            iam_role = IAMRole(self.svc, self.region, self.filter_func)
             roles, err = iam_role.list(has_cache=True)
             if err:
                 return results, err

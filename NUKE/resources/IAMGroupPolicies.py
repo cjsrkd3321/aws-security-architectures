@@ -13,7 +13,7 @@ class IAMGroupPolicy(ResourceBase):
     def list(self):
         results = []
         try:
-            iam_group = IAMGroup(sess=self.svc, default_filter_func=self.filter_func)
+            iam_group = IAMGroup(self.svc, self.region, self.filter_func)
             groups, err = iam_group.list(has_cache=True)
             if err:
                 return results, err
