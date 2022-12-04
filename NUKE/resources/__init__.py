@@ -51,7 +51,7 @@ from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
 
 from .IAMOpenIdConnectProviders import IAMOpenIdConnectProviders
-from .IAMSamlProviders import IAMSamlProviders
+from .IAMSamlProviders import IAMSamlProvider
 
 # S3
 from .S3Objects import S3Object
