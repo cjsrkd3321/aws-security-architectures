@@ -50,6 +50,8 @@ from .IAMGroupPolicyAttachments import IAMGroupPolicyAttachment
 from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
 
+from .IAMOpenIdConnectProviders import IAMOpenIdConnectProvider
+
 # S3
 from .S3Objects import S3Object
 from .S3Buckets import S3Bucket

@@ -49,6 +49,8 @@
 - [x] IAMGroupPolicies
 - [x] IAMGroups
 
+- [x] IAMOpenIdConnectProviders
+
 ## S3
 - [x] S3Buckets
 - [x] S3Objects
