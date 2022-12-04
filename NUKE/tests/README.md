@@ -51,6 +51,7 @@
 
 ## S3
 - [x] S3Buckets
+- [x] S3Objects
 
 ## KMS
 - [x] KMSKeys
