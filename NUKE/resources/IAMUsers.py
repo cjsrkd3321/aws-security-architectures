@@ -1,23 +1,20 @@
 from ._base import ResourceBase
-from . import resources, Config
-
-import boto3
+from . import resources
 
 
 cache: dict = {}
 
 
 class IAMUser(ResourceBase):
-    def __init__(self, region="ap-northeast-2", default_filter_func=None):
-        self.svc = boto3.client("iam", config=Config(region_name=region))
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess["iam"] if type(sess) == dict else sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self, has_cache=False):
         global cache
-        if cache.get(self.region) and has_cache:
-            return cache[self.region], None
+        if cache.get(self.svc) and has_cache:
+            return cache[self.svc], None
 
         results = []
         try:
@@ -44,7 +41,7 @@ class IAMUser(ResourceBase):
                         "permissions_boundary": user.get("PermissionsBoundary"),
                     }
                 )
-            cache[self.region] = results if has_cache else None
+            cache[self.svc] = results if has_cache else None
             return results, None
         except Exception as e:
             return results, e

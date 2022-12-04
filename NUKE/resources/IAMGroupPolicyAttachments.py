@@ -1,23 +1,18 @@
 from ._base import ResourceBase
-from . import resources, Config
+from . import resources
 from .IAMGroups import IAMGroup
-
-import boto3
 
 
 class IAMGroupPolicyAttachment(ResourceBase):
-    def __init__(self, region="ap-northeast-2", default_filter_func=None):
-        self.svc = boto3.client("iam", config=Config(region_name=region))
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess["iam"] if type(sess) == dict else sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         results = []
         try:
-            iam_group = IAMGroup(
-                region=self.region, default_filter_func=self.filter_func
-            )
+            iam_group = IAMGroup(sess=self.svc, default_filter_func=self.filter_func)
             groups, err = iam_group.list(has_cache=True)
             if err:
                 return results, err

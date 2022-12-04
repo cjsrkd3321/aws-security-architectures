@@ -1,13 +1,11 @@
 from ._base import ResourceBase
 from ._utils import get_name_from_tags
-from . import resources, Config
-
-import boto3
+from . import resources
 
 
 class EC2InternetGateway(ResourceBase):
-    def __init__(self, region="ap-northeast-2", default_filter_func=None):
-        self.svc = boto3.client("ec2", config=Config(region_name=region))
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess["ec2"] if type(sess) == dict else sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
