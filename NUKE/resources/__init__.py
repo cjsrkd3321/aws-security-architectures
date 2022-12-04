@@ -58,3 +58,6 @@ from .KMSKeys import KMSKey
 
 # LAMBDA
 from .LAMBDAFunctions import LAMBDAFunction
+
+# MSK
+from .MSKClusters import MSKCluster

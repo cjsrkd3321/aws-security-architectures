@@ -1,5 +1,5 @@
 resource "aws_key_pair" "this" {
-  key_name   = "deployer-key"
+  key_name   = "nuke-key-pair"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQz1x2cEikKDEY0aIj41qgxMCP/iteneqXSIFZBp5vizPvaoIR3Um9xK7PGoW8giupGn+EPuxIA4cDM4vzOqOkiMPhz5XK0whEjkVzTo4+S0puvDZuwIsdiW9mxhJc7tgBNL0cYlWSYVkz4G/fslNfRPW5mYAM49f4fhtxPb5ok4Q2Lg9dPKVHO/Bgeu5woMc7RY0p1ej6D4CKFE6lymSDJpW0YHX/wqE9+cfEauh7xZcG0q9t2ta6F6fmX0agvpFyZo8aFbXeUBr7osSCJNgvavWbM/06niWrOvYX2xwWdhXmXSrbX8ZbabVohBK41 email@example.com"
 }
 
@@ -12,7 +12,7 @@ resource "aws_instance" "this" {
 
 # EC2Images
 resource "aws_ami_from_instance" "this" {
-  name               = "terraform-example"
+  name               = "nuke-ami"
   source_instance_id = aws_instance.this.id
 }
 
@@ -29,8 +29,23 @@ resource "aws_vpc" "this2" {
 
 # EC2Subnets
 resource "aws_subnet" "this" {
-  vpc_id     = aws_vpc.this.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "${var.region}a"
+}
+
+# EC2Subnets
+resource "aws_subnet" "this2" {
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "${var.region}b"
+}
+
+# EC2Subnets
+resource "aws_subnet" "this3" {
+  vpc_id            = aws_vpc.this.id
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = "${var.region}c"
 }
 
 # EC2InternetGateways
