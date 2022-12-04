@@ -7,4 +7,5 @@ Services = List[
     | Literal["kms"]
     | Literal["lambda"]
     | Literal["kafka"]
+    | Literal["secretsmanager"]
 ]

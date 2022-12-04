@@ -62,3 +62,6 @@ from .LAMBDAFunctions import LAMBDAFunction
 
 # MSK
 from .MSKClusters import MSKCluster
+
+# SECRETSMANAGER
+from .SECRETSMANAGERSecrets import SECRETSMANAGERSecret

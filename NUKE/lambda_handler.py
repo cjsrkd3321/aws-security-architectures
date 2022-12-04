@@ -65,7 +65,15 @@ if __name__ == "__main__":
     # regions = ["us-east-1"]  # Virginia
     # regions = ["ap-northeast-2"]  # Seoul
     regions = ["ap-southeast-1", "us-east-1"]
-    services: Services = ["ec2", "iam", "s3", "kms", "lambda", "kafka"]
+    services: Services = [
+        "ec2",
+        "iam",
+        "s3",
+        "kms",
+        "lambda",
+        "kafka",
+        "secretsmanager",
+    ]
 
     sessions = get_sessions(services, regions)
 
