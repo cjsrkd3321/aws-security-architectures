@@ -1,22 +1,18 @@
-from . import resources, Config
+from . import resources
 from ._base import ResourceBase
 from .IAMUsers import IAMUser
 
 
-import boto3
-
-
 class IAMSigningCertificate(ResourceBase):
-    def __init__(self, region="ap-northeast-2", default_filter_func=None):
-        self.svc = boto3.client("iam", config=Config(region_name=region))
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess["iam"] if type(sess) == dict else sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         results = []
         try:
-            iam_user = IAMUser(region=self.region, default_filter_func=self.filter_func)
+            iam_user = IAMUser(sess=self.svc, default_filter_func=self.filter_func)
             users, err = iam_user.list(has_cache=True)
             if err:
                 return results, err

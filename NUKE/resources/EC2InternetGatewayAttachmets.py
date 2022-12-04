@@ -1,23 +1,20 @@
 from ._base import ResourceBase
 from ._utils import get_name_from_tags
-from . import resources, Config
+from . import resources
 
 from .EC2VPC import EC2VPC
 
-import boto3
-
 
 class EC2InternetGatewayAttachmet(ResourceBase):
-    def __init__(self, region="ap-northeast-2", default_filter_func=None):
-        self.svc = boto3.client("ec2", config=Config(region_name=region))
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess["ec2"] if type(sess) == dict else sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         results = []
         try:
-            ec2_vpc = EC2VPC(region=self.region, default_filter_func=self.filter_func)
+            ec2_vpc = EC2VPC(sess=self.svc, default_filter_func=self.filter_func)
             vpcs, err = ec2_vpc.list(has_cache=True)
             if err:
                 return results, err
