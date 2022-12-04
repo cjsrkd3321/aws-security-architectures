@@ -64,3 +64,6 @@
 
 ## SECRETSMANAGER
 - [x] SECRETSMANAGERSecrets
+
+## SSM
+- [x] SSMParameters
