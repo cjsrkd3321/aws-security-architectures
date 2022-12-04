@@ -2,6 +2,10 @@ variable "region" {
   default = "ap-southeast-1"
 }
 
+variable "global_region" {
+  default = "us-east-1"
+}
+
 variable "cert_body" {
   default = <<EOF
 -----BEGIN CERTIFICATE-----
