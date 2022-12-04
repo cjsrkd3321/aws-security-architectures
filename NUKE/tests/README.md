@@ -50,6 +50,7 @@
 - [x] IAMGroups
 
 - [x] IAMOpenIdConnectProviders
+- [x] IAMSamlProviders # If you wanna test this functions then, You'll bring the saml-metadata.xml file.
 
 ## S3
 - [x] S3Buckets
