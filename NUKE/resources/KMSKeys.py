@@ -31,10 +31,15 @@ class KMSKey(ResourceBase):
                 except self.exceptions.NotFoundException:
                     continue
 
+                try:
+                    alias = self.svc.list_aliases(KeyId=key_id)["Aliases"][0]
+                except self.exceptions.NotFoundException:
+                    alias = {}
+
                 results.append(
                     {
                         "id": key_id,
-                        "name": key_id,
+                        "name": alias.get("AliasName"),
                         "tags": delete_tag_prefix(tags),
                         "create_date": key_meta["CreationDate"],
                         "valid_date": key_meta.get("ValidTo"),
