@@ -61,3 +61,6 @@
 
 ## MSK
 - [x] MSKClusters # Be careful, It takes so very long time!
+
+## SECRETSMANAGER
+- [x] SECRETSMANAGERSecrets
