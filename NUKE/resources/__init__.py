@@ -47,3 +47,5 @@ from .IAMPolicies import IAMPolicy
 from .IAMGroupPolicyAttachments import IAMGroupPolicyAttachment
 from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
+
+from .S3Buckets import S3Bucket

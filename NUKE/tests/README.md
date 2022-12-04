@@ -48,3 +48,6 @@
 - [x] IAMGroupPolicyAttachments
 - [x] IAMGroupPolicies
 - [x] IAMGroups
+
+## S3
+- [x] S3Buckets
