@@ -51,6 +51,7 @@ from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
 
 # S3
+from .S3Objects import S3Objects
 from .S3Buckets import S3Bucket
 
 # KMS
