@@ -73,6 +73,7 @@ if __name__ == "__main__":
         "lambda",
         "kafka",
         "secretsmanager",
+        "ssm",
     ]
 
     sessions = get_sessions(services, regions)
