@@ -1,8 +1,24 @@
+from concurrent import futures
+
 from ._base import ResourceBase
 from . import resources
 
 
 cache: dict = {}
+MAX_WORKERS = 16
+
+
+def delete_objs(svc, bucket, objects):
+    if len(objects) == 0:
+        return True, None
+    try:
+        svc.delete_objects(
+            Bucket=bucket,
+            Delete={"Objects": objects},
+        )
+    except Exception as e:
+        return False, e
+    return True, None
 
 
 class S3Bucket(ResourceBase):
@@ -57,8 +73,39 @@ class S3Bucket(ResourceBase):
             return results, e
 
     def remove(self, resource):
+        from .S3Objects import S3Object
+
+        s3_object = S3Object(self.svc, self.region, self.filter_func)
+        objects, err = s3_object.list(has_cache=True)
+        if err:
+            return False, err
+
         try:
-            self.svc.delete_bucket(Bucket=resource["id"])
+            bucket = resource["id"]
+            threads = []
+            if len(objects) > 0:
+                pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
+
+                obj_count, objs = 0, []
+                for obj in objects:
+                    obj_count += 1
+                    objs.append({"Key": obj["id"], "VersionId": obj["version_id"]})
+
+                    if obj_count == 1000:
+                        threads.append(pool.submit(delete_objs, self.svc, bucket, objs))
+                        obj_count, objs = 0, []
+                if obj_count > 0:
+                    threads.append(pool.submit(delete_objs, self.svc, bucket, objs))
+                    obj_count, objs = 0, []
+            for future in futures.as_completed(threads):
+                is_succeeded, err = future.result()
+                if err or not is_succeeded:
+                    return False, err
+        except Exception as e:
+            return False, e
+
+        try:
+            self.svc.delete_bucket(Bucket=bucket)
             return True, None
         except self.exceptions.NoSuchBucket:
             return True, None

@@ -54,8 +54,9 @@ from .IAMOpenIdConnectProviders import IAMOpenIdConnectProvider
 from .IAMSamlProviders import IAMSamlProvider
 
 # S3
-from .S3Objects import S3Object
 from .S3Buckets import S3Bucket
+
+# from .S3Objects import S3Object # If you wanna delete the specific object then, use it.
 
 # KMS
 from .KMSKeys import KMSKey
