@@ -50,7 +50,7 @@ from .IAMGroupPolicyAttachments import IAMGroupPolicyAttachment
 from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
 
-from .IAMOpenIdConnectProviders import IAMOpenIdConnectProviders
+from .IAMOpenIdConnectProviders import IAMOpenIdConnectProvider
 from .IAMSamlProviders import IAMSamlProvider
 
 # S3
