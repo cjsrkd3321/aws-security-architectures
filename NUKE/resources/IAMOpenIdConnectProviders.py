@@ -29,6 +29,7 @@ class IAMOpenIdConnectProvider(ResourceBase):
                         "id": oidc_arn,
                         "name": oidc_arn,
                         "tags": tags,
+                        "arn": oidc_arn,
                     }
                 )
             return results, None
