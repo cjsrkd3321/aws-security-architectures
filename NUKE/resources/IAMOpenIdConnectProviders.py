@@ -41,6 +41,7 @@ class IAMOpenIdConnectProvider(ResourceBase):
             self.svc.delete_open_id_connect_provider(
                 OpenIDConnectProviderArn=resource["id"]
             )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:
