@@ -3,9 +3,6 @@ from . import resources
 from ._utils import convert_dict_to_tags
 
 
-cache: dict = {}
-
-
 class LAMBDAFunction(ResourceBase):
     def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
         self.svc = sess[region]["lambda"] if type(sess) == dict else sess
@@ -13,11 +10,7 @@ class LAMBDAFunction(ResourceBase):
         self.filter_func = default_filter_func
         self.region = region
 
-    def list(self, has_cache=False):
-        global cache
-        if cache.get(self.svc) and has_cache:
-            return cache[self.svc], None
-
+    def list(self):
         results = []
         try:
             iterator = self.svc.get_paginator("list_functions").paginate()
@@ -42,7 +35,6 @@ class LAMBDAFunction(ResourceBase):
                         "last_modified_date": f["LastModified"],
                     }
                 )
-            cache[self.svc] = results if has_cache else None
             return results, None
         except Exception as e:
             return results, e
