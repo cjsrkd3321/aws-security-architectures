@@ -40,7 +40,7 @@ class SECRETSMANAGERSecret(ResourceBase):
                 SecretId=resource["id"], ForceDeleteWithoutRecovery=True
             )
             return True, None
-        except self.exceptions.NoSuchBucket:
+        except self.exceptions.ResourceNotFoundException:
             return True, None
         except Exception as e:
             return False, e
