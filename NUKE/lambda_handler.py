@@ -14,15 +14,20 @@ MAX_ITER_COUNTS = 40
 MAX_SLEEP = 15
 
 
-def get_regions(ec2):
+def get_regions():
+    ec2 = boto3.client("ec2")
     return [region.get("RegionName") for region in ec2.describe_regions()["Regions"]]
 
 
 def lister(resource, sess, region):
     global items
 
-    r = resource(sess=sess, default_filter_func=have_no_nuke_project_tag)
-    # r = resource(sess=sess, default_filter_func=have_tags)
+    try:
+        r = resource(sess, region, have_no_nuke_project_tag)
+        # r = resource(sess, region, have_tags)
+    except Exception as e:
+        print("[ERR_INIT]", resource, region, e)
+
     name = r.__class__.__name__
 
     if name.startswith("IAM") and region != "us-east-1":
@@ -56,8 +61,7 @@ def get_sessions(services=[], regions=[]):
 
 
 if __name__ == "__main__":
-    # ec2 = boto3.client("ec2")
-    # regions = get_regions(ec2)
+    regions = get_regions()
     # regions = ["ap-southeast-1"]  # Singapore
     # regions = ["us-east-1"]  # Virginia
     # regions = ["ap-northeast-2"]  # Seoul
@@ -72,7 +76,7 @@ if __name__ == "__main__":
         pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
         for region in regions:
             for resource in resources:
-                threads.append(pool.submit(lister, resource, sessions[region], region))
+                threads.append(pool.submit(lister, resource, sessions, region))
         futures.wait(threads)
 
         if not items:

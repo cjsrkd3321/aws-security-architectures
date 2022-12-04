@@ -4,10 +4,11 @@ from . import resources
 
 
 class EC2TransitGateway(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
-        self.svc = sess["ec2"] if type(sess) == dict else sess
+    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
+        self.svc = sess[region]["ec2"] if type(sess) == dict else sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
+        self.region = region
 
     def list(self):
         results = []
