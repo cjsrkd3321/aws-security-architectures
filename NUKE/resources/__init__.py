@@ -1,6 +1,7 @@
 # resources
 resources: list = []
 
+# EC2
 from .EC2TransitGatewayAttachments import EC2TransitGatewayAttachment
 from .EC2VPCPeeringConnections import EC2VPCPeeringConnection
 from .EC2TransitGateways import EC2TransitGateway
@@ -22,6 +23,7 @@ from .EC2InternetGateways import EC2InternetGateway
 from .EC2Subnets import EC2Subnet
 from .EC2VPC import EC2VPC
 
+# IAM
 from .IAMUserPermissionsBoundaries import IAMUserPermissionsBoundary
 from .IAMLoginProfiles import IAMLoginProfile
 from .IAMUserAccessKeys import IAMUserAccessKey
@@ -48,4 +50,5 @@ from .IAMGroupPolicyAttachments import IAMGroupPolicyAttachment
 from .IAMGroupPolicies import IAMGroupPolicy
 from .IAMGroups import IAMGroup
 
+# S3
 from .S3Buckets import S3Bucket
