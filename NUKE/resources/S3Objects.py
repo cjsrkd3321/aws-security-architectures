@@ -1,6 +1,8 @@
 from ._base import ResourceBase
 from . import resources
-from .S3Buckets import S3Bucket
+
+
+cache: dict = {}
 
 
 class S3Object(ResourceBase):
@@ -10,9 +12,15 @@ class S3Object(ResourceBase):
         self.filter_func = default_filter_func
         self.region = region
 
-    def list(self):
+    def list(self, has_cache=False):
+        global cache
+        if cache.get(self.svc) and has_cache:
+            return cache[self.svc], None
+
         results = []
         try:
+            from .S3Buckets import S3Bucket
+
             s3_bucket = S3Bucket(self.svc, self.region, self.filter_func)
             buckets, err = s3_bucket.list(has_cache=True)
             if err:
@@ -48,6 +56,7 @@ class S3Object(ResourceBase):
                                 "bucket": bucket_name,
                             }
                         )
+            cache[self.svc] = results if has_cache else None
             return results, None
         except (self.exceptions.NoSuchBucket, self.exceptions.NoSuchKey):
             return True, None
