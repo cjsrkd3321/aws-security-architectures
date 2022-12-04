@@ -50,7 +50,6 @@ def lister(resource, sess, region):
 
 def get_sessions(services=[], regions=[]):
     sessions = {}
-    services = ["ec2", "iam", "s3"]
     for region in regions:
         sessions[region] = {}
         for service in services:
@@ -66,7 +65,7 @@ if __name__ == "__main__":
     # regions = ["us-east-1"]  # Virginia
     # regions = ["ap-northeast-2"]  # Seoul
     regions = ["ap-southeast-1", "us-east-1"]
-    services: Services = ["ec2", "iam", "s3"]
+    services: Services = ["ec2", "iam", "s3", "kms"]
 
     sessions = get_sessions(services, regions)
 
