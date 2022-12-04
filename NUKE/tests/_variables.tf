@@ -1,5 +1,5 @@
 variable "region" {
-  default = "ap-southeast-1"
+  default = "ap-northeast-2"
 }
 
 variable "global_region" {
