@@ -60,7 +60,7 @@ class IAMMfaDevice(ResourceBase):
 
     def filter(self, resource, *filters):
         if resource["id"].endswith("/root-account-mfa-device"):
-            return "DEFAULT(IMPOSSIBLE)", None
+            return f"DEFAULT(IMPOSSIBLE: {resource['id']})", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):

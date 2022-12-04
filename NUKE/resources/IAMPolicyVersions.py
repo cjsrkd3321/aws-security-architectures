@@ -59,7 +59,7 @@ class IAMPolicyVersion(ResourceBase):
 
     def filter(self, resource, *filters):
         if resource["is_default"]:
-            return "DEFAULT(IMPOSSIBLE)", None
+            return f"DEFAULT(IMPOSSIBLE: {resource['is_default']})", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
