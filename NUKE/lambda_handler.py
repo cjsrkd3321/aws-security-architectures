@@ -94,6 +94,7 @@ if __name__ == "__main__":
             item.filter()
 
             if item.is_skip():
+                # Temporary if statement
                 if item.item["reason"] in [
                     "have_no_nuke_project_tag",
                     "have_tags",

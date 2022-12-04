@@ -151,3 +151,9 @@ resource "aws_iam_openid_connect_provider" "this" {
   ]
   thumbprint_list = []
 }
+
+# IAMSamlProviders
+# resource "aws_iam_saml_provider" "this" {
+#   name                   = "nuke-provider"
+#   saml_metadata_document = file("resources/saml-metadata.xml")
+# }
