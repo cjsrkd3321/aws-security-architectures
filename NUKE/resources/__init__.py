@@ -52,3 +52,6 @@ from .IAMGroups import IAMGroup
 
 # S3
 from .S3Buckets import S3Bucket
+
+# KMS
+from .KMSKeys import KMSKey

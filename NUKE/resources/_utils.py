@@ -20,6 +20,16 @@ def get_value_from_tags(tags, key, value):
     return False
 
 
+def delete_tag_prefix(tags):
+    new_tags = []
+    if not tags:
+        return new_tags
+    for tag in tags:
+        key, value = tag.items()
+        new_tags.append({"Key": key[1], "Value": value[1]})
+    return new_tags
+
+
 def timeit(func):
     @wraps(func)
     def timeit_wrapper(*args, **kwargs):
