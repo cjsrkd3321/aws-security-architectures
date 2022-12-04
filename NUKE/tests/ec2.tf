@@ -130,3 +130,10 @@ resource "aws_vpc_peering_connection" "foo" {
   peer_vpc_id = aws_vpc.this.id
   vpc_id      = aws_vpc.this2.id
 }
+
+# EC2TransitGatewayAttachments
+resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
+  subnet_ids         = [aws_subnet.this.id]
+  transit_gateway_id = aws_ec2_transit_gateway.this.id
+  vpc_id             = aws_vpc.this.id
+}

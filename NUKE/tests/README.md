@@ -20,6 +20,7 @@
 - [x] EC2EgressOnlyInternetGateways
 - [x] EC2TransitGateways
 - [x] EC2VPCPeeringConnections
+- [x] EC2TransitGatewayAttachments
 
 ## IAM
 - [x] IAMUserPermissionsBoundaries
