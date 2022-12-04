@@ -1,25 +1,28 @@
 from concurrent import futures
+from time import sleep
+from botocore.config import Config
 from resources import resources
-from filters import have_tags
+from filters import have_no_nuke_project_tag, have_tags
 from items import Item, items
+from _types import Services
 
-import time
 import boto3
 
 
-MAX_WORKERS = 16
-MAX_ITER_COUNTS = 3
-MAX_SLEEP = 5
+MAX_WORKERS = 25
+MAX_ITER_COUNTS = 40
+MAX_SLEEP = 15
 
 
 def get_regions(ec2):
     return [region.get("RegionName") for region in ec2.describe_regions()["Regions"]]
 
 
-def lister(resource, region):
+def lister(resource, sess, region):
     global items
 
-    r = resource(region, default_filter_func=have_tags)
+    r = resource(sess=sess, default_filter_func=have_no_nuke_project_tag)
+    # r = resource(sess=sess, default_filter_func=have_tags)
     name = r.__class__.__name__
 
     if name.startswith("IAM") and region != "us-east-1":
@@ -40,9 +43,28 @@ def lister(resource, region):
         items.append(item)
 
 
+def get_sessions(services=[], regions=[]):
+    sessions = {}
+    services = ["ec2", "iam", "s3"]
+    for region in regions:
+        sessions[region] = {}
+        for service in services:
+            sessions[region][service] = boto3.client(
+                service_name=service, config=Config(region_name=region)
+            )
+    return sessions
+
+
 if __name__ == "__main__":
-    ec2 = boto3.client("ec2")
-    regions = get_regions(ec2)
+    # ec2 = boto3.client("ec2")
+    # regions = get_regions(ec2)
+    # regions = ["ap-southeast-1"]  # Singapore
+    # regions = ["us-east-1"]  # Virginia
+    # regions = ["ap-northeast-2"]  # Seoul
+    regions = ["ap-southeast-1", "us-east-1"]
+    services: Services = ["ec2", "iam"]
+
+    sessions = get_sessions(services, regions)
 
     for _ in range(MAX_ITER_COUNTS):
         threads = []
@@ -50,22 +72,38 @@ if __name__ == "__main__":
         pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
         for region in regions:
             for resource in resources:
-                threads.append(pool.submit(lister, resource, region))
+                threads.append(pool.submit(lister, resource, sessions[region], region))
         futures.wait(threads)
+
+        if not items:
+            break
 
         for item in items:
             item.filter()
 
             if item.is_skip():
+                if item.item["reason"] in [
+                    "have_no_nuke_project_tag",
+                    "have_tags",
+                ] or item.item["reason"].startswith("DEFAULT(IMPOSSIBLE"):
+                    continue
                 print(item.current)
                 continue
             else:
                 print(item.current)
+                pass
 
             # item.remove()
             # print(item.current)
 
+        failed_count = 0
+        for item in items:
+            if item.is_failed():
+                failed_count += 1
+        if failed_count == 0:
+            exit(1)
+
         items.clear()
 
         print(f"\nWaiting {MAX_SLEEP} seconds...\n")
-        time.sleep(MAX_SLEEP)
+        sleep(MAX_SLEEP)
