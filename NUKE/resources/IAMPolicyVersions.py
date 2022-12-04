@@ -13,7 +13,7 @@ class IAMPolicyVersion(ResourceBase):
     def list(self):
         results = []
         try:
-            iam_policy = IAMPolicy(sess=self.svc, default_filter_func=self.filter_func)
+            iam_policy = IAMPolicy(self.svc, self.region, self.filter_func)
             policies, err = iam_policy.list(has_cache=True)
             if err:
                 return results, err

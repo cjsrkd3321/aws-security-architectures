@@ -15,7 +15,7 @@ class EC2InternetGatewayAttachmet(ResourceBase):
     def list(self):
         results = []
         try:
-            ec2_vpc = EC2VPC(sess=self.svc, default_filter_func=self.filter_func)
+            ec2_vpc = EC2VPC(self.svc, self.region, self.filter_func)
             vpcs, err = ec2_vpc.list(has_cache=True)
             if err:
                 return results, err

@@ -13,7 +13,7 @@ class IAMListUserGroupAttachment(ResourceBase):
     def list(self):
         results = []
         try:
-            iam_user = IAMUser(sess=self.svc, default_filter_func=self.filter_func)
+            iam_user = IAMUser(self.svc, self.region, self.filter_func)
             users, err = iam_user.list(has_cache=True)
             if err:
                 return results, err
