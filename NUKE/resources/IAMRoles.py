@@ -65,7 +65,7 @@ class IAMRole(ResourceBase):
         if (rp := resource["path"]).startswith("/aws-service-role/") or rp.startswith(
             "/aws-reserved/"
         ):
-            return "DEFAULT(IMPOSSIBLE)", None
+            return f"DEFAULT(IMPOSSIBLE {resource['path']})", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
