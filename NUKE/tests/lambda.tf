@@ -4,6 +4,6 @@ resource "aws_lambda_function" "this" {
   handler          = "index.test"
   runtime          = "nodejs16.x"
   role             = aws_iam_role.lambda.arn
-  filename         = "nuke_lambda.zip"
-  source_code_hash = filebase64sha256("nuke_lambda.zip")
+  filename         = "./resources/nuke_lambda.zip"
+  source_code_hash = filebase64sha256("./resources/nuke_lambda.zip")
 }
