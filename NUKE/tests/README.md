@@ -70,3 +70,6 @@
 
 ## SSM
 - [x] SSMParameters
+
+## CLOUDWATCH
+- [x] CLOUDWATCHLOGSLogGroups

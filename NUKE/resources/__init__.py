@@ -71,3 +71,6 @@ from .SECRETSMANAGERSecrets import SECRETSMANAGERSecret
 
 # SSM
 from .SSMParameters import SSMParameter
+
+# CLOUDWATCH
+from .CLOUDWATCHLOGSLogGroups import CLOUDWATCHLOGSLogGroup

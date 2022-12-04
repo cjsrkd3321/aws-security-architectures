@@ -74,6 +74,7 @@ if __name__ == "__main__":
         "kafka",
         "secretsmanager",
         "ssm",
+        "logs",
     ]
 
     sessions = get_sessions(services, regions)

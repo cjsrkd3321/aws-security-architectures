@@ -9,4 +9,5 @@ Services = List[
     | Literal["kafka"]
     | Literal["secretsmanager"]
     | Literal["ssm"]
+    | Literal["logs"]
 ]
