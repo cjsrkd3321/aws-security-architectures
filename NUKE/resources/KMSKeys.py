@@ -32,7 +32,8 @@ class KMSKey(ResourceBase):
                     continue
 
                 try:
-                    alias = self.svc.list_aliases(KeyId=key_id)["Aliases"][0]
+                    aliases = self.svc.list_aliases(KeyId=key_id)["Aliases"]
+                    alias = aliases[0] if aliases else {}
                 except self.exceptions.NotFoundException:
                     alias = {}
 
