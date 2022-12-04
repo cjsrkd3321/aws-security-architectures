@@ -54,3 +54,6 @@
 
 ## KMS
 - [x] KMSKeys
+
+## LAMBDA
+- [x] LAMBDAFunctions
