@@ -30,6 +30,15 @@ def delete_tag_prefix(tags):
     return new_tags
 
 
+def convert_dict_to_tags(tags):
+    new_tags = []
+    if not tags:
+        return new_tags
+    for key, value in tags.items():
+        new_tags.append({"Key": key, "Value": value})
+    return new_tags
+
+
 def timeit(func):
     @wraps(func)
     def timeit_wrapper(*args, **kwargs):

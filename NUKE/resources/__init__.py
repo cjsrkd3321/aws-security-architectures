@@ -55,3 +55,6 @@ from .S3Buckets import S3Bucket
 
 # KMS
 from .KMSKeys import KMSKey
+
+# LAMBDA
+from .LAMBDAFunctions import LAMBDAFunction
