@@ -33,22 +33,17 @@ class EC2SecurityGroup(ResourceBase):
 
     def remove(self, resource):
         try:
-            if not (
+            if len(resource["ingress"]) > 0:
                 self.svc.revoke_security_group_ingress(
                     GroupId=resource["id"], IpPermissions=resource["ingress"]
-                )["Return"]
-                and self.svc.revoke_security_group_egress(
+                )
+            if len(resource["egress"]) > 0:
+                self.svc.revoke_security_group_egress(
                     GroupId=resource["id"], IpPermissions=resource["egress"]
-                )["Return"]
-            ):
-                raise (f"{resource['id']} have(has) invincible rules.")
+                )
 
-            return (
-                self.svc.delete_security_group(GroupId=resource["id"])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_security_group(GroupId=resource["id"])
+            return True, None
         except Exception as e:
             return False, e
 
