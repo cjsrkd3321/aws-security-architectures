@@ -32,7 +32,7 @@ class S3Bucket(ResourceBase):
                     region = region if region else "us-east-1"
                     if self.region != region:
                         continue
-                except self.exceptions.NoSuchEntityException:
+                except self.exceptions.NoSuchBucket:
                     continue
 
                 try:
