@@ -49,6 +49,8 @@ class S3Object(ResourceBase):
                             }
                         )
             return results, None
+        except (self.exceptions.NoSuchBucket, self.exceptions.NoSuchKey):
+            return True, None
         except Exception as e:
             return results, e
 
