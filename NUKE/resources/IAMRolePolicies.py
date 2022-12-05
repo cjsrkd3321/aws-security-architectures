@@ -1,6 +1,5 @@
 from . import resources
 from ._base import ResourceBase
-from .IAMRoles import IAMRole
 
 
 class IAMRolePolicy(ResourceBase):
@@ -11,6 +10,8 @@ class IAMRolePolicy(ResourceBase):
         self.region = region
 
     def list(self):
+        from .IAMRoles import IAMRole
+
         results = []
         try:
             iam_role = IAMRole(self.svc, self.region, self.filter_func)
