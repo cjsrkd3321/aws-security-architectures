@@ -10,4 +10,5 @@ Services = List[
     | Literal["secretsmanager"]
     | Literal["ssm"]
     | Literal["logs"]
+    | Literal["sqs"]
 ]

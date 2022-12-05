@@ -1,10 +1,11 @@
 from concurrent import futures
-from time import sleep
+from time import sleep, time
 from botocore.config import Config
 from resources import resources
 from filters import have_no_nuke_project_tag, have_tags
 from items import Item, items
 from _types import Services
+from resources._utils import get_current_memory_usage
 
 import boto3
 
@@ -25,17 +26,16 @@ def lister(resource, sess, region):
     try:
         r = resource(sess, region, have_no_nuke_project_tag)
         # r = resource(sess, region, have_tags)
+        name = r.__class__.__name__
     except Exception as e:
-        print("[ERR_INIT]", resource, region, e)
-
-    name = r.__class__.__name__
+        print("[ERR_INIT]", region, name, e)
 
     if name.startswith("IAM") and region != "us-east-1":
         return
 
     results, err = r.list()
     if err:
-        print("[ERR_LIST]", name, err)
+        print("[ERR_LIST]", region, name, err)
 
     for result in results:
         item = Item(
@@ -74,11 +74,13 @@ if __name__ == "__main__":
         "secretsmanager",
         "ssm",
         "logs",
+        "sqs",
     ]
-
     sessions = get_sessions(services, regions)
 
     for _ in range(MAX_ITER_COUNTS):
+        start_time = time()
+
         threads = []
 
         pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
@@ -86,6 +88,10 @@ if __name__ == "__main__":
             for resource in resources:
                 threads.append(pool.submit(lister, resource, sessions, region))
         futures.wait(threads)
+
+        print(f"[LIST] {time() - start_time:.3f}s")
+
+        get_current_memory_usage()
 
         if not items:
             break
@@ -117,6 +123,7 @@ if __name__ == "__main__":
             exit(1)
 
         items.clear()
+        get_current_memory_usage()
 
         print(f"\nWaiting {MAX_SLEEP} seconds...\n")
         sleep(MAX_SLEEP)
