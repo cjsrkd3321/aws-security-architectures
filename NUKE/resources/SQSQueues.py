@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from ._base import ResourceBase
 from . import resources
 from ._utils import convert_dict_to_tags
@@ -23,8 +25,13 @@ class SQSQueue(ResourceBase):
                     attrs = self.svc.get_queue_attributes(
                         QueueUrl=queue, AttributeNames=["All"]
                     )["Attributes"]
-                except Exception as e:
-                    continue
+                except ClientError as e:
+                    if e.response["Error"]["Code"] in [
+                        "AccessDeniedException",
+                        "AWS.SimpleQueueService.NonExistentQueue",
+                    ]:
+                        continue
+                    raise e
 
                 results.append(
                     {

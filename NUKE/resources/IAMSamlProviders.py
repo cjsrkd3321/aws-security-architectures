@@ -39,6 +39,7 @@ class IAMSamlProvider(ResourceBase):
     def remove(self, resource):
         try:
             self.svc.delete_saml_provider(SAMLProviderArn=resource["id"])
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

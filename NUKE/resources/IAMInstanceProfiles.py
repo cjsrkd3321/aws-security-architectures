@@ -46,12 +46,8 @@ class IAMInstanceProfile(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_instance_profile(InstanceProfileName=resource["id"])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_instance_profile(InstanceProfileName=resource["id"])
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

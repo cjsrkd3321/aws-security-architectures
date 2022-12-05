@@ -31,12 +31,8 @@ class EC2Subnet(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_subnet(SubnetId=resource["id"])["ResponseMetadata"][
-                    "HTTPStatusCode"
-                ]
-                == 200
-            ), None
+            self.svc.delete_subnet(SubnetId=resource["id"])
+            return True, None
         except Exception as e:
             return False, e
 

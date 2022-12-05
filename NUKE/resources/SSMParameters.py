@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from ._base import ResourceBase
 from . import resources
 
@@ -20,8 +22,10 @@ class SSMParameter(ResourceBase):
                     tags = self.svc.list_tags_for_resource(
                         ResourceType="Parameter", ResourceId=param_name
                     )["TagList"]
-                except Exception:
-                    continue
+                except ClientError as e:
+                    if e.response["Error"]["Code"] == "AccessDeniedException":
+                        continue
+                    raise e
 
                 results.append(
                     {

@@ -50,12 +50,11 @@ class IAMServiceSpecificCredential(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_service_specific_credential(
-                    UserName=resource["user_name"],
-                    ServiceSpecificCredentialId=resource["id"],
-                )["ResponseMetadata"]["HTTPStatusCode"]
-            ) == 200, None
+            self.svc.delete_service_specific_credential(
+                UserName=resource["user_name"],
+                ServiceSpecificCredentialId=resource["id"],
+            )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

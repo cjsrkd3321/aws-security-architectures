@@ -49,12 +49,10 @@ class IAMListUserGroupAttachment(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.remove_user_from_group(
-                    UserName=resource["user_name"], GroupName=resource["id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.remove_user_from_group(
+                UserName=resource["user_name"], GroupName=resource["id"]
+            )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

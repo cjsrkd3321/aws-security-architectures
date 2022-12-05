@@ -45,15 +45,11 @@ class IAMMfaDevice(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.deactivate_mfa_device(
-                    UserName=resource["user_name"], SerialNumber=resource["id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-            ) == 200 and (
-                self.svc.delete_virtual_mfa_device(SerialNumber=resource["id"])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-            ) == 200, None
+            self.svc.deactivate_mfa_device(
+                UserName=resource["user_name"], SerialNumber=resource["id"]
+            )
+            self.svc.delete_virtual_mfa_device(SerialNumber=resource["id"])
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

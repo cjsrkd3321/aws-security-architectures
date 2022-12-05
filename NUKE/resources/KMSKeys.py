@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from ._base import ResourceBase
 from . import resources
 from ._utils import delete_tag_prefix
@@ -26,16 +28,21 @@ class KMSKey(ResourceBase):
                 key_id = key["KeyId"]
 
                 try:
-                    key_meta = self.svc.describe_key(KeyId=key_id)["KeyMetadata"]
-                    tags = self.svc.list_resource_tags(KeyId=key_id)["Tags"]
-                except self.exceptions.NotFoundException:
-                    continue
+                    try:
+                        key_meta = self.svc.describe_key(KeyId=key_id)["KeyMetadata"]
+                        tags = self.svc.list_resource_tags(KeyId=key_id)["Tags"]
+                    except self.exceptions.NotFoundException:
+                        continue
 
-                try:
-                    aliases = self.svc.list_aliases(KeyId=key_id)["Aliases"]
-                    alias = aliases[0] if aliases else {}
-                except self.exceptions.NotFoundException:
-                    alias = {}
+                    try:
+                        aliases = self.svc.list_aliases(KeyId=key_id)["Aliases"]
+                        alias = aliases[0] if aliases else {}
+                    except self.exceptions.NotFoundException:
+                        alias = {}
+                except ClientError as e:
+                    if e.response["Error"]["Code"] == "AccessDeniedException":
+                        continue
+                    raise e
 
                 results.append(
                     {

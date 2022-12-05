@@ -30,12 +30,8 @@ class EC2InternetGateway(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_internet_gateway(InternetGatewayId=resource["id"])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_internet_gateway(InternetGatewayId=resource["id"])
+            return True, None
         except Exception as e:
             return False, e
 

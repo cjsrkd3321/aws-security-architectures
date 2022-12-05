@@ -53,12 +53,10 @@ class EC2InternetGatewayAttachmet(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.detach_internet_gateway(
-                    InternetGatewayId=resource["id"], VpcId=resource["vpc_id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.detach_internet_gateway(
+                InternetGatewayId=resource["id"], VpcId=resource["vpc_id"]
+            )
+            return True, None
         except Exception as e:
             return False, e
 

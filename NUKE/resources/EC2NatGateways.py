@@ -35,12 +35,8 @@ class EC2NatGateway(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_nat_gateway(NatGatewayId=resource["id"])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_nat_gateway(NatGatewayId=resource["id"])
+            return True, None
         except Exception as e:
             return False, e
 

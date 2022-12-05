@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from ._base import ResourceBase
 from . import resources
 from ._utils import convert_dict_to_tags
@@ -20,8 +22,12 @@ class CLOUDWATCHLOGSLogGroup(ResourceBase):
                 log_arn = log["arn"][:-2]  # ...log-group:name:* -> ...log-group:name
                 try:
                     tags = self.svc.list_tags_for_resource(resourceArn=log_arn)["tags"]
-                except Exception as e:
+                except self.svc.ResourceNotFoundException:
                     tags = []
+                except ClientError as e:
+                    if e.response["Error"]["Code"] == "AccessDeniedException":
+                        continue
+                    raise e
 
                 results.append(
                     {
