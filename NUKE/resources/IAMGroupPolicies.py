@@ -1,6 +1,5 @@
 from ._base import ResourceBase
 from . import resources
-from .IAMGroups import IAMGroup
 
 
 class IAMGroupPolicy(ResourceBase):
@@ -11,6 +10,8 @@ class IAMGroupPolicy(ResourceBase):
         self.region = region
 
     def list(self):
+        from .IAMGroups import IAMGroup
+
         results = []
         try:
             iam_group = IAMGroup(self.svc, self.region, self.filter_func)

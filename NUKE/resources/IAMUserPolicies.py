@@ -1,6 +1,5 @@
 from . import resources
 from ._base import ResourceBase
-from .IAMUsers import IAMUser
 
 
 class IAMUserPolicy(ResourceBase):
@@ -11,6 +10,8 @@ class IAMUserPolicy(ResourceBase):
         self.region = region
 
     def list(self):
+        from .IAMUsers import IAMUser
+
         results = []
         try:
             iam_user = IAMUser(self.svc, self.region, self.filter_func)

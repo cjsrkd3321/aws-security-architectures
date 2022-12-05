@@ -2,8 +2,6 @@ from ._base import ResourceBase
 from ._utils import get_name_from_tags
 from . import resources
 
-from .EC2VPC import EC2VPC
-
 
 class EC2InternetGatewayAttachmet(ResourceBase):
     def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
@@ -13,6 +11,8 @@ class EC2InternetGatewayAttachmet(ResourceBase):
         self.region = region
 
     def list(self):
+        from .EC2VPC import EC2VPC
+
         results = []
         try:
             ec2_vpc = EC2VPC(self.svc, self.region, self.filter_func)

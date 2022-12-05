@@ -13,14 +13,14 @@ class S3Object(ResourceBase):
         self.region = region
 
     def list(self, has_cache=False):
+        from .S3Buckets import S3Bucket
+
         global cache
         if cache.get(self.svc) and has_cache:
             return cache[self.svc], None
 
         results = []
         try:
-            from .S3Buckets import S3Bucket
-
             s3_bucket = S3Bucket(self.svc, self.region, self.filter_func)
             buckets, err = s3_bucket.list(has_cache=True)
             if err:

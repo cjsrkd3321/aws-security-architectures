@@ -1,6 +1,5 @@
 from ._base import ResourceBase
 from . import resources
-from .IAMPolicies import IAMPolicy
 
 
 class IAMPolicyVersion(ResourceBase):
@@ -11,6 +10,8 @@ class IAMPolicyVersion(ResourceBase):
         self.region = region
 
     def list(self):
+        from .IAMPolicies import IAMPolicy
+
         results = []
         try:
             iam_policy = IAMPolicy(self.svc, self.region, self.filter_func)
