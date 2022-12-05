@@ -75,6 +75,7 @@ if __name__ == "__main__":
         "ssm",
         "logs",
         "sqs",
+        "dynamodb",
     ]
     sessions = get_sessions(services, regions)
 

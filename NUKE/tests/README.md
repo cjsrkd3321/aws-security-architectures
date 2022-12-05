@@ -72,3 +72,6 @@
 
 ## SQS
 - [x] SQSQueues
+
+## DYNAMODB
+- [x] DYNAMODBTables
