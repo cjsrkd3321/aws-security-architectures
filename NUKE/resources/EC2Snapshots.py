@@ -36,12 +36,8 @@ class EC2Snapshot(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_snapshot(SnapshotId=resource["id"])["ResponseMetadata"][
-                    "HTTPStatusCode"
-                ]
-                == 200
-            ), None
+            self.svc.delete_snapshot(SnapshotId=resource["id"])
+            return True, None
         except Exception as e:
             return False, e
 

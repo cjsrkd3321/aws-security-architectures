@@ -1,4 +1,5 @@
 from concurrent import futures
+from botocore.exceptions import ClientError
 
 from ._base import ResourceBase
 from . import resources
@@ -48,16 +49,16 @@ class S3Bucket(ResourceBase):
                     region = region if region else "us-east-1"
                     if self.region != region:
                         continue
+                    tags = self.svc.get_bucket_tagging(Bucket=bucket_name)["TagSet"]
                 except self.exceptions.NoSuchBucket:
                     continue
-
-                try:
-                    tags = self.svc.get_bucket_tagging(Bucket=bucket_name)["TagSet"]
-                except Exception as e:
-                    if e.response.get("Error", {}).get("Code") == "NoSuchTagSet":
-                        tags = []
-                    else:
+                except ClientError as e:
+                    if e.response["Error"]["Code"] == "AccessDeniedException":
                         continue
+                except Exception as e:
+                    if e.response.get("Error", {}).get("Code") != "NoSuchTagSet":
+                        raise e
+                    tags = []
 
                 results.append(
                     {

@@ -47,12 +47,10 @@ class IAMPolicyVersion(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_policy_version(
-                    PolicyArn=resource["policy_arn"], VersionId=resource["id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_policy_version(
+                PolicyArn=resource["policy_arn"], VersionId=resource["id"]
+            )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

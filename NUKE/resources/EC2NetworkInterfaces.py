@@ -36,12 +36,8 @@ class EC2NetworkInterface(ResourceBase):
                 self.svc.detach_network_interface(
                     AttachmentId=resource["id"], Force=True
                 )
-            return (
-                self.svc.delete_network_interface(NetworkInterfaceId=resource["id"])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_network_interface(NetworkInterfaceId=resource["id"])
+            return True, None
         except Exception as e:
             return False, e
 

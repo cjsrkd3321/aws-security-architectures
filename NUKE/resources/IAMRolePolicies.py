@@ -45,12 +45,10 @@ class IAMRolePolicy(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.delete_role_policy(
-                    RoleName=resource["role_name"], PolicyName=resource["id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.delete_role_policy(
+                RoleName=resource["role_name"], PolicyName=resource["id"]
+            )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

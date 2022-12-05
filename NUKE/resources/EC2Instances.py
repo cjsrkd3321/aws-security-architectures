@@ -39,12 +39,8 @@ class EC2Instance(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.terminate_instances(InstanceIds=[resource["id"]])[
-                    "ResponseMetadata"
-                ]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.terminate_instances(InstanceIds=[resource["id"]])
+            return True, None
         except Exception as e:
             return False, e
 

@@ -48,12 +48,10 @@ class IAMUserPolicyAttachment(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.detach_user_policy(
-                    UserName=resource["user_name"], PolicyArn=resource["id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.detach_user_policy(
+                UserName=resource["user_name"], PolicyArn=resource["id"]
+            )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:

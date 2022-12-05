@@ -48,12 +48,10 @@ class IAMGroupPolicyAttachment(ResourceBase):
 
     def remove(self, resource):
         try:
-            return (
-                self.svc.detach_group_policy(
-                    GroupName=resource["group_name"], PolicyArn=resource["id"]
-                )["ResponseMetadata"]["HTTPStatusCode"]
-                == 200
-            ), None
+            self.svc.detach_group_policy(
+                GroupName=resource["group_name"], PolicyArn=resource["id"]
+            )
+            return True, None
         except self.exceptions.NoSuchEntityException:
             return True, None
         except Exception as e:
