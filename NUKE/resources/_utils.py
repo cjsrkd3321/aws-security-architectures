@@ -1,4 +1,6 @@
 from functools import wraps
+
+import psutil
 import time
 
 
@@ -50,3 +52,8 @@ def timeit(func):
         return result
 
     return timeit_wrapper
+
+
+def get_current_memory_usage():
+    cur_proc_mem_usage_as_MB = psutil.Process().memory_info().rss / (1024 * 1024)
+    print(f"Current Memory Usage: {cur_proc_mem_usage_as_MB:.2f} MB")
