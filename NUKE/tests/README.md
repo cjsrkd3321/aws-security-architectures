@@ -35,20 +35,16 @@
 - [x] IAMUserPolicies
 - [x] IAMListUserGroupAttachments
 - [x] IAMUsers
-
 - [x] IAMRolePolicies
 - [x] IAMRolePolicyAttachments
 - [x] IAMInstanceProfileRoles
 - [x] IAMInstanceProfiles
 - [x] IAMRoles
-
 - [x] IAMPolicyVersions # If you wanna test this function then, You have to deploy it twice.
 - [x] IAMPolicies
-
 - [x] IAMGroupPolicyAttachments
 - [x] IAMGroupPolicies
 - [x] IAMGroups
-
 - [x] IAMOpenIdConnectProviders
 - [x] IAMSamlProviders # If you wanna test this functions then, You'll bring the saml-metadata.xml file.
 
@@ -73,3 +69,6 @@
 
 ## CLOUDWATCH
 - [x] CLOUDWATCHLOGSLogGroups
+
+## SQS
+- [x] SQSQueues
