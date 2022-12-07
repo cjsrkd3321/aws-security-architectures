@@ -26,6 +26,7 @@ SERVICES: Services = [
     "logs",
     "sqs",
     "dynamodb",
+    "rds",
 ]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2", "us-east-1"]
