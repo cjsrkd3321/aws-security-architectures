@@ -1,11 +1,11 @@
+from os import getenv
 from concurrent import futures
-from resources import resources
+
 from filters import have_no_nuke_project_tag, have_tags
 from items import Item, items
 from _types import Services
-from resources._utils import get_regions, get_sessions
-
-from os import getenv
+from resources import resources
+from resources.utils import get_regions, get_sessions
 
 import time
 

@@ -1,4 +1,4 @@
-from resources._base import ResourceState as rs
+from resources.base import ResourceState as rs
 
 
 class Item:
