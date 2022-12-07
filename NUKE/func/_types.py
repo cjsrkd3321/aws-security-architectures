@@ -13,5 +13,6 @@ Services = List[
         Literal["logs"],
         Literal["sqs"],
         Literal["dynamodb"],
+        Literal["rds"],
     ]
 ]

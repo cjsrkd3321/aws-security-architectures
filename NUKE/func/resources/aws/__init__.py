@@ -79,3 +79,6 @@ from .SQSQueues import SQSQueue
 
 # DYNAMODB
 from .DYNAMODBTables import DYNAMODBTable
+
+# RDS
+from .RDSClusters import RDSCluster
