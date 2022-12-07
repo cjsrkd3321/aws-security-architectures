@@ -1,3 +1,5 @@
+from botocore.exceptions import ClientError
+
 from resources import resources
 from resources.base import ResourceBase
 
@@ -52,6 +54,10 @@ class EC2DefaultSecurityGroupRule(ResourceBase):
                     GroupId=resource["group_id"], SecurityGroupRuleIds=[resource["id"]]
                 )["Return"]
             return res, None
+        except ClientError as e:
+            code = e.response.get("Error", {}).get("Code")
+            if code == "InvalidGroup.NotFound":
+                return True, None
         except Exception as e:
             return False, e
 
