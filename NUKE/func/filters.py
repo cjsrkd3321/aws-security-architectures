@@ -1,4 +1,4 @@
-from resources._utils import has_value_from_tags
+from resources.utils import has_value_from_tags
 
 
 # identifies untagged resources
