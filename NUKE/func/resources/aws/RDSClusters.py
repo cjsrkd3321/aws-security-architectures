@@ -1,5 +1,3 @@
-from botocore.exceptions import ClientError
-
 from resources import resources
 from resources.base import ResourceBase
 
