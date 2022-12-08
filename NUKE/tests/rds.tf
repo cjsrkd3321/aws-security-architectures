@@ -40,3 +40,17 @@ resource "aws_rds_cluster_parameter_group" "this" {
     value = "utf8"
   }
 }
+
+# RDSDbParameterGroups
+resource "aws_db_parameter_group" "this" {
+  name   = "nuke-rds-pg"
+  family = "mysql5.6"
+  parameter {
+    name  = "character_set_server"
+    value = "utf8"
+  }
+  parameter {
+    name  = "character_set_client"
+    value = "utf8"
+  }
+}
