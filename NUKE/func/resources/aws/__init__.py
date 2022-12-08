@@ -82,3 +82,4 @@ from .DYNAMODBTables import DYNAMODBTable
 
 # RDS
 from .RDSClusters import RDSCluster
+from .RDSClusterParameterGroups import RDSClusterParameterGroup

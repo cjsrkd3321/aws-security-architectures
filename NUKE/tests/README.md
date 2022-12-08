@@ -78,3 +78,4 @@
 
 ## RDS
 - [x] RDSClusters
+- [x] RDSClusterParameterGroups
