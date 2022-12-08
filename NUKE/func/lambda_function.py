@@ -27,9 +27,10 @@ SERVICES: Services = [
     "sqs",
     "dynamodb",
     "rds",
+    "sns",
 ]
 REGIONS = get_regions()
-REGIONS = ["ap-northeast-2", "us-east-1"]
+REGIONS = ["ap-northeast-2"]
 
 
 def lister(resource, sess, region):
