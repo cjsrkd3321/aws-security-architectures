@@ -82,3 +82,4 @@
 - [x] RDSDbParameterGroups
 - [x] RDSSubnets
 - [x] RDSInstances
+- [x] RDSEventSubscriptions
