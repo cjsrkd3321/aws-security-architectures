@@ -157,3 +157,21 @@ resource "aws_iam_openid_connect_provider" "this" {
 #   name                   = "nuke-provider"
 #   saml_metadata_document = file("resources/saml-metadata.xml")
 # }
+
+# IAMRoles
+resource "aws_iam_role" "grafana" {
+  name = "nuke-grafana-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "grafana.amazonaws.com"
+        }
+      },
+    ]
+  })
+}

@@ -90,3 +90,6 @@ from .RDSEventSubscriptions import RDSEventSubscription
 
 # SNS
 from .SNSTopics import SNSTopic
+
+# GRAFANA
+from .GRAFANAWorkspaces import GRAFANAWorkspace
