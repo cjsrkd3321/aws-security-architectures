@@ -1,7 +1,7 @@
 from os import getenv
 from concurrent import futures
 
-from filters import have_no_nuke_project_tag, have_tags
+from filters import have_no_nuke_project_tag, have_tags, is_create_date_less_than_now
 from items import Item, items
 from _types import Services
 from resources import resources
@@ -34,11 +34,12 @@ REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]
 
 
-def lister(resource, sess, region):
+def lister(resource, sess):
     name = resource.__name__
 
     try:
         r = resource(sess, have_no_nuke_project_tag)
+        # r = resource(sess, is_create_date_less_than_now)
         # r = resource(sess, have_tags)
     except Exception as e:
         print("[ERR_INIT]", name, e)
@@ -52,7 +53,7 @@ def lister(resource, sess, region):
     for resource_result in resource_results:
         item = Item(
             resource=resource_result,
-            region=region,
+            region=sess._client_config.region_name,
             name=name,
             filterer=r.filter,
             remover=r.remove,
@@ -73,7 +74,7 @@ def lambda_handler(event, context):
                 continue
 
             threads = [
-                pool.submit(lister, r, sessions[region][svc], region)
+                pool.submit(lister, r, sessions[region][svc])
                 for r in resources
                 for svc in services
                 if r.__name__.lower().startswith(svc)
