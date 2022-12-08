@@ -3,7 +3,7 @@ from resources.base import ResourceBase
 from resources.utils import convert_dict_to_tags
 
 
-class MSKCluster(ResourceBase):
+class KAFKAMskCluster(ResourceBase):
     def __init__(self, sess=None, default_filter_func=None):
         self.svc = sess
         self.exceptions = self.svc.exceptions
@@ -62,4 +62,4 @@ class MSKCluster(ResourceBase):
 
 
 if __name__ != "__main__":
-    resources.append(MSKCluster)
+    resources.append(KAFKAMskCluster)

@@ -63,7 +63,7 @@ from .KMSKeys import KMSKey
 from .LAMBDAFunctions import LAMBDAFunction
 
 # MSK
-from .MSKClusters import MSKCluster
+from .KAFKAMskClusters import KAFKAMskCluster
 
 # SECRETSMANAGER
 from .SECRETSMANAGERSecrets import SECRETSMANAGERSecret
