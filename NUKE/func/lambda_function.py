@@ -35,20 +35,18 @@ REGIONS = ["ap-northeast-2"]
 
 
 def lister(resource, sess, region):
-    try:
-        r = resource(sess, region, have_no_nuke_project_tag)
-        # r = resource(sess, region, have_tags)
-        name = r.__class__.__name__
-    except Exception as e:
-        print("[ERR_INIT]", region, name, e)
-        return
+    name = resource.__name__
 
-    if name.startswith("IAM") and region != "us-east-1":
+    try:
+        r = resource(sess, have_no_nuke_project_tag)
+        # r = resource(sess, have_tags)
+    except Exception as e:
+        print("[ERR_INIT]", name, e)
         return
 
     resource_results, err = r.list()
     if err:
-        print("[ERR_LIST]", region, name, err)
+        print("[ERR_LIST]", name, err)
         return
 
     for resource_result in resource_results:
@@ -65,14 +63,21 @@ def lister(resource, sess, region):
 def lambda_handler(event, context):
     global MAX_ITER_COUNTS, MAX_SLEEP, MAX_WORKERS, REGIONS, SERVICES
 
+    sessions = get_sessions(SERVICES, REGIONS)
+
     for _ in range(MAX_ITER_COUNTS):
-        threads = []
         pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
         for region in REGIONS:
-            for resource in resources:
-                sessions = get_sessions(SERVICES, REGIONS)
-                job = pool.submit(lister, resource, sessions, region)
-                threads.append(job)
+            services = sessions[region].keys()
+            if not services:
+                continue
+
+            threads = [
+                pool.submit(lister, r, sessions[region][svc], region)
+                for r in resources
+                for svc in services
+                if r.__name__.lower().startswith(svc)
+            ]
         futures.wait(threads)
 
         if not items:
@@ -110,45 +115,4 @@ def lambda_handler(event, context):
 
 
 if __name__ == "__main__":
-    for _ in range(MAX_ITER_COUNTS):
-        threads = []
-        pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
-        for region in REGIONS:
-            for resource in resources:
-                sessions = get_sessions(SERVICES, REGIONS)
-                job = pool.submit(lister, resource, sessions, region)
-                threads.append(job)
-        futures.wait(threads)
-
-        if not items:
-            break
-
-        for item in items:
-            item.filter()
-            if item.is_skip():
-                # Temporary if statement
-                if item.item["reason"] in [
-                    "have_no_nuke_project_tag",
-                    "have_tags",
-                ] or item.item["reason"].startswith("DEFAULT(IMPOSSIBLE"):
-                    continue
-                print(item.current)
-                continue
-            else:
-                print(item.current)
-                pass
-
-            # item.remove()
-            # print(item.current)
-
-        failed_count = 0
-        for item in items:
-            if item.is_failed():
-                failed_count += 1
-        if failed_count == 0:
-            break
-
-        items.clear()
-
-        print(f"\nWaiting {MAX_SLEEP} seconds...\n")
-        time.sleep(MAX_SLEEP)
+    lambda_handler("event", "context")

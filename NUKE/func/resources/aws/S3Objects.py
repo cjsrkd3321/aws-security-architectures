@@ -6,11 +6,10 @@ cache: dict = {}
 
 
 class S3Object(ResourceBase):
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
-        self.svc = sess[region]["s3"] if type(sess) == dict else sess
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self, has_cache=False):
         from .S3Buckets import S3Bucket
@@ -21,7 +20,7 @@ class S3Object(ResourceBase):
 
         results = []
         try:
-            s3_bucket = S3Bucket(self.svc, self.region, self.filter_func)
+            s3_bucket = S3Bucket(self.svc, self.filter_func)
             buckets, err = s3_bucket.list(has_cache=True)
             if err:
                 return results, err

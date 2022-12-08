@@ -23,11 +23,10 @@ def delete_objs(svc, bucket, objects):
 
 
 class S3Bucket(ResourceBase):
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
-        self.svc = sess[region]["s3"] if type(sess) == dict else sess
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self, has_cache=False):
         global cache
@@ -47,7 +46,7 @@ class S3Bucket(ResourceBase):
                         "LocationConstraint"
                     ]
                     region = region if region else "us-east-1"
-                    if self.region != region:
+                    if self.svc._client_config.region_name != region:
                         continue
                     tags = self.svc.get_bucket_tagging(Bucket=name).get("TagSet", [])
                 except self.exceptions.NoSuchBucket:
@@ -75,7 +74,7 @@ class S3Bucket(ResourceBase):
     def remove(self, resource):
         from .S3Objects import S3Object
 
-        s3_object = S3Object(self.svc, self.region, self.filter_func)
+        s3_object = S3Object(self.svc, self.filter_func)
         objects, err = s3_object.list(has_cache=True)
         if err:
             return False, err

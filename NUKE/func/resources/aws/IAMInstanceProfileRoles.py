@@ -3,18 +3,17 @@ from resources.base import ResourceBase
 
 
 class IAMInstanceProfileRole(ResourceBase):
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
-        self.svc = sess[region]["iam"] if type(sess) == dict else sess
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         from .IAMRoles import IAMRole
 
         results = []
         try:
-            iam_role = IAMRole(self.svc, self.region, self.filter_func)
+            iam_role = IAMRole(self.svc, self.filter_func)
             roles, err = iam_role.list(has_cache=True)
             if err:
                 return results, err

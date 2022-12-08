@@ -14,7 +14,7 @@ from .EC2VPCEndpoints import EC2VPCEndpoint
 from .EC2DefaultSecurityGroupRules import EC2DefaultSecurityGroupRule
 from .EC2Instances import EC2Instance
 
-# from .EC2NetworkInterfaces import EC2NetworkInterface
+from .EC2NetworkInterfaces import EC2NetworkInterface
 from .EC2SecurityGroups import EC2SecurityGroup
 from .EC2InternetGatewayAttachmets import EC2InternetGatewayAttachmet
 from .EC2InternetGateways import EC2InternetGateway
@@ -72,7 +72,7 @@ from .SECRETSMANAGERSecrets import SECRETSMANAGERSecret
 from .SSMParameters import SSMParameter
 
 # CLOUDWATCH
-from .CLOUDWATCHLOGSLogGroups import CLOUDWATCHLOGSLogGroup
+from .LOGSLogGroups import LOGSLogGroup
 
 # SQS
 from .SQSQueues import SQSQueue

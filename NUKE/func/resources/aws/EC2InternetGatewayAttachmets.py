@@ -4,18 +4,17 @@ from resources.utils import get_name_from_tags
 
 
 class EC2InternetGatewayAttachmet(ResourceBase):
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
-        self.svc = sess[region]["ec2"] if type(sess) == dict else sess
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         from .EC2VPC import EC2VPC
 
         results = []
         try:
-            ec2_vpc = EC2VPC(self.svc, self.region, self.filter_func)
+            ec2_vpc = EC2VPC(self.svc, self.filter_func)
             vpcs, err = ec2_vpc.list(has_cache=True)
             if err:
                 return results, err

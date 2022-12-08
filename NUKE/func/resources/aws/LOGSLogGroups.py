@@ -5,12 +5,11 @@ from resources.base import ResourceBase
 from resources.utils import convert_dict_to_tags
 
 
-class CLOUDWATCHLOGSLogGroup(ResourceBase):
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
-        self.svc = sess[region]["logs"] if type(sess) == dict else sess
+class LOGSLogGroup(ResourceBase):
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         results = []
@@ -67,4 +66,4 @@ class CLOUDWATCHLOGSLogGroup(ResourceBase):
 
 
 if __name__ != "__main__":
-    resources.append(CLOUDWATCHLOGSLogGroup)
+    resources.append(LOGSLogGroup)
