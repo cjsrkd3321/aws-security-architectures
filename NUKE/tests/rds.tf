@@ -70,10 +70,6 @@ resource "aws_db_instance" "this" {
   db_subnet_group_name = aws_db_subnet_group.this.name
 }
 
-resource "aws_sns_topic" "this" {
-  name = "nuke-topic"
-}
-
 # RDSEventSubscriptions
 resource "aws_db_event_subscription" "this" {
   name      = "nuke-event-sub"
