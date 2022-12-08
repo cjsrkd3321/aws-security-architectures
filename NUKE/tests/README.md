@@ -80,3 +80,4 @@
 - [x] RDSClusters
 - [x] RDSClusterParameterGroups
 - [x] RDSDbParameterGroups
+- [x] RDSSubnets

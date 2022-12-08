@@ -22,8 +22,9 @@ resource "aws_rds_cluster" "postgresql" {
   preferred_backup_window = "07:00-09:00"
 }
 
+# RDSSubnets
 resource "aws_db_subnet_group" "this" {
-  name       = "main"
+  name       = "nuke-subnet-group"
   subnet_ids = [aws_subnet.this.id, aws_subnet.this2.id, aws_subnet.this3.id]
 }
 
