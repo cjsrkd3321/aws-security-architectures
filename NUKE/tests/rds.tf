@@ -55,3 +55,17 @@ resource "aws_db_parameter_group" "this" {
     value = "utf8"
   }
 }
+
+# RDSInstances
+resource "aws_db_instance" "this" {
+  allocated_storage    = 10
+  db_name              = "nukedb"
+  engine               = "mysql"
+  engine_version       = "5.7"
+  instance_class       = "db.t2.medium"
+  username             = "foo"
+  password             = "foobarbaz"
+  parameter_group_name = "default.mysql5.7"
+  skip_final_snapshot  = true
+  db_subnet_group_name = aws_db_subnet_group.this.name
+}

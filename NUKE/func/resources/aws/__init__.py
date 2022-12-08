@@ -85,3 +85,4 @@ from .RDSClusters import RDSCluster
 from .RDSClusterParameterGroups import RDSClusterParameterGroup
 from .RDSDbParameterGroups import RDSDbParameterGroup
 from .RDSSubnets import RDSSubnet
+from .RDSInstances import RDSInstance
