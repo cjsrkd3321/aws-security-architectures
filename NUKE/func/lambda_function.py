@@ -28,6 +28,7 @@ SERVICES: Services = [
     "dynamodb",
     "rds",
     "sns",
+    "grafana",
 ]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]

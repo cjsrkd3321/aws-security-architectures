@@ -86,3 +86,6 @@
 
 ## SNS
 - [x] SNSTopics
+
+# GRAFANA
+- [x] GRAFANAWorkspaces
