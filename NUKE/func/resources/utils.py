@@ -1,5 +1,6 @@
 from functools import wraps
 from botocore.config import Config
+from boto3.session import Session
 
 import time
 import boto3
@@ -65,14 +66,28 @@ def get_regions():
 
 def get_sessions(services=[], regions=[]):
     global SESSIONS
-    if SESSIONS:
-        return SESSIONS
+    GLOBAL_REGION = "us-east-1"
 
-    for region in regions:
-        SESSIONS[region] = {}
-        for service in services:
-            SESSIONS[region][service] = boto3.client(
+    sess = Session()
+    for service in services:
+        if service in ["iam"]:
+            SESSIONS[GLOBAL_REGION] = {
+                service: boto3.client(
+                    service_name=service,
+                    config=Config(region_name=GLOBAL_REGION, max_pool_connections=1000),
+                )
+            }
+            continue
+
+        available_regions = sess.get_available_regions(service_name=service)
+        for available_region in available_regions:
+            if not SESSIONS.get(available_region):
+                SESSIONS[available_region] = {}
+            if available_region not in regions:
+                continue
+            SESSIONS[available_region][service] = boto3.client(
                 service_name=service,
-                config=Config(region_name=region, max_pool_connections=1000),
+                config=Config(region_name=available_region, max_pool_connections=1000),
             )
+
     return SESSIONS

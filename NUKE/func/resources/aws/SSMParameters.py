@@ -5,11 +5,10 @@ from resources.base import ResourceBase
 
 
 class SSMParameter(ResourceBase):
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
-        self.svc = sess[region]["ssm"] if type(sess) == dict else sess
+    def __init__(self, sess=None, default_filter_func=None):
+        self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
-        self.region = region
 
     def list(self):
         results = []

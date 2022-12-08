@@ -4,7 +4,7 @@ from enum import Enum, auto
 
 class ResourceBase(metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, sess=None, region="ap-northeast-2", default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None):
         pass
 
     @abstractmethod
