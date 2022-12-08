@@ -1,3 +1,4 @@
+# RDSClusters
 resource "aws_rds_cluster" "mysql" {
   cluster_identifier      = "nuke-aurora-mysql-cluster"
   engine                  = "aurora-mysql"
@@ -9,6 +10,7 @@ resource "aws_rds_cluster" "mysql" {
   preferred_backup_window = "07:00-09:00"
 }
 
+# RDSClusters
 resource "aws_rds_cluster" "postgresql" {
   cluster_identifier      = "nuke-aurora-postgresql-cluster"
   engine                  = "aurora-postgresql"
@@ -23,4 +25,18 @@ resource "aws_rds_cluster" "postgresql" {
 resource "aws_db_subnet_group" "this" {
   name       = "main"
   subnet_ids = [aws_subnet.this.id, aws_subnet.this2.id, aws_subnet.this3.id]
+}
+
+# RDSClusterParameterGroups
+resource "aws_rds_cluster_parameter_group" "this" {
+  name   = "nuke-rds-cluster-pg"
+  family = "aurora5.6"
+  parameter {
+    name  = "character_set_server"
+    value = "utf8"
+  }
+  parameter {
+    name  = "character_set_client"
+    value = "utf8"
+  }
 }
