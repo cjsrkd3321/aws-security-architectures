@@ -84,3 +84,4 @@ from .DYNAMODBTables import DYNAMODBTable
 from .RDSClusters import RDSCluster
 from .RDSClusterParameterGroups import RDSClusterParameterGroup
 from .RDSDbParameterGroups import RDSDbParameterGroup
+from .RDSSubnets import RDSSubnet
