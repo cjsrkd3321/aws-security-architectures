@@ -2,8 +2,6 @@ from resources import resources
 from resources.base import ResourceBase
 from resources.utils import get_name_from_tags
 
-cache: dict = {}
-
 
 class EC2EIP(ResourceBase):
     def __init__(self, sess=None, default_filter_func=None):
