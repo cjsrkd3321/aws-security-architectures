@@ -1,6 +1,7 @@
 # TEST LIST
 
 ## EC2
+- [x] EC2NetworkAcls
 - [x] EC2KeyPairs
 - [x] EC2Images
 - [x] EC2EIP
