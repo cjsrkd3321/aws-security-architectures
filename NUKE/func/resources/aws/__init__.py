@@ -96,3 +96,6 @@ from .GRAFANAWorkspaces import GRAFANAWorkspace
 
 # EKS
 from .EKSClusters import EKSCluster
+
+# EMR
+from .EMRClusters import EMRCluster

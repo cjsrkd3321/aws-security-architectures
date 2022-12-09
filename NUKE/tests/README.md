@@ -92,3 +92,6 @@
 
 # EKS
 - [x] EKSClusters
+
+# EMR
+- [x] EMRClusters
