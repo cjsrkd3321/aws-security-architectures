@@ -82,8 +82,10 @@ resource "aws_eip" "this" {
 
 # EC2VPCEndpoints
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id       = aws_vpc.this.id
-  service_name = "com.amazonaws.${var.region}.s3"
+  vpc_id            = aws_vpc.this.id
+  subnet_ids        = [aws_subnet.this.id]
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Interface"
 }
 
 # EC2NetworkInterfaces
