@@ -89,3 +89,6 @@
 
 # GRAFANA
 - [x] GRAFANAWorkspaces
+
+# EKS
+- [x] EKSClusters
