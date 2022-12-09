@@ -9,13 +9,21 @@ class IAMLoginProfile(ResourceBase):
         self.filter_func = default_filter_func
 
     def list(self):
+        from .IAMUsers import IAMUser
+
         results = []
         try:
-            iterator = self.svc.get_paginator("list_users").paginate()
-            users = [user for users in iterator for user in users["Users"]]
-            for user in users:
-                user_name = user["UserName"]
+            iam_user = IAMUser(self.svc, self.filter_func)
+            users, err = iam_user.list(has_cache=True)
+            if err:
+                return results, err
 
+            for user in users:
+                reason, err = iam_user.filter(user)
+                if err or reason:
+                    continue
+
+                user_name = user["id"]
                 try:
                     p = self.svc.get_login_profile(UserName=user_name)["LoginProfile"]
                 except self.exceptions.NoSuchEntityException:
