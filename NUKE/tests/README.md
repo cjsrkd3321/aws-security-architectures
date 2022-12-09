@@ -102,3 +102,6 @@
 
 # EFS
 - [x] EFSFilesystems
+
+# ACM
+- [x] ACMCertificates

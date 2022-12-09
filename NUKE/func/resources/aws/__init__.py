@@ -106,3 +106,6 @@ from .ECRRepositories import ECRRepository
 
 # EFS
 from .EFSFilesystems import EFSFilesystem
+
+# ACM
+from .ACMCertificates import ACMCertificate
