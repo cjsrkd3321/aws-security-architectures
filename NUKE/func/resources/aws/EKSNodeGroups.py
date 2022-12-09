@@ -15,7 +15,7 @@ class EKSNodeGroup(ResourceBase):
         results = []
         try:
             eks_clusters = EKSCluster(self.svc, self.filter_func)
-            clusters, err = eks_clusters.list(has_cache=True)
+            clusters, err = eks_clusters.list()
             if err:
                 return results, err
 
