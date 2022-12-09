@@ -200,3 +200,29 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.eks_cluster.name
 }
+
+# # IAMRoles
+resource "aws_iam_role" "emr_cluster" {
+  name               = "nuke-emr-cluster-service-role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "elasticmapreduce.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+# IAMInstanceProfiles
+resource "aws_iam_instance_profile" "emr_profile" {
+  name = "nuke-emr-profile"
+  role = aws_iam_role.emr_cluster.name
+}

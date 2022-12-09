@@ -30,6 +30,7 @@ SERVICES: Services = [
     "sns",
     "grafana",
     "eks",
+    "emr",
 ]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]
