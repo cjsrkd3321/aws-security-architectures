@@ -12,8 +12,8 @@ import time
 
 IS_RUN_DELETE = getenv("IS_RUN_DELETE", "FALSE")
 MAX_WORKERS = int(getenv("MAX_WORKERS", 50))
-MAX_ITER_COUNTS = int(getenv("MAX_ITER_COUNTS", 60))
-MAX_SLEEP = int(getenv("MAX_SLEEP", 10))
+MAX_ITER_COUNTS = int(getenv("MAX_ITER_COUNTS", 50))
+MAX_SLEEP = int(getenv("MAX_SLEEP", 15))
 SERVICES: Services = [
     "ec2",
     "iam",
