@@ -43,9 +43,17 @@ def lister(resource, sess):
     region = sess._client_config.region_name
 
     try:
+        # Filter resources with no "Project=nuke" tag
         r = resource(sess, have_no_nuke_project_tag)
+
+        # Filter resources with create_date if exist and less than now
         # r = resource(sess, is_create_date_less_than_now)
+
+        # Filter resources with tags if exist
         # r = resource(sess, have_tags)
+
+        # All resources
+        # r = resource(sess)
     except Exception as e:
         print("[ERR_INIT]", name, e)
         return
