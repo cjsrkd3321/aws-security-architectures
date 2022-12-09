@@ -33,6 +33,7 @@ SERVICES: Services = [
     "emr",
     "ecr",
     "efs",
+    "acm",
 ]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]
