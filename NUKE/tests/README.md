@@ -99,3 +99,6 @@
 
 # ECR
 - [x] ECRRepositories
+
+# EFS
+- [x] EFSFilesystems
