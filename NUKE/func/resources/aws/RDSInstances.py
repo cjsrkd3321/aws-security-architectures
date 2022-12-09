@@ -17,7 +17,7 @@ class RDSInstance(ResourceBase):
                 results.append(
                     {
                         "id": instance["DBInstanceIdentifier"],
-                        "name": instance["DBName"],
+                        "name": instance.get("DBName", ""),
                         "tags": instance["TagList"],
                         "state": instance["DBInstanceStatus"],
                         "unique_id": instance.get("DBSystemId"),
