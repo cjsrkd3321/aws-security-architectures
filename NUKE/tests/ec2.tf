@@ -166,3 +166,30 @@ resource "aws_customer_gateway" "this" {
   ip_address = "172.83.124.10"
   type       = "ipsec.1"
 }
+
+# EC2VPCEndpointServiceConfigurations
+resource "aws_vpc_endpoint_service" "this" {
+  acceptance_required        = false
+  network_load_balancer_arns = [aws_lb.network.arn]
+}
+
+# EC2VPCEndpoints
+resource "aws_vpc_endpoint" "this" {
+  vpc_id              = aws_vpc.this.id
+  service_name        = aws_vpc_endpoint_service.this.service_name
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = false
+}
+
+# EC2VPCEndpointServiceConfigurations(Connections)
+resource "aws_vpc_endpoint_connection_accepter" "this" {
+  vpc_endpoint_service_id = aws_vpc_endpoint_service.this.id
+  vpc_endpoint_id         = aws_vpc_endpoint.this.id
+}
+
+resource "aws_lb" "network" {
+  name               = "nuke-network-lb"
+  internal           = true
+  load_balancer_type = "network"
+  subnets            = [aws_subnet.this.id]
+}
