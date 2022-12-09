@@ -18,5 +18,6 @@ Services = List[
         Literal["grafana"],
         Literal["eks"],
         Literal["emr"],
+        Literal["ecr"],
     ]
 ]

@@ -96,3 +96,6 @@
 
 # EMR
 - [x] EMRClusters
+
+# ECR
+- [x] ECRRepositories
