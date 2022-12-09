@@ -1,6 +1,5 @@
 from resources import resources
 from resources.base import ResourceBase
-from resources.utils import convert_dict_to_tags
 
 
 class ECRRepository(ResourceBase):
