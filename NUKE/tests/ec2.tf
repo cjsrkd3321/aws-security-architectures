@@ -159,3 +159,10 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
 resource "aws_network_acl" "this" {
   vpc_id = aws_vpc.this.id
 }
+
+# EC2CustomerGateways
+resource "aws_customer_gateway" "this" {
+  bgp_asn    = 65000
+  ip_address = "172.83.124.10"
+  type       = "ipsec.1"
+}
