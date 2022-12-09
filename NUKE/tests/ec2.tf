@@ -154,3 +154,8 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "this" {
   transit_gateway_id = aws_ec2_transit_gateway.this.id
   vpc_id             = aws_vpc.this.id
 }
+
+# EC2NetworkAcls
+resource "aws_network_acl" "this" {
+  vpc_id = aws_vpc.this.id
+}
