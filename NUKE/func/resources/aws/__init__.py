@@ -1,4 +1,5 @@
 # EC2
+from .EC2CustomerGateways import EC2CustomerGateway
 from .EC2NetworkAcls import EC2NetworkAcl
 from .EC2TransitGatewayAttachments import EC2TransitGatewayAttachment
 from .EC2VPCPeeringConnections import EC2VPCPeeringConnection
