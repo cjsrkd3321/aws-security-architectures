@@ -36,6 +36,7 @@ REGIONS = ["ap-northeast-2"]
 
 def lister(resource, sess):
     name = resource.__name__
+    region = sess._client_config.region_name
 
     try:
         r = resource(sess, have_no_nuke_project_tag)
@@ -53,7 +54,7 @@ def lister(resource, sess):
     for resource_result in resource_results:
         item = Item(
             resource=resource_result,
-            region=sess._client_config.region_name,
+            region="us-east-1" if region == "aws-global" else region,
             name=name,
             filterer=r.filter,
             remover=r.remove,
