@@ -109,3 +109,6 @@ from .EFSFilesystems import EFSFilesystem
 
 # ACM
 from .ACMCertificates import ACMCertificate
+
+# ACMPCA
+from .ACMPCACertificateAuthorities import ACMPCACertificateAuthority

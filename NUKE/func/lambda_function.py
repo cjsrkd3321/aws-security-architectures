@@ -34,6 +34,7 @@ SERVICES: Services = [
     "ecr",
     "efs",
     "acm",
+    "acm-pca",
 ]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]
@@ -91,7 +92,7 @@ def lambda_handler(event, context):
                 pool.submit(lister, r, sessions[region][svc])
                 for r in resources
                 for svc in services
-                if r.__name__.lower().startswith(svc)
+                if r.__name__.lower().startswith(svc.replace("-", ""))
             ]
         futures.wait(threads)
 

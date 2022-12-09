@@ -105,3 +105,4 @@
 
 # ACM
 - [x] ACMCertificates
+- [x] ACMPCACertificateAuthorities # Be careful!! This spends a lot of money.
