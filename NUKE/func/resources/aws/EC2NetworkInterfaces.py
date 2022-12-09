@@ -21,6 +21,8 @@ class EC2NetworkInterface(ResourceBase):
                     "state": ni["Status"],
                     "type": ni["InterfaceType"],
                     "attachment": ni.get("Attachment", {}),
+                    "requester_id": ni.get("RequesterId"),
+                    "description": ni.get("Description", ""),
                 }
                 for network_interfaces in iterator
                 for network_interface in network_interfaces["NetworkInterfaces"]
@@ -43,6 +45,8 @@ class EC2NetworkInterface(ResourceBase):
     def filter(self, resource, *filters):
         if resource["attachment"].get("DeleteOnTermination"):
             return "DEFAULT(INSTANCE DEPENDENCY)", None
+        if resource["requester_id"] and resource["state"] != "available":
+            return f"DEFAULT(REQUESTER DEPENDENCY {resource['requester_id']})", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
