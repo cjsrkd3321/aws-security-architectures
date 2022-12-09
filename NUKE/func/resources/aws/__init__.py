@@ -93,3 +93,6 @@ from .SNSTopics import SNSTopic
 
 # GRAFANA
 from .GRAFANAWorkspaces import GRAFANAWorkspace
+
+# EKS
+from .EKSClusters import EKSCluster

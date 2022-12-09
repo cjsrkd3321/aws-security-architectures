@@ -29,6 +29,7 @@ SERVICES: Services = [
     "rds",
     "sns",
     "grafana",
+    "eks",
 ]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]
@@ -92,6 +93,7 @@ def lambda_handler(event, context):
                 if item.item["reason"] in [
                     "have_no_nuke_project_tag",
                     "have_tags",
+                    "is_create_date_less_than_now",
                 ] or item.item["reason"].startswith("DEFAULT(IMPOSSIBLE"):
                     continue
                 print(item.current)
