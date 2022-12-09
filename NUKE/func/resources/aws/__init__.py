@@ -103,3 +103,6 @@ from .EMRClusters import EMRCluster
 
 # ECR
 from .ECRRepositories import ECRRepository
+
+# EFS
+from .EFSFilesystems import EFSFilesystem
