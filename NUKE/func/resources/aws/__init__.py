@@ -100,3 +100,6 @@ from .EKSNodeGroups import EKSNodeGroup
 
 # EMR
 from .EMRClusters import EMRCluster
+
+# ECR
+from .ECRRepositories import ECRRepository
