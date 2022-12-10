@@ -115,3 +115,6 @@
 # ELBv2
 - [x] ELBv2ELBs
 - [x] ELBv2TargetGroups
+
+# EVENTS
+- [x] EVENTSRules
