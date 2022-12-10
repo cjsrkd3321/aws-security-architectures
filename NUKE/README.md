@@ -2,6 +2,11 @@
 
 [How to delete unused resources with lambda NUKE in python (Not written yet)]()
 
+## Getting Started
+1. Run docker
+2. Start command `./layer.sh`
+3. `terraform apply`
+
 ## Cautions
 
 1. If you wanna test this NUKE, be careful! Because test codes can spend a lot of money probably.
