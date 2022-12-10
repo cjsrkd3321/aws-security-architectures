@@ -3,39 +3,17 @@ from concurrent import futures
 
 from filters import have_no_nuke_project_tag, have_tags, is_create_date_less_than_now
 from items import Item, items
-from _types import Services
 from resources import resources
 from resources.utils import get_regions, get_sessions
+from resources.aws._GLOBAL import SERVICES
 
 import time
 
 
 IS_RUN_DELETE = getenv("IS_RUN_DELETE", "FALSE")
-MAX_WORKERS = int(getenv("MAX_WORKERS", 50))
+MAX_WORKERS = int(getenv("MAX_WORKERS", 500))
 MAX_ITER_COUNTS = int(getenv("MAX_ITER_COUNTS", 50))
 MAX_SLEEP = int(getenv("MAX_SLEEP", 15))
-SERVICES: Services = [
-    "ec2",
-    "iam",
-    "s3",
-    "kms",
-    "lambda",
-    "kafka",
-    "secretsmanager",
-    "ssm",
-    "logs",
-    "sqs",
-    "dynamodb",
-    "rds",
-    "sns",
-    "grafana",
-    "eks",
-    "emr",
-    "ecr",
-    "efs",
-    "acm",
-    "acm-pca",
-]
 REGIONS = get_regions()
 REGIONS = ["ap-northeast-2"]
 

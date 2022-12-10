@@ -1,4 +1,6 @@
 # EC2
+from .ELBv2TargetGroups import ELBv2TargetGroup
+from .ELBv2ELBs import ELBv2ELB
 from .EC2VPCEndpointServiceConfigurations import EC2VPCEndpointServiceConfiguration
 from .EC2CustomerGateways import EC2CustomerGateway
 from .EC2NetworkAcls import EC2NetworkAcl

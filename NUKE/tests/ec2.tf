@@ -187,9 +187,18 @@ resource "aws_vpc_endpoint_connection_accepter" "this" {
   vpc_endpoint_id         = aws_vpc_endpoint.this.id
 }
 
+# ELBv2ELBs
 resource "aws_lb" "network" {
   name               = "nuke-network-lb"
   internal           = true
   load_balancer_type = "network"
   subnets            = [aws_subnet.this.id]
+}
+
+# ELBv2TargetGroups
+resource "aws_lb_target_group" "this" {
+  name     = "nuke-lb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.this.id
 }
