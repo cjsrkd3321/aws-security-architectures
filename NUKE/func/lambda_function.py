@@ -7,16 +7,17 @@ from resources import resources
 from resources.utils import get_regions, get_sessions
 from resources.aws._GLOBAL import SERVICES
 
-import time
-import json
+from time import sleep, time
+from json import dumps
 
 
-IS_RUN_DELETE = getenv("IS_RUN_DELETE", "FALSE")
+IS_RUN_DELETE = getenv("IS_RUN_DELETE", "TRUE")
 MAX_WORKERS = int(getenv("MAX_WORKERS", 500))
 MAX_ITER_COUNTS = int(getenv("MAX_ITER_COUNTS", 50))
 MAX_SLEEP = int(getenv("MAX_SLEEP", 15))
+MAX_RUNNING_TIME = getenv("MAX_RUNNING_TIME", 850)
+TOPIC_ARN = getenv("TOPIC_ARN", "")
 REGIONS = get_regions()
-REGIONS = ["us-east-1", "ap-northeast-2"]
 
 
 def lister(resource, sess, filter_func=None):
@@ -48,31 +49,43 @@ def lister(resource, sess, filter_func=None):
 
 
 def lambda_handler(event, context):
-    # STARTED_AT = time.time() # You must calculate time because of lambda maximum operating time.
-    items = {"REMOVED": [], "FAILED": [], "FILTERED": []}
+    if not TOPIC_ARN:
+        print("You must set the TOPIC_ARN environment variable.")
+        return
+
     global MAX_ITER_COUNTS, MAX_SLEEP, MAX_WORKERS, REGIONS, SERVICES
+    STARTED_AT = time()
+
+    message = ""
+    items = {"REMOVED": [], "FAILED": [], "FILTERED": []}
     sessions = get_sessions(SERVICES, REGIONS)
 
     for iter_cnt in range(MAX_ITER_COUNTS):
+        list_start_time = time()
+
         scan_results = []
-        pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
         threads = []
+        pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
         for region in REGIONS:
             services = sessions[region].keys()
             if not services:
                 continue
 
             threads += [
-                pool.submit(lister, r, sessions[region][svc], have_no_nuke_project_tag)
+                # pool.submit(lister, r, sessions[region][svc], have_no_nuke_project_tag) # FOR TEST
                 # pool.submit(lister, r, sessions[region][svc], is_create_date_less_than_now)
-                # pool.submit(lister, r, sessions[region][svc], have_tags)
-                # pool.submit(lister, r, sessions[region][svc])
+                pool.submit(lister, r, sessions[region][svc], have_tags)  # NO TAGS
+                # pool.submit(lister, r, sessions[region][svc]) # ALL RESOURCES
                 for r in resources
                 for svc in services
                 if r.__name__.lower().startswith(svc.replace("-", ""))
             ]
         for future in futures.as_completed(threads):
             scan_results += future.result()
+
+        print(f"LIST ELAPSED TIME: {time() - list_start_time:.3f}s")
+
+        filter_remove_start_time = time()
 
         for item in scan_results:
             if item.filter():
@@ -83,17 +96,33 @@ def lambda_handler(event, context):
                 continue
 
             items["REMOVED" if item.remove() else "FAILED"].append(item.current)
+            print(item.current)
 
-        if (len(items["FAILED"]) == 0) or (iter_cnt == MAX_ITER_COUNTS - 1):
-            print(json.dumps(items, indent=2).replace('"', ""))
-            print(
-                f"FILTERED: {len(items['FILTERED'])}, REMOVED: {len(items['REMOVED'])}, FAILED: {len(items['FAILED'])}"
-            )
+        elapsed_time = int(time() - STARTED_AT)
+        if (
+            (len(items["FAILED"]) == 0)
+            or (iter_cnt == MAX_ITER_COUNTS - 1)
+            or elapsed_time > MAX_RUNNING_TIME
+        ):
+            message += dumps(items, indent=2).replace('"', "")
+            message += f"\nFILTERED: {len(items['FILTERED'])}, REMOVED: {len(items['REMOVED'])}, FAILED: {len(items['FAILED'])}"
             break
+
+        print(f"F&R ELAPSED TIME: {time() - filter_remove_start_time:.3f}s")
 
         items["FAILED"].clear() or items["FILTERED"].clear()
         print(f"\nWaiting {MAX_SLEEP} seconds...\n")
-        time.sleep(MAX_SLEEP)
+        sleep(MAX_SLEEP)
+
+    from datetime import date
+    import boto3
+
+    sns = boto3.client("sns")
+    sns.publish(
+        TopicArn=TOPIC_ARN,
+        Message=message,
+        Subject=f"{date.today()} - AWS NUKE RESULTS",
+    )
 
 
 if __name__ == "__main__":
