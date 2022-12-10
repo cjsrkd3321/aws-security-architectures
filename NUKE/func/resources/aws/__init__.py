@@ -1,4 +1,5 @@
 # EC2
+from .EC2RouteTables import EC2RouteTable
 from .ELBv2TargetGroups import ELBv2TargetGroup
 from .ELBv2ELBs import ELBv2ELB
 from .EC2VPCEndpointServiceConfigurations import EC2VPCEndpointServiceConfiguration

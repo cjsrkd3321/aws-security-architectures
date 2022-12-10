@@ -1,6 +1,7 @@
 # TEST LIST
 
 ## EC2
+- [x] EC2RouteTables
 - [x] EC2VPCEndpointServiceConfigurations
 - [x] EC2CustomerGateways
 - [x] EC2NetworkAcls

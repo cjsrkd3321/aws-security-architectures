@@ -202,3 +202,12 @@ resource "aws_lb_target_group" "this" {
   protocol = "HTTP"
   vpc_id   = aws_vpc.this.id
 }
+
+# EC2RouteTables
+resource "aws_route_table" "this" {
+  vpc_id = aws_vpc.this.id
+  route {
+    ipv6_cidr_block        = "::/0"
+    egress_only_gateway_id = aws_egress_only_internet_gateway.this.id
+  }
+}
