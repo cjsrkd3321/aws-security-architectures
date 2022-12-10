@@ -140,3 +140,4 @@ builds
 *.key
 
 .DS_Store
+NUKE/python.zip
