@@ -24,20 +24,20 @@ module "lambda_function" {
   memory_size   = 2048
 
   publish = true
-  # allowed_triggers = {
-  #   EventBridge = {
-  #     principal  = "events.amazonaws.com"
-  #     source_arn = aws_cloudwatch_event_rule.eventbridge_rule.arn
-  #   }
-  # }
+  allowed_triggers = {
+    EventBridge = {
+      principal  = "events.amazonaws.com"
+      source_arn = aws_cloudwatch_event_rule.this.arn
+    }
+  }
 
   environment_variables = {
-    IS_RUN_DELETE   = "TRUE" # "TRUE" or "FALSE"
-    MAX_WORKERS     = 500
-    MAX_SLEEP       = 15
+    IS_RUN_DELETE    = "TRUE" # "TRUE" or "FALSE"
+    MAX_WORKERS      = 500
+    MAX_SLEEP        = 15
     MAX_RUNNING_TIME = 850
-    MAX_ITER_COUNTS = 50
-    TOPIC_ARN       = aws_sns_topic.this.arn
+    MAX_ITER_COUNTS  = 50
+    TOPIC_ARN        = aws_sns_topic.this.arn
   }
 
   attach_policy = true
@@ -63,4 +63,15 @@ resource "aws_sns_topic_subscription" "this" {
   topic_arn = aws_sns_topic.this.arn
   protocol  = "email"
   endpoint  = var.email
+}
+
+### EVENTBRIDGE ###
+resource "aws_cloudwatch_event_rule" "this" {
+  name                = "nuke-eventbridge-rule"
+  schedule_expression = "cron(0 12 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "this" {
+  rule = aws_cloudwatch_event_rule.this.name
+  arn  = module.lambda_function.lambda_function_arn
 }
