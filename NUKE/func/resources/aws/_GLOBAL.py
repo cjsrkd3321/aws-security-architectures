@@ -22,4 +22,5 @@ SERVICES: Services = [
     "acm",
     "acm-pca",
     "elbv2",
+    "events",
 ]
