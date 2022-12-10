@@ -3,6 +3,7 @@ from botocore.exceptions import ClientError
 
 from resources import resources
 from resources.base import ResourceBase
+from resources._types import ListResults, RemoveResults, FilterResults
 
 
 cache: dict = {}
@@ -23,17 +24,17 @@ def delete_objs(svc, bucket, objects):
 
 
 class S3Bucket(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None) -> None:
         self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self, has_cache=False):
+    def list(self, has_cache=False) -> ListResults:
         global cache
         if cache.get(self.svc) and has_cache:
             return cache[self.svc], None
 
-        results = []
+        results: list = []
         try:
             buckets = self.svc.list_buckets()
 
@@ -52,7 +53,7 @@ class S3Bucket(ResourceBase):
                 except self.exceptions.NoSuchBucket:
                     continue
                 except ClientError as e:
-                    code = e.response.get("Error", {}).get("Code")
+                    code = e.response.get("Error", {}).get("Code", "")
                     if code.startswith("AccessDenied"):
                         continue
                     elif code == "NoSuchTagSet":
@@ -71,7 +72,7 @@ class S3Bucket(ResourceBase):
         except Exception as e:
             return results, e
 
-    def remove(self, resource):
+    def remove(self, resource) -> RemoveResults:
         from .S3Objects import S3Object
 
         s3_object = S3Object(self.svc, self.filter_func)
@@ -111,7 +112,7 @@ class S3Bucket(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, resource, *filters) -> FilterResults:
         if self.filter_func:
             try:
                 if self.filter_func(resource):

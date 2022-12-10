@@ -1,17 +1,18 @@
 from resources import resources
 from resources.base import ResourceBase
+from resources._types import ListResults, RemoveResults, FilterResults
 
 
 class IAMPolicyVersion(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None) -> None:
         self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self):
+    def list(self) -> ListResults:
         from .IAMPolicies import IAMPolicy
 
-        results = []
+        results: list = []
         try:
             iam_policy = IAMPolicy(self.svc, self.filter_func)
             policies, err = iam_policy.list(has_cache=True)
@@ -44,7 +45,7 @@ class IAMPolicyVersion(ResourceBase):
         except Exception as e:
             return results, e
 
-    def remove(self, resource):
+    def remove(self, resource) -> RemoveResults:
         try:
             self.svc.delete_policy_version(
                 PolicyArn=resource["policy_arn"], VersionId=resource["id"]
@@ -55,7 +56,7 @@ class IAMPolicyVersion(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, resource, *filters) -> FilterResults:
         if resource["is_default"]:
             return f"DEFAULT(IMPOSSIBLE: {resource['is_default']})", None
         if self.filter_func:

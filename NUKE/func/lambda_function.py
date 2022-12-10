@@ -2,12 +2,13 @@ from os import getenv
 from concurrent import futures
 
 from filters import have_no_nuke_project_tag, have_tags, is_create_date_less_than_now
-from items import Item, items
+from items import Item
 from resources import resources
 from resources.utils import get_regions, get_sessions
 from resources.aws._GLOBAL import SERVICES
 
 import time
+import json
 
 
 IS_RUN_DELETE = getenv("IS_RUN_DELETE", "FALSE")
@@ -15,25 +16,16 @@ MAX_WORKERS = int(getenv("MAX_WORKERS", 500))
 MAX_ITER_COUNTS = int(getenv("MAX_ITER_COUNTS", 50))
 MAX_SLEEP = int(getenv("MAX_SLEEP", 15))
 REGIONS = get_regions()
-REGIONS = ["ap-northeast-2"]
+REGIONS = ["us-east-1", "ap-northeast-2"]
 
 
-def lister(resource, sess):
+def lister(resource, sess, filter_func=None):
     name = resource.__name__
     region = sess._client_config.region_name
+    lister_results = []
 
     try:
-        # Filter resources with no "Project=nuke" tag
-        r = resource(sess, have_no_nuke_project_tag)
-
-        # Filter resources with create_date if exist and less than now
-        # r = resource(sess, is_create_date_less_than_now)
-
-        # Filter resources with tags if exist
-        # r = resource(sess, have_tags)
-
-        # All resources
-        # r = resource(sess)
+        r = resource(sess, filter_func)
     except Exception as e:
         print("[ERR_INIT]", name, e)
         return
@@ -51,60 +43,55 @@ def lister(resource, sess):
             filterer=r.filter,
             remover=r.remove,
         )
-        items.append(item)
+        lister_results.append(item)
+    return lister_results
 
 
 def lambda_handler(event, context):
+    # STARTED_AT = time.time() # You must calculate time because of lambda maximum operating time.
+    items = {"REMOVED": [], "FAILED": [], "FILTERED": []}
     global MAX_ITER_COUNTS, MAX_SLEEP, MAX_WORKERS, REGIONS, SERVICES
-
     sessions = get_sessions(SERVICES, REGIONS)
 
-    for _ in range(MAX_ITER_COUNTS):
+    for iter_cnt in range(MAX_ITER_COUNTS):
+        scan_results = []
         pool = futures.ThreadPoolExecutor(max_workers=MAX_WORKERS)
+        threads = []
         for region in REGIONS:
             services = sessions[region].keys()
             if not services:
                 continue
 
-            threads = [
-                pool.submit(lister, r, sessions[region][svc])
+            threads += [
+                pool.submit(lister, r, sessions[region][svc], have_no_nuke_project_tag)
+                # pool.submit(lister, r, sessions[region][svc], is_create_date_less_than_now)
+                # pool.submit(lister, r, sessions[region][svc], have_tags)
+                # pool.submit(lister, r, sessions[region][svc])
                 for r in resources
                 for svc in services
                 if r.__name__.lower().startswith(svc.replace("-", ""))
             ]
-        futures.wait(threads)
+        for future in futures.as_completed(threads):
+            scan_results += future.result()
 
-        if not items:
-            break
-
-        for item in items:
-            item.filter()
-            if item.is_skip():
-                # Temporary if statement
-                if item.item["reason"] in [
-                    "have_no_nuke_project_tag",
-                    "have_tags",
-                    "is_create_date_less_than_now",
-                ] or item.item["reason"].startswith("DEFAULT(IMPOSSIBLE"):
-                    continue
-                print(item.current)
+        for item in scan_results:
+            if item.filter():
+                items["FILTERED"].append(item.current)
                 continue
-            else:
-                print(item.current)
-                pass
 
-            # item.remove()
-            # print(item.current)
+            if IS_RUN_DELETE == "FALSE":
+                continue
 
-        failed_count = 0
-        for item in items:
-            if item.is_failed():
-                failed_count += 1
-        if failed_count == 0:
+            items["REMOVED" if item.remove() else "FAILED"].append(item.current)
+
+        if (len(items["FAILED"]) == 0) or (iter_cnt == MAX_ITER_COUNTS - 1):
+            print(json.dumps(items, indent=2).replace('"', ""))
+            print(
+                f"FILTERED: {len(items['FILTERED'])}, REMOVED: {len(items['REMOVED'])}, FAILED: {len(items['FAILED'])}"
+            )
             break
 
-        items.clear()
-
+        items["FAILED"].clear() or items["FILTERED"].clear()
         print(f"\nWaiting {MAX_SLEEP} seconds...\n")
         time.sleep(MAX_SLEEP)
 

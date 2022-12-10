@@ -1,18 +1,19 @@
 from resources import resources
 from resources.base import ResourceBase
+from resources._types import ListResults, RemoveResults, FilterResults
 from resources.utils import convert_dict_to_tags
 
 
 class EKSNodeGroup(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None) -> None:
         self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self):
+    def list(self) -> ListResults:
         from .EKSClusters import EKSCluster
 
-        results = []
+        results: list = []
         try:
             eks_clusters = EKSCluster(self.svc, self.filter_func)
             clusters, err = eks_clusters.list()
@@ -53,7 +54,7 @@ class EKSNodeGroup(ResourceBase):
         except Exception as e:
             return results, e
 
-    def remove(self, resource):
+    def remove(self, resource) -> RemoveResults:
         try:
             self.svc.delete_nodegroup(
                 nodegroupName=resource["id"], clusterName=resource["cluster_name"]
@@ -64,7 +65,7 @@ class EKSNodeGroup(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, resource, *filters) -> FilterResults:
         if resource["state"] == "DELETING":
             return f"DEFAULT(IMPOSSIBLE: {resource['state']})", None
         if self.filter_func:

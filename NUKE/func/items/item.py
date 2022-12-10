@@ -17,25 +17,13 @@ class Item:
         is_filter, err = self.__filterer(self.__item["resource"])
         self.__item["state"] = rs.Filtered if is_filter else rs.New
         self.__item["reason"] = is_filter if is_filter else err
+        return self.__item["state"] == rs.Filtered
 
     def remove(self):
         is_removed, err = self.__remover(self.__item["resource"])
         self.__item["state"] = rs.Removed if is_removed else rs.Failed
         self.__item["reason"] = None if is_removed else err
-
-    def is_skip(self):
-        if self.__item["state"] in [rs.Filtered, rs.Removed]:
-            return True
-        return False
-
-    def is_failed(self):
-        if self.__item["state"] == rs.Failed:
-            return True
-        return False
-
-    @property
-    def item(self):
-        return self.__item
+        return self.__item["state"] == rs.Removed
 
     @property
     def current(self):
