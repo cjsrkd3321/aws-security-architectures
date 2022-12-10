@@ -42,6 +42,8 @@ class EC2Volume(ResourceBase):
         for a in resource["attachments"]:
             if a["DeleteOnTermination"]:
                 return "DEFAULT(INSTANCE DEPENDENCY)", None
+        if resource["state"].startswith("delet"):
+            return f"DEFAULT(IMPOSSIBLE: {resource['state']})", None
         if self.filter_func:
             try:
                 if self.filter_func(resource):
