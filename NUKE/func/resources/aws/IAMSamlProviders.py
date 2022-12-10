@@ -19,7 +19,7 @@ class IAMSamlProvider(ResourceBase):
                         "Tags"
                     ]
                 except self.exceptions.NoSuchEntityException:
-                    tags = []
+                    continue
 
                 results.append(
                     {
