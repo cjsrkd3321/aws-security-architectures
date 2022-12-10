@@ -34,6 +34,7 @@ class LOGSLogGroup(ResourceBase):
                         "name": log_name,
                         "tags": convert_dict_to_tags(tags),
                         "create_date": log["creationTime"],
+                        "retention_days": log.get("retentionInDays"),
                     }
                 )
             return results, None
