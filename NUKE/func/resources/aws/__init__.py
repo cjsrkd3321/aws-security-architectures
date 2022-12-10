@@ -93,6 +93,7 @@ from .RDSDbParameterGroups import RDSDbParameterGroup
 from .RDSSubnets import RDSSubnet
 from .RDSInstances import RDSInstance
 from .RDSEventSubscriptions import RDSEventSubscription
+from .RDSOptionGroups import RDSOptionGroup
 
 # SNS
 from .SNSTopics import SNSTopic
