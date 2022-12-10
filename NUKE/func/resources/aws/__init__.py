@@ -122,3 +122,4 @@ from .ACMPCACertificateAuthorities import ACMPCACertificateAuthority
 
 # EVENTS
 from .EVENTSRules import EVENTSRule
+from .EVENTSBuses import EVENTSBus
