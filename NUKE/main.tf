@@ -23,6 +23,8 @@ module "lambda_function" {
   timeout       = 900
   memory_size   = 2048
 
+  cloudwatch_logs_retention_in_days = 1
+
   publish = true
   allowed_triggers = {
     EventBridge = {
