@@ -22,7 +22,7 @@ class LOGSLogGroup(ResourceBase):
                 try:
                     tags = self.svc.list_tags_for_resource(resourceArn=log_arn)["tags"]
                 except self.exceptions.ResourceNotFoundException:
-                    tags = []
+                    continue
                 except ClientError as e:
                     if e.response["Error"]["Code"] == "AccessDeniedException":
                         continue
