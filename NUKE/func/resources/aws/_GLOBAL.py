@@ -1,0 +1,25 @@
+from ._types import Services
+
+SERVICES: Services = [
+    "ec2",
+    "iam",
+    "s3",
+    "kms",
+    "lambda",
+    "kafka",
+    "secretsmanager",
+    "ssm",
+    "logs",
+    "sqs",
+    "dynamodb",
+    "rds",
+    "sns",
+    "grafana",
+    "eks",
+    "emr",
+    "ecr",
+    "efs",
+    "acm",
+    "acm-pca",
+    "elbv2",
+]

@@ -22,5 +22,6 @@ Services = List[
         Literal["efs"],
         Literal["acm"],
         Literal["acm-pca"],
+        Literal["elbv2"],
     ]
 ]

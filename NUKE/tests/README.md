@@ -109,3 +109,7 @@
 # ACM
 - [x] ACMCertificates
 - [x] ACMPCACertificateAuthorities # Be careful!! This spends a lot of money.
+
+# ELBv2
+- [x] ELBv2ELBs
+- [x] ELBv2TargetGroups
