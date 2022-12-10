@@ -21,7 +21,7 @@ class IAMOpenIdConnectProvider(ResourceBase):
                         OpenIDConnectProviderArn=oidc_arn
                     )["Tags"]
                 except self.exceptions.NoSuchEntityException:
-                    tags = []
+                    continue
 
                 results.append(
                     {
