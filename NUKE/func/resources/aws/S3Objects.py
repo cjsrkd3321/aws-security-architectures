@@ -58,7 +58,7 @@ class S3Object(ResourceBase):
             cache[self.svc] = results if has_cache else None
             return results, None
         except (self.exceptions.NoSuchBucket, self.exceptions.NoSuchKey):
-            return True, None
+            return results, None
         except Exception as e:
             return results, e
 
