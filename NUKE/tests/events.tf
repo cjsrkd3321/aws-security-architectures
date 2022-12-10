@@ -18,3 +18,8 @@ resource "aws_cloudwatch_event_target" "this" {
   target_id = "SendToSNS"
   arn       = aws_sns_topic.aws_logins.arn
 }
+
+# EVENTSBuses
+resource "aws_cloudwatch_event_bus" "this" {
+  name = "nuke-event-bus"
+}
