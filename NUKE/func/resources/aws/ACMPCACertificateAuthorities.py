@@ -13,7 +13,7 @@ class ACMPCACertificateAuthority(ResourceBase):
 
         # Check if self.svc create from acm not acm-pca
         if "list_certificate_authorities" not in dir(self.svc):
-            return results
+            return results, None
 
         try:
             iterator = self.svc.get_paginator("list_certificate_authorities").paginate()
