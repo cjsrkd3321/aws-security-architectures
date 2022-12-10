@@ -87,6 +87,7 @@
 - [x] RDSSubnets
 - [x] RDSInstances
 - [x] RDSEventSubscriptions
+- [x] RDSOptionGroups
 
 ## SNS
 - [x] SNSTopics

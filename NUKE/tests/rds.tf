@@ -75,3 +75,13 @@ resource "aws_db_event_subscription" "this" {
   name      = "nuke-event-sub"
   sns_topic = aws_sns_topic.this.arn
 }
+
+# RDSOptionGroups
+resource "aws_db_option_group" "this" {
+  option_group_description = "Terraform Option Group"
+  engine_name              = "sqlserver-ee"
+  major_engine_version     = "11.00"
+  option {
+    option_name = "TDE"
+  }
+}
