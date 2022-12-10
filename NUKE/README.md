@@ -3,9 +3,15 @@
 [How to delete unused resources with lambda NUKE in python (Not written yet)]()
 
 ## Getting Started
+
 1. Run docker
 2. Start command `./layer.sh`
 3. `terraform apply`
+4. If you wanna spcific region, set REGIONS variable like below.(lambda_function.py)
+```python
+# REGIONS = get_regions()
+REGIONS = ["us-east-1"]
+```
 
 ## Cautions
 
