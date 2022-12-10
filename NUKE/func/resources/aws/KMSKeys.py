@@ -2,6 +2,7 @@ from botocore.exceptions import ClientError
 
 from resources import resources
 from resources.base import ResourceBase
+from resources._types import ListResults, RemoveResults, FilterResults
 from resources.utils import delete_tag_prefix
 
 
@@ -9,17 +10,17 @@ cache: dict = {}
 
 
 class KMSKey(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None) -> None:
         self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self, has_cache=False):
+    def list(self, has_cache=False) -> ListResults:
         global cache
         if cache.get(self.svc) and has_cache:
             return cache[self.svc], None
 
-        results = []
+        results: list = []
         try:
             iterator = self.svc.get_paginator("list_keys").paginate()
             keys = [key for keys in iterator for key in keys["Keys"]]
@@ -63,7 +64,7 @@ class KMSKey(ResourceBase):
         except Exception as e:
             return results, e
 
-    def remove(self, resource):
+    def remove(self, resource) -> RemoveResults:
         try:
             self.svc.schedule_key_deletion(KeyId=resource["id"], PendingWindowInDays=7)
             return True, None
@@ -72,7 +73,7 @@ class KMSKey(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, resource, *filters) -> FilterResults:
         if resource["state"] == "PendingDeletion":
             return f"DEFAULT(IMPOSSIBLE: {resource['state']})", None
         if resource["manager"] == "AWS":

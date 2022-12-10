@@ -1,17 +1,18 @@
 from resources import resources
 from resources.base import ResourceBase
+from resources._types import ListResults, RemoveResults, FilterResults
 
 
 class IAMMfaDevice(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None) -> None:
         self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self):
+    def list(self) -> ListResults:
         from .IAMUsers import IAMUser
 
-        results = []
+        results: list = []
         try:
             iam_user = IAMUser(self.svc, self.filter_func)
             users, err = iam_user.list(has_cache=True)
@@ -42,7 +43,7 @@ class IAMMfaDevice(ResourceBase):
         except Exception as e:
             return results, e
 
-    def remove(self, resource):
+    def remove(self, resource) -> RemoveResults:
         try:
             self.svc.deactivate_mfa_device(
                 UserName=resource["user_name"], SerialNumber=resource["id"]
@@ -54,7 +55,7 @@ class IAMMfaDevice(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, resource, *filters) -> FilterResults:
         if resource["id"].endswith("/root-account-mfa-device"):
             return f"DEFAULT(IMPOSSIBLE: {resource['id']})", None
         if self.filter_func:

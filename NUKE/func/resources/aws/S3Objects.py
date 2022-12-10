@@ -1,24 +1,25 @@
 from resources import resources
 from resources.base import ResourceBase
+from resources._types import ListResults, RemoveResults, FilterResults
 
 
 cache: dict = {}
 
 
 class S3Object(ResourceBase):
-    def __init__(self, sess=None, default_filter_func=None):
+    def __init__(self, sess=None, default_filter_func=None) -> None:
         self.svc = sess
         self.exceptions = self.svc.exceptions
         self.filter_func = default_filter_func
 
-    def list(self, has_cache=False):
+    def list(self, has_cache=False) -> ListResults:
         from .S3Buckets import S3Bucket
 
         global cache
         if cache.get(self.svc) and has_cache:
             return cache[self.svc], None
 
-        results = []
+        results: list = []
         try:
             s3_bucket = S3Bucket(self.svc, self.filter_func)
             buckets, err = s3_bucket.list(has_cache=True)
@@ -62,7 +63,7 @@ class S3Object(ResourceBase):
         except Exception as e:
             return results, e
 
-    def remove(self, resource):
+    def remove(self, resource) -> RemoveResults:
         try:
             self.svc.delete_object(
                 Bucket=resource["bucket"],
@@ -75,7 +76,7 @@ class S3Object(ResourceBase):
         except Exception as e:
             return False, e
 
-    def filter(self, resource, *filters):
+    def filter(self, resource, *filters) -> FilterResults:
         if self.filter_func:
             try:
                 if self.filter_func(resource):

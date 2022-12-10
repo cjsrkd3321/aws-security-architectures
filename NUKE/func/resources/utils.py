@@ -1,4 +1,5 @@
 from functools import wraps
+from datetime import datetime
 from botocore.config import Config
 from boto3.session import Session
 
@@ -7,6 +8,7 @@ import boto3
 
 
 SESSIONS: dict = {}
+MAX_POOL_CONNECTIONS = 1000
 
 
 def get_name_from_tags(tags):
@@ -74,7 +76,10 @@ def get_sessions(services=[], regions=[]):
             SESSIONS[GLOBAL_REGION] = {
                 service: boto3.client(
                     service_name=service,
-                    config=Config(region_name=GLOBAL_REGION, max_pool_connections=1000),
+                    config=Config(
+                        region_name=GLOBAL_REGION,
+                        max_pool_connections=MAX_POOL_CONNECTIONS,
+                    ),
                 )
             }
             continue
@@ -87,7 +92,26 @@ def get_sessions(services=[], regions=[]):
                 continue
             SESSIONS[available_region][service] = boto3.client(
                 service_name=service,
-                config=Config(region_name=available_region, max_pool_connections=1000),
+                config=Config(
+                    region_name=available_region,
+                    max_pool_connections=MAX_POOL_CONNECTIONS,
+                ),
             )
-
     return SESSIONS
+
+
+def convert_time_to_datetime(date, utc):
+    if type(date) == int:
+        date = datetime.fromtimestamp(date / 1_000)
+    elif type(date) == str:
+        try:
+            date = datetime.fromtimestamp(int(date))
+        except ValueError:
+            if date.endswith("Z"):
+                date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")
+            else:
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S.%f")
+    if not cd.tzinfo:
+        cd = utc.localize(cd)
+    cd = cd.replace(tzinfo=utc)
+    return date
