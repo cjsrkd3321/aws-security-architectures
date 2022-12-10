@@ -119,3 +119,6 @@ from .ACMCertificates import ACMCertificate
 
 # ACMPCA
 from .ACMPCACertificateAuthorities import ACMPCACertificateAuthority
+
+# EVENTS
+from .EVENTSRules import EVENTSRule
