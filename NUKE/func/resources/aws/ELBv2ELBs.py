@@ -23,7 +23,7 @@ class ELBv2ELB(ResourceBase):
                 results.append(
                     {
                         "id": arn,
-                        "name": elb["DNSName"],
+                        "name": elb.get("DNSName"),
                         "tags": tags[0]["Tags"],
                         "create_date": elb.get("CreatedTime"),
                         "state": elb["State"]["Code"],
