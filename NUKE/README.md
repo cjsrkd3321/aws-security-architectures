@@ -2,6 +2,9 @@
 
 [How to delete unused resources with lambda NUKE in python (Not written yet)]()
 
+## Architecture
+![Architecture](./Architecture.png)
+
 ## Getting Started
 
 1. Run docker
