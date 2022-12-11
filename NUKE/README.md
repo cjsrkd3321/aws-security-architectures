@@ -1,6 +1,6 @@
 # NUKE
 
-[How to delete unused resources with lambda NUKE in python (Not written yet)]()
+[[AWS] How to delete unused resources with NUKE lambda using Python](https://medium.com/@7424069/aws-how-to-delete-unused-resources-with-nuke-lambda-using-python-7ed2f270480b)
 
 ## Architecture
 ![Architecture](./Architecture.png)
