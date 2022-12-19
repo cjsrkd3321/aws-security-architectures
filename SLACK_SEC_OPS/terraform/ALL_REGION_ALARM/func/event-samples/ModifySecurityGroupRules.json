@@ -1,0 +1,74 @@
+{
+    "version": "0",
+    "id": "83779b24-06dc-c462-c378-97131037fbbb",
+    "detail-type": "AWS API Call via CloudTrail",
+    "source": "aws.ec2",
+    "account": "ACCOUNT_ID",
+    "time": "2022-09-07T12:10:42Z",
+    "region": "us-east-1",
+    "resources": [
+      
+    ],
+    "detail": {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "AssumedRole",
+        "principalId": "ROLE_ID:rexchun",
+        "arn": "arn:aws:sts::ACCOUNT_ID:assumed-role/AWSReservedSSO_AdministratorAccess_5b69846c9a386f10/rexchun",
+        "accountId": "ACCOUNT_ID",
+        "accessKeyId": "ASIAQAJ4MWDUPDGAOA64",
+        "sessionContext": {
+          "sessionIssuer": {
+            "type": "Role",
+            "principalId": "ROLE_ID",
+            "arn": "arn:aws:iam::ACCOUNT_ID:role/aws-reserved/sso.amazonaws.com/ap-northeast-2/AWSReservedSSO_AdministratorAccess_5b69846c9a386f10",
+            "accountId": "ACCOUNT_ID",
+            "userName": "AWSReservedSSO_AdministratorAccess_5b69846c9a386f10"
+          },
+          "webIdFederationData": {
+            
+          },
+          "attributes": {
+            "creationDate": "2022-09-07T11:44:39Z",
+            "mfaAuthenticated": "false"
+          }
+        }
+      },
+      "eventTime": "2022-09-07T12:10:42Z",
+      "eventSource": "ec2.amazonaws.com",
+      "eventName": "ModifySecurityGroupRules",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "AWS Internal",
+      "userAgent": "AWS Internal",
+      "requestParameters": {
+        "ModifySecurityGroupRulesRequest": {
+          "SecurityGroupRule": {
+            "SecurityGroupRuleId": "sgr-05998427c6acc7db3",
+            "tag": 1,
+            "SecurityGroupRule": {
+              "CidrIpv4": "0.0.0.0/16",
+              "FromPort": 3389,
+              "ToPort": 3389,
+              "IpProtocol": "tcp"
+            }
+          },
+          "GroupId": "sg-08274a1bf996e8f28"
+        }
+      },
+      "responseElements": {
+        "ModifySecurityGroupRulesResponse": {
+          "xmlns": "http://ec2.amazonaws.com/doc/2016-11-15/",
+          "requestId": "8f596ffd-8d1b-4aa0-8f2d-a86477e0f282",
+          "return": true
+        }
+      },
+      "requestID": "8f596ffd-8d1b-4aa0-8f2d-a86477e0f282",
+      "eventID": "f847e157-2677-4c5f-831f-1cdffecbb09b",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "managementEvent": true,
+      "recipientAccountId": "ACCOUNT_ID",
+      "eventCategory": "Management",
+      "sessionCredentialFromConsole": "true"
+    }
+  }
