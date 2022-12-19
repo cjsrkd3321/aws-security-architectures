@@ -1,0 +1,60 @@
+{
+    "version": "0",
+    "id": "fa41dc5e-82e1-bc3a-b5ef-08c15b47a02f",
+    "detail-type": "AWS API Call via CloudTrail",
+    "source": "aws.iam",
+    "account": "ACCOUNT_ID",
+    "time": "2022-09-07T11:42:26Z",
+    "region": "us-east-1",
+    "resources": [
+      
+    ],
+    "detail": {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "Root",
+        "principalId": "ACCOUNT_ID",
+        "arn": "arn:aws:iam::ACCOUNT_ID:root",
+        "accountId": "ACCOUNT_ID",
+        "accessKeyId": "ASIAQAJ4MWDUKC73PFMB",
+        "userName": "rex-mas",
+        "sessionContext": {
+          "sessionIssuer": {
+            
+          },
+          "webIdFederationData": {
+            
+          },
+          "attributes": {
+            "creationDate": "2022-09-07T10:22:27Z",
+            "mfaAuthenticated": "true"
+          }
+        }
+      },
+      "eventTime": "2022-09-07T11:42:26Z",
+      "eventSource": "iam.amazonaws.com",
+      "eventName": "CreateAccessKey",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "AWS Internal",
+      "userAgent": "AWS Internal",
+      "requestParameters": {
+        "userName": "USER_NAME"
+      },
+      "responseElements": {
+        "accessKey": {
+          "userName": "USER_NAME",
+          "accessKeyId": "AKIAQAJ4MWDUAEAJLDRL",
+          "status": "Active",
+          "createDate": "Sep 7, 2022 11:42:26 AM"
+        }
+      },
+      "requestID": "3c5005b1-d873-476b-a045-ecc7dd5eed38",
+      "eventID": "b7d71e9d-e684-41c2-a12c-b84804a59648",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "managementEvent": true,
+      "recipientAccountId": "ACCOUNT_ID",
+      "eventCategory": "Management",
+      "sessionCredentialFromConsole": "true"
+    }
+  }
