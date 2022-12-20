@@ -8,13 +8,28 @@ module "lambda_function" {
   source_path = "func"
 
   timeout     = 60
-  memory_size = 256
+  memory_size = 512
 
   cloudwatch_logs_retention_in_days = 1
 
+  attach_policy_json = true
+  policy_json        = <<-EOT
+      {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Effect": "Allow",
+                  "Action": [
+                      "secretsmanager:GetSecretValue"
+                  ],
+                  "Resource": ["${aws_secretsmanager_secret.this.arn}"]
+              }
+          ]
+      }
+    EOT
+
   environment_variables = {
-    SLACK_HOOK_URL  = var.slack_webhook_url
-    SLACK_CHANNEL   = var.channel
+    SECRET_ARN      = aws_secretsmanager_secret.this.arn
     SOURCE_IPS      = jsonencode(concat(var.my_ips, ["AWS Internal"]))
     SENSITIVE_PORTS = jsonencode([22, 3389])
     ALLOWED_IPS     = jsonencode(["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"])
