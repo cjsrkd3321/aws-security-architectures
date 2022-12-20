@@ -74,7 +74,7 @@ def detect_console_login(channel, detail, source_ips=[]):
                                 "type": "button",
                                 "text": {
                                     "type": "plain_text",
-                                    "text": "Approve",
+                                    "text": "APPROVE",
                                 },
                                 "style": "primary",
                                 "value": f"APPROVE",
@@ -86,7 +86,7 @@ def detect_console_login(channel, detail, source_ips=[]):
                                     "text": "LOCK",
                                 },
                                 "style": "danger",
-                                "value": f"ConsoleLogin|{user_name}|{role_name}",
+                                "value": f"ACTION|ConsoleLogin|{user_name}|{role_name}",
                             },
                         ],
                     },
