@@ -1,19 +1,29 @@
+from botocore.config import Config
+from libs import actors
+
 import boto3
 
-iam = boto3.client("iam")
+
+class ConsoleLogin:
+    def __init__(self, region, args, deny_policy):
+        self.client = boto3.client("iam", config=Config(region_name=region))
+        self.user, self.role = args
+        self.policy = deny_policy
+
+    def do(self, func, act_type):
+        if self.role:
+            self.client.attach_role_policy(RoleName=self.role, PolicyArn=self.policy)
+        else:
+            self.client.attach_user_policy(UserName=self.user, PolicyArn=self.policy)
+        func(act_type)
+
+    def undo(self, func, act_type):
+        if self.role:
+            self.client.detach_role_policy(RoleName=self.role, PolicyArn=self.policy)
+        else:
+            self.client.detach_user_policy(UserName=self.user, PolicyArn=self.policy)
+        func(act_type)
 
 
-def console_login(lock_type, args, deny_policy):
-    user_name, role_name = args
-    if user_name == "root" or role_name.startswith("AWSReservedSSO_"):
-        raise Exception(f"[ConsoleLogin] {user_name} or {role_name} can't lock.")
-    if lock_type == "ACTION":
-        if role_name:
-            iam.attach_role_policy(RoleName=role_name, PolicyArn=deny_policy)
-        else:
-            iam.attach_user_policy(UserName=user_name, PolicyArn=deny_policy)
-    else:
-        if role_name:
-            iam.detach_role_policy(RoleName=role_name, PolicyArn=deny_policy)
-        else:
-            iam.detach_user_policy(UserName=user_name, PolicyArn=deny_policy)
+if __name__ != "__main__":
+    actors[ConsoleLogin.__name__] = ConsoleLogin

@@ -7,3 +7,7 @@ variable "slack_oauth_token" {
   type      = string
   sensitive = true
 }
+
+variable "manager" {
+  type = string
+}

@@ -1,6 +1,6 @@
 # https://docs.aws.amazon.com/ko_kr/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html
 # https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html
-def detect_console_login(channel, detail, source_ips=[]):
+def detect_console_login(channel, detail, region, source_ips=[]):
     if detail["responseElements"]["ConsoleLogin"] != "Success":
         return
 
@@ -35,7 +35,7 @@ def detect_console_login(channel, detail, source_ips=[]):
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"*{detail['eventName']}* ({detail['awsRegion']})",
+                            "text": f"*{detail['eventName']}* ({region})",
                         },
                     },
                     {
@@ -83,10 +83,10 @@ def detect_console_login(channel, detail, source_ips=[]):
                                 "type": "button",
                                 "text": {
                                     "type": "plain_text",
-                                    "text": "LOCK",
+                                    "text": "BLOCK",
                                 },
                                 "style": "danger",
-                                "value": f"ACTION|ConsoleLogin|{user_name}|{role_name}",
+                                "value": f"BLOCK|{region}|ConsoleLogin|{user_name}|{role_name}",
                             },
                         ],
                     },
