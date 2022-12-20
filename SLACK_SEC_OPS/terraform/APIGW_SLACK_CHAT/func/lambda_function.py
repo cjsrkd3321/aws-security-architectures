@@ -6,7 +6,7 @@ import os
 from urllib import parse
 from response import OK, BAD_REQUEST, UNAUTORIZED
 from slacks import Slack
-from libs.iam.ConsoleLogin import console_login
+from libs import actors
 
 secrets = json.loads(
     boto3.client("secretsmanager").get_secret_value(
@@ -18,6 +18,7 @@ secrets = json.loads(
 SIGNING_SECRET = bytes(secrets.get("signing_secret", ""), "utf-8")
 OAUTH_TOKEN = secrets.get("slack_oauth_token", "")
 DENY_POLICY_ARN = os.getenv("DENY_POLICY_ARN")
+MANAGER = os.getenv("MANAGER")
 
 
 def lambda_handler(event, _):
@@ -31,18 +32,21 @@ def lambda_handler(event, _):
     s = Slack(SIGNING_SECRET, OAUTH_TOKEN, headers, payload)
     if not s.verify_slack_signature(body):
         return UNAUTORIZED
-    print(s.user)
+    if s.user["username"] != MANAGER:
+        return UNAUTORIZED
 
     try:
         if s.state == "APPROVE":
             s.send_approved()
-        else:
-            lock_type, evt, *args = s.state.split("|")
-            if evt == "ConsoleLogin":
-                console_login(lock_type, args, DENY_POLICY_ARN)
+            return OK
 
-            if lock_type == "ACTION":
-                s.send_thread_unlock()
+        act_type, region, evt, *args = s.state.split("|")
+        actor = actors[evt](region, args, DENY_POLICY_ARN)
+
+        if act_type == "BLOCK":
+            actor.do(s.send_response, act_type)
+        else:
+            actor.undo(s.send_response, act_type)
     except Exception as e:
         s.send_exception(e)
 

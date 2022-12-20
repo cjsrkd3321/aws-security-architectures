@@ -9,13 +9,14 @@ module "lambda_function" {
   source_path = "func"
 
   timeout     = 60
-  memory_size = 256
+  memory_size = 1024
 
   cloudwatch_logs_retention_in_days = 1
 
   environment_variables = {
     SECRET_ARN      = aws_secretsmanager_secret.this.arn
     DENY_POLICY_ARN = aws_iam_policy.this.arn
+    MANAGER         = var.manager
   }
 
   allowed_triggers = {
@@ -41,7 +42,8 @@ module "lambda_function" {
                   "Effect": "Allow",
                   "Action": [
                       "iam:Attach*",
-                      "iam:Detach*"
+                      "iam:Detach*",
+                      "iam:DeleteAccessKey"
                   ],
                   "Resource": ["*"]
               }
