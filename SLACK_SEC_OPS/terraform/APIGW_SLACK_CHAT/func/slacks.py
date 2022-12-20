@@ -4,26 +4,9 @@ import time
 
 from hashlib import sha256
 from urls import WRITE_URL
+from utils import get_button, get_text_section
 
 APPROVED_SECTION = {"type": "section", "text": {"type": "mrkdwn", "text": "*APPROVED*"}}
-
-
-def get_unlock_button(value):
-    value = "UN" + value
-    return {
-        "type": "actions",
-        "elements": [
-            {
-                "type": "button",
-                "text": {
-                    "type": "plain_text",
-                    "text": "UNLOCK",
-                },
-                "style": "primary",
-                "value": value,
-            }
-        ],
-    }
 
 
 class Slack:
@@ -60,6 +43,23 @@ class Slack:
             return False
         return True
 
+    def send_response(self, text):
+        if text == "BLOCK":
+            button = get_button("UNBLOCK", self.state)
+        else:
+            button = get_button("BLOCK", self.state)
+        self.blocks.extend([get_text_section(text), button])
+        res = requests.post(
+            url=self.response_url,
+            headers=self.headers,
+            json={
+                "channel": self.channel,
+                "blocks": self.blocks,
+                "ts": self.msg_ts,
+            },
+        )
+        print(f"send_locked: {res.json()}")
+
     def send_approved(self):
         self.blocks.append(APPROVED_SECTION)
         res = requests.post(
@@ -85,18 +85,18 @@ class Slack:
         )
         print(f"send_exception: {res.json()}")
 
-    def send_thread_unlock(self):
-        self.blocks.append(get_unlock_button(self.state))
-        res = requests.post(
-            url=WRITE_URL,
-            headers=self.headers,
-            json={
-                "channel": self.channel,
-                "blocks": self.blocks,
-                "thread_ts": self.msg_ts,
-            },
-        )
-        print(f"send_thread_unlock: {res.json()}")
+    # def send_thread_unlock(self):
+    #     self.blocks.append(get_unlock_button(self.state))
+    #     res = requests.post(
+    #         url=WRITE_URL,
+    #         headers=self.headers,
+    #         json={
+    #             "channel": self.channel,
+    #             "blocks": self.blocks,
+    #             "thread_ts": self.msg_ts,
+    #         },
+    #     )
+    #     print(f"send_thread_unlock: {res.json()}")
 
     @property
     def state(self):
