@@ -11,3 +11,8 @@ variable "slack_oauth_token" {
 variable "manager" {
   type = string
 }
+
+variable "path" {
+  type    = string
+  default = "slack"
+}

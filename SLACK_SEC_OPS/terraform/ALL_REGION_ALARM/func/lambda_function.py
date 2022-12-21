@@ -31,14 +31,15 @@ def lambda_handler(event, context):
         event["detail"],
     ]
 
+    evt = detail["eventName"]
     region = detail["awsRegion"]
 
-    if detail["eventName"] == "ConsoleLogin":
-        slack_message = detect_console_login(CHANNEL, detail, region, SOURCE_IPS)
-    elif detail["eventName"] == "CreateAccessKey":
-        slack_message = detect_create_access_key(CHANNEL, detail, region, SOURCE_IPS)
+    if evt == "ConsoleLogin":
+        msg = detect_console_login(CHANNEL, detail, region, SOURCE_IPS)
+    elif evt == "CreateAccessKey":
+        msg = detect_create_access_key(CHANNEL, detail, region, SOURCE_IPS)
 
-    if not slack_message:
+    if not msg:
         return
 
-    send_message_to_slack(HOOK_URL, slack_message)
+    send_message_to_slack(HOOK_URL, msg)

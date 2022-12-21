@@ -73,30 +73,17 @@ class Slack:
         )
         print(f"send_approved: {res.json()}")
 
-    def send_exception(self, exception):
+    def send_thread(self, text):
         res = requests.post(
             url=WRITE_URL,
             headers=self.headers,
             json={
                 "channel": self.channel,
-                "text": f"{exception}",
+                "text": f"{text}" if text else "NO RESULT.",
                 "thread_ts": self.msg_ts,
             },
         )
-        print(f"send_exception: {res.json()}")
-
-    # def send_thread_unlock(self):
-    #     self.blocks.append(get_unlock_button(self.state))
-    #     res = requests.post(
-    #         url=WRITE_URL,
-    #         headers=self.headers,
-    #         json={
-    #             "channel": self.channel,
-    #             "blocks": self.blocks,
-    #             "thread_ts": self.msg_ts,
-    #         },
-    #     )
-    #     print(f"send_thread_unlock: {res.json()}")
+        print(f"send_thread: {res.json()}")
 
     @property
     def state(self):

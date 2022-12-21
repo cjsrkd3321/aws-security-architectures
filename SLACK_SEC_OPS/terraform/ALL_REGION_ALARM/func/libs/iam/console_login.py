@@ -74,6 +74,19 @@ def detect_console_login(channel, detail, region, source_ips=[]):
                                 "type": "button",
                                 "text": {
                                     "type": "plain_text",
+                                    "text": "LOG(USER)",
+                                },
+                                "value": f"LOG|{region}|Username:{user_name}",
+                            },
+                        ],
+                    },
+                    {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
                                     "text": "APPROVE",
                                 },
                                 "style": "primary",
