@@ -64,6 +64,27 @@ def detect_create_access_key(channel, detail, region, source_ips=[]):
                                 "type": "button",
                                 "text": {
                                     "type": "plain_text",
+                                    "text": "LOG(USER)",
+                                },
+                                "value": f"LOG|{region}|Username:{arn.split('/')[-1]}",
+                            },
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "LOG(ACCESS_KEY)",
+                                },
+                                "value": f"LOG|{region}|AccessKeyId:{created_access_key_id}",
+                            },
+                        ],
+                    },
+                    {
+                        "type": "actions",
+                        "elements": [
+                            {
+                                "type": "button",
+                                "text": {
+                                    "type": "plain_text",
                                     "text": "APPROVE",
                                 },
                                 "style": "primary",

@@ -22,7 +22,7 @@ module "lambda_function" {
   allowed_triggers = {
     APIGatewaySlack = {
       service    = "apigateway"
-      source_arn = "${aws_apigatewayv2_api.this.execution_arn}/*/*/rextest"
+      source_arn = "${aws_apigatewayv2_api.this.execution_arn}/*/*/${var.path}"
     },
   }
 
@@ -43,7 +43,9 @@ module "lambda_function" {
                   "Action": [
                       "iam:Attach*",
                       "iam:Detach*",
-                      "iam:DeleteAccessKey"
+                      "iam:DeleteAccessKey",
+                      "cloudtrail:LookupEvents",
+                      "ec2:DescribeRegions"
                   ],
                   "Resource": ["*"]
               }
