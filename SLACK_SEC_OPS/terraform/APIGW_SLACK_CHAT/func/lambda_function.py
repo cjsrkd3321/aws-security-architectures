@@ -43,9 +43,7 @@ def lambda_handler(event, _):
 
     try:
         if s.state.startswith("LOG|"):
-            print(s.state)
             _, __, *filters = s.state.split("|")
-            print(s.state)
             results = asyncio.run(get_logs(REGIONS, filters))
             s.send_thread(results)
             return OK
