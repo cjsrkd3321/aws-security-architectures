@@ -46,7 +46,7 @@ async def lookup_events(region="ap-northeast-1", filters=[]):
         for e in events["Events"]
     ]
     for e in events:
-        if e["readOnly"]:
+        if not (err := e.get("errorCode", "")) and e["readOnly"]:
             continue
         console = "CO" if e.get("sessionCredentialFromConsole") else "API"
         logs.append(
@@ -57,7 +57,7 @@ async def lookup_events(region="ap-northeast-1", filters=[]):
                 e["eventTime"],
                 e["sourceIPAddress"],
                 e["eventName"],
-                e.get("errorCode", ""),
+                err,
             ]
         )
 
