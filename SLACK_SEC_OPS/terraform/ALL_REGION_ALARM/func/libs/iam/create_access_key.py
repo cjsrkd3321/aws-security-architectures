@@ -9,7 +9,7 @@ def detect_create_access_key(channel, detail, region, source_ips=[]):
     created_access_key_info = detail["responseElements"]["accessKey"]
 
     # Root 엑세스 키는 UserName이 존재하지 않음(계정별칭을 추가하면 생김)
-    user_name = created_access_key_info.get("userName", "")
+    user_name = created_access_key_info.get("userName", "root")
     created_access_key_id = created_access_key_info["accessKeyId"]
 
     slack_message = {
