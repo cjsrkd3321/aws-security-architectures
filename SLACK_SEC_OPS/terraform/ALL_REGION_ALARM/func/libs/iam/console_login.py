@@ -23,7 +23,7 @@ def detect_console_login(channel, detail, region, source_ips=[]):
         user_name = "NEED_CHECK"
         print(detail["eventID"])
 
-    slack_message = {
+    return {
         "channel": channel,
         "attachments": [
             {
@@ -107,5 +107,3 @@ def detect_console_login(channel, detail, region, source_ips=[]):
             }
         ],
     }
-
-    return slack_message

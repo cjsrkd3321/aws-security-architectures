@@ -57,6 +57,7 @@ def lambda_handler(event, _):
 
         if act_type == "BLOCK":
             actor.do(s.send_response, act_type)
+            s.send_thread(f"<@{args[0]}>")
         else:
             actor.undo(s.send_response, act_type)
     except Exception as e:

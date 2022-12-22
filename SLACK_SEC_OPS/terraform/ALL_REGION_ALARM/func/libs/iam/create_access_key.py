@@ -12,7 +12,7 @@ def detect_create_access_key(channel, detail, region, source_ips=[]):
     user_name = created_access_key_info.get("userName", "root")
     created_access_key_id = created_access_key_info["accessKeyId"]
 
-    slack_message = {
+    return {
         "channel": channel,
         "attachments": [
             {
@@ -105,5 +105,3 @@ def detect_create_access_key(channel, detail, region, source_ips=[]):
             }
         ],
     }
-
-    return slack_message
