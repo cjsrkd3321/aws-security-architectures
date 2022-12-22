@@ -38,7 +38,7 @@ async def lookup_events(region="ap-northeast-1", filters=[]):
             EndTime=NOW,
         )
     except Exception as exc:
-        return exc
+        return [[region, exc]]
 
     events = [
         json.loads(e["CloudTrailEvent"])
@@ -51,13 +51,13 @@ async def lookup_events(region="ap-northeast-1", filters=[]):
         console = "CO" if e.get("sessionCredentialFromConsole") else "API"
         logs.append(
             [
-                console,
+                f"*{console}*",
                 e["recipientAccountId"],
                 e["awsRegion"],
                 e["eventTime"],
-                e["sourceIPAddress"],
+                f"*{e['sourceIPAddress']}*",
                 e["eventName"],
-                err,
+                f"*{err}*",
             ]
         )
 
