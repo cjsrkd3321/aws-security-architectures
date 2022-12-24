@@ -8,13 +8,17 @@ def detect_console_login(channel, detail, region, source_ips=[]):
     user_type = (ui := detail["userIdentity"])["type"]
     role_name = ""
     if user_type == "AssumedRole":
-        arn = ui["sessionContext"]["sessionIssuer"]["arn"]
+        if "sessionContext" in ui:
+            # AWS SSO etc...
+            # arn:aws:iam::ACCOUNT_ID:role/rextest
+            arn = ui["sessionContext"]["sessionIssuer"]["arn"]
+            role_name = arn.split("/")[-1]
+        else:
+            # External SAML etc...
+            # "arn:aws:sts::ACCOUNT_ID:assumed-role/rextest/admin"
+            arn = ui["arn"]
+            role_name = arn.split("/")[-2]
         user_name = ui["principalId"].split(":")[-1]
-        role_name = arn.split("/")[-1]
-    elif user_type in ["SAMLUser", "WebIdentityUser", "AWSAccount"]:
-        arn = (rp := detail["requestParameters"])["roleArn"]
-        user_name = rp["roleSessionName"]
-        role_name = arn.split("/")[-1]
     elif user_type in ["Root", "IAMUser"]:
         arn = ui["arn"]
         user_name = ui.get("userName", "root")
