@@ -25,6 +25,7 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
+    msg = ""
     try:
         print(type(event), event)
         [source, detail_type, detail] = [

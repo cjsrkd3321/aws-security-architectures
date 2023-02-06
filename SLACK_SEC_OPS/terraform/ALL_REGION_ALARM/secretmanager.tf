@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "this" {
-  name = "event-alarm-secret"
+  name_prefix = "event-alarm-secret"
 }
 
 resource "aws_secretsmanager_secret_policy" "this" {

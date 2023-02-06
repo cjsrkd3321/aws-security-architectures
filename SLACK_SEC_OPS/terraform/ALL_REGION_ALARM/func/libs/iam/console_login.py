@@ -1,7 +1,10 @@
 # https://docs.aws.amazon.com/ko_kr/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html
 # https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html
 def detect_console_login(channel, detail, region, source_ips=[]):
-    if detail["responseElements"]["ConsoleLogin"] != "Success":
+    res = detail["responseElements"]
+    add_event_data = detail["additionalEventData"]
+    evt = detail["eventName"]
+    if "Success" != res.get("ConsoleLogin"):
         return
 
     # IAMUser, AssumedRole, Root, SAMLUser, WebIdentityUser, AWSAccount
@@ -39,7 +42,7 @@ def detect_console_login(channel, detail, region, source_ips=[]):
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"*{detail['eventName']}* ({region})",
+                            "text": f"*{evt}* ({region})",
                         },
                     },
                     {
@@ -68,6 +71,10 @@ def detect_console_login(channel, detail, region, source_ips=[]):
                             {
                                 "type": "mrkdwn",
                                 "text": f"*이름:*\n{user_name}",
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": f"*MFA:*\n{add_event_data.get('MFAUsed')}",
                             },
                         ],
                     },

@@ -1,7 +1,7 @@
 module "lambda_function" {
   source = "terraform-aws-modules/lambda/aws"
 
-  function_name = "my-lambda1"
+  function_name = "slack-sec-ops"
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.9"
   publish       = true
