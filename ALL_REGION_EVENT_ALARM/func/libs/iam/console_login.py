@@ -1,5 +1,11 @@
 def detect_console_login(channel, detail, source_ips=[]):
-    if detail["responseElements"]["ConsoleLogin"] != "Success":
+    res = detail["responseElements"]
+    add_event_data = detail["additionalEventData"]
+    evt = detail["eventName"]
+    if "Success" != res.get("ConsoleLogin"):
+        return
+
+    if evt == "SwitchRole" and "SwitchFrom" not in add_event_data:
         return
 
     slack_message = {
@@ -14,7 +20,7 @@ def detect_console_login(channel, detail, source_ips=[]):
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"*{detail['eventName']}* ({detail['awsRegion']})",
+                            "text": f"*{evt}* ({detail['awsRegion']})",
                         },
                     },
                     {
@@ -39,7 +45,11 @@ def detect_console_login(channel, detail, source_ips=[]):
                             },
                             {
                                 "type": "mrkdwn",
-                                "text": f"*MFA:*\n{detail['additionalEventData']['MFAUsed']}",
+                                "text": f"*MFA:*\n{add_event_data.get('MFAUsed')}",
+                            },
+                            {
+                                "type": "mrkdwn",
+                                "text": f"*SWITCH_FROM:*\n{add_event_data.get('SwitchFrom')}",
                             },
                         ],
                     },

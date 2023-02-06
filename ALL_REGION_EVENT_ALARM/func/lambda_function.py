@@ -27,6 +27,7 @@ def lambda_handler(event, context):
         event["detail"],
     ]
 
+    slack_message = ""
     if (
         source == "aws.signin"
         and detail_type == "AWS Console Sign In via CloudTrail"

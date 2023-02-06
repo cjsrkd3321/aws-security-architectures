@@ -4,7 +4,11 @@ variable "patterns" {
     login-alarm            = <<PATTERN
     {
       "source": ["aws.signin"],
-      "detail-type": ["AWS Console Sign In via CloudTrail"]
+      "detail-type": ["AWS Console Sign In via CloudTrail"],
+      "detail": {
+        "eventSource": ["signin.amazonaws.com"],
+        "eventName": ["ConsoleLogin"]
+      }
     }
     PATTERN
     create-access-key      = <<PATTERN
