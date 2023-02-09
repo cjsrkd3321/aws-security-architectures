@@ -58,7 +58,7 @@ variable "root_cert_validity_period_hours" {
 
 variable "user_cert_validity_period_hours" {
   type    = number
-  default = 24 * 365 * 5 # 5 years
+  default = 24 * 365 * 2 # 2 years
 }
 
 variable "trust_anchor_enabled" {
@@ -79,4 +79,8 @@ variable "key_algorithm" {
 variable "key_bits" {
   type    = number
   default = 4096
+}
+
+variable "endpoint_mail" {
+  type = string
 }
