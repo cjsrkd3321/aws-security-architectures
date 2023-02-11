@@ -7,8 +7,9 @@ module "lambda_function" {
 
   source_path = "func"
 
-  timeout     = 60
-  memory_size = 512
+  timeout       = 60
+  memory_size   = 512
+  architectures = ["arm64"]
 
   publish = true
   allowed_triggers = {
@@ -20,7 +21,7 @@ module "lambda_function" {
       principal  = "events.amazonaws.com"
       source_arn = aws_cloudwatch_event_rule.use1.arn
     }
-    EventBridge-warn = {
+    EventBridge-warm = {
       principal  = "events.amazonaws.com"
       source_arn = aws_cloudwatch_event_rule.use1_warm.arn
     }
