@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_event_rule" "use1" {
   name = "macie-inspect-rule"
   #   schedule_expression = "rate(25 minutes)"
-  schedule_expression = "cron(30 * * * ? *)"
+  schedule_expression = "cron(30 10 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "default_use1" {
@@ -18,4 +18,9 @@ resource "aws_cloudwatch_event_rule" "use1_warm" {
 resource "aws_cloudwatch_event_target" "default_warn_use1" {
   rule = aws_cloudwatch_event_rule.use1_warm.name
   arn  = module.lambda_function.lambda_function_arn
+  input = jsonencode(
+    {
+      "warmer" = true
+    }
+  )
 }

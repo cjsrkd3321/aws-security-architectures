@@ -26,7 +26,7 @@ EVENTBRIDGE_WARM_ARN = os.getenv("EVENTBRIDGE_WARM_ARN")
 s3 = boto3.client("s3", config=Config(region_name="us-east-1"))
 macie2 = boto3.client("macie2", config=Config(region_name="us-east-1"))
 
-COMMAND_COMPLETED_REGIONS = []
+COMMAND_COMPLETED_REGIONS: list = []
 
 
 def lambda_handler(event, context):
@@ -42,7 +42,7 @@ def lambda_handler(event, context):
     ################################################################
     # FOR WARMING CONDITION
     ################################################################
-    if "resources" in event and EVENTBRIDGE_WARM_ARN in event["resources"][0]:
+    if "warmer" in event:
         return
 
     # https://docs.aws.amazon.com/ko_kr/macie/latest/user/discovery-jobs-monitor-cw-logs.html
@@ -123,10 +123,14 @@ def lambda_handler(event, context):
                     if file_path != json_["resourcesAffected"]["s3Object"]["key"]:
                         continue
                     additional_result = json_["classificationDetails"]["result"]
-                    detect_results += get_detect_result_from_sensitive_result(s3, affected_object_path, additional_result)
+                    detect_results += get_detect_result_from_sensitive_result(
+                        s3, affected_object_path, additional_result
+                    )
             else:
-                detect_results += get_detect_result_from_sensitive_result(s3, affected_object_path, result)
-                
+                detect_results += get_detect_result_from_sensitive_result(
+                    s3, affected_object_path, result
+                )
+
         # Convert detect_results to CSV format
         for detect_result in detect_results:
             for result_key, result_values in detect_result.items():
@@ -215,7 +219,7 @@ def lambda_handler(event, context):
             )
 
         return
-    
+
     ################################################################
     # INITIAL EXECUTION (FIRST)
     ################################################################
@@ -227,14 +231,18 @@ def lambda_handler(event, context):
             ssm_connected_instances = []
 
             for instance in get_running_instances(ec2):
-                status = ssm.get_connection_status(Target=instance["InstanceId"])["Status"]
+                status = ssm.get_connection_status(Target=instance["InstanceId"])[
+                    "Status"
+                ]
                 if status == "connected":
                     ssm_connected_instances.append(instance["InstanceId"])
 
             if not ssm_connected_instances:
                 continue
 
-            sns_arn = f"arn:aws:sns:{region}:{S3_ACCOUNT_ID}:{SNS_TOPIC_ARN.split(':')[-1]}"
+            sns_arn = (
+                f"arn:aws:sns:{region}:{S3_ACCOUNT_ID}:{SNS_TOPIC_ARN.split(':')[-1]}"
+            )
             command_id = ssm.send_command(
                 InstanceIds=ssm_connected_instances,
                 DocumentName="AWS-RunShellScript",
@@ -252,7 +260,12 @@ def lambda_handler(event, context):
                 ServiceRoleArn=SNS_ASSUME_ROLE_ARN,
                 NotificationConfig={
                     "NotificationArn": sns_arn,
-                    "NotificationEvents": ["Success", "TimedOut", "Cancelled", "Failed"],
+                    "NotificationEvents": [
+                        "Success",
+                        "TimedOut",
+                        "Cancelled",
+                        "Failed",
+                    ],
                     "NotificationType": "Command",
                 },
             )["Command"]["CommandId"]
