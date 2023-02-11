@@ -6,9 +6,9 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
 
-def jsonb_gzip_to_jsons(jsonb_gzip):
-    jsonb = gzip.decompress(jsonb_gzip).decode()
-    return [json.loads(jsonb) for jsonb in jsonb.split("\n") if jsonb]
+def jsonl_gzip_to_jsons(jsonl_gzip):
+    jsonl = gzip.decompress(jsonl_gzip).decode()
+    return [json.loads(json_) for json_ in jsonl.split("\n") if json_]
 
 
 def stream_to_str(body):
@@ -19,7 +19,11 @@ def convert_center_string_to_asterisk(data):
     data_size = len(data)
     boundary_index = data_size // 3
     if boundary_index != 0:
-        return data[:boundary_index + 1] + "*" * boundary_index + data[boundary_index * 2 + 1:]
+        return (
+            data[: boundary_index + 1]
+            + "*" * boundary_index
+            + data[boundary_index * 2 + 1 :]
+        )
     else:
         return data
 
