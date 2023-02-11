@@ -15,7 +15,7 @@ INSTANCE_PROFILE_NAME = os.getenv("INSTANCE_PROFILE_NAME")
 iam = boto3.client("iam")
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, _):
     association_ids = []
 
     for region in get_available_regions():
@@ -23,7 +23,7 @@ def lambda_handler(event, context):
         ec2 = boto3.client("ec2", config=Config(region_name=region))
 
         for instance in get_available_instances(ec2):
-            instance_id = instance["InstanceId"]
+            inst_id = instance["InstanceId"]
 
             # 인스턴스 프로파일 없을 경우 붙여줌
             if not instance.get("IamInstanceProfile", False):
@@ -32,14 +32,12 @@ def lambda_handler(event, context):
                         "Arn": INSTANCE_PROFILE_ARN,
                         "Name": INSTANCE_PROFILE_NAME,
                     },
-                    InstanceId=instance["InstanceId"],
+                    InstanceId=inst_id,
                 )["IamInstanceProfileAssociation"]
 
                 if result["State"] == "associating":
                     association_ids.append(result["AssociationId"])
-                    print(
-                        f"[+] {instance['InstanceId']} 에 {INSTANCE_PROFILE_NAME} 인스턴스 프로파일 부여 완료."
-                    )
+                    print(f"[+] {inst_id} 에 {INSTANCE_PROFILE_NAME} 인스턴스 프로파일 부여 완료.")
             # 인스턴스 프로파일 있을 경우 SSM 정책 있는지 확인
             else:
                 instance_profile_name = instance["IamInstanceProfile"]["Arn"].split(
@@ -52,18 +50,15 @@ def lambda_handler(event, context):
                 attached_policies = iam.list_attached_role_policies(RoleName=role_name)[
                     "AttachedPolicies"
                 ]
-                policy_arns = [
-                    policy_arn["PolicyArn"] for policy_arn in attached_policies
-                ]
+                policy_arns = [policy["PolicyArn"] for policy in attached_policies]
 
                 if SSM_MANAGED_POLICY not in policy_arns:
-                    res = iam.attach_role_policy(
+                    iam.attach_role_policy(
                         RoleName=role_name, PolicyArn=SSM_MANAGED_POLICY
                     )
-                    if res["ResponseMetadata"]["HTTPStatusCode"] == 200:
-                        print(f"[+] {role_name} 역할에 {SSM_MANAGED_POLICY} 정책 부여 완료.")
+                    print(f"[+] {role_name} 역할에 {SSM_MANAGED_POLICY} 정책 부여 완료.")
                 else:
-                    print(f"[{instance_id}] 은(는) 문제없음")
+                    print(f"[{inst_id}] 은(는) 문제없음")
 
         # 인스턴스 프로파일 부여 완료되는 것 확인
         while True:
