@@ -8,7 +8,7 @@ from datetime import date
 from botocore.config import Config
 from libs.ec2 import get_running_instances, get_available_regions
 from libs.macie2 import get_detect_result_from_sensitive_result
-from libs.utils import send_message_to_slack, get_slack_message, jsonb_gzip_to_jsons
+from libs.utils import send_message_to_slack, get_slack_message, jsonl_gzip_to_jsons
 
 
 logger = logging.getLogger()
@@ -118,7 +118,7 @@ def lambda_handler(event, context):
                     Bucket=bucket_name,
                     Key=key,
                 )["Body"].read()
-                jsons = jsonb_gzip_to_jsons(body)
+                jsons = jsonl_gzip_to_jsons(body)
                 for json_ in jsons:
                     if file_path != json_["resourcesAffected"]["s3Object"]["key"]:
                         continue
