@@ -39,6 +39,7 @@ EOF
   }
 }
 
+# https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html
 resource "aws_iam_role" "sns_role" {
   name = "ssm-run-command-assume-role"
 
