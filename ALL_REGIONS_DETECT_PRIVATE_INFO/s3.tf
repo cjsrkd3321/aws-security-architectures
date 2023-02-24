@@ -22,7 +22,7 @@ module "s3_bucket" {
   policy        = data.aws_iam_policy_document.s3_policy.json
 
   control_object_ownership = true
-  object_ownership         = "BucketOwnerPreferred"
+  object_ownership         = "BucketOwnerEnforced"
 
   expected_bucket_owner = local.account_id
 
@@ -69,7 +69,7 @@ module "private_info_bucket" {
   #   policy        = data.aws_iam_policy_document.s3_policy.json
 
   control_object_ownership = true
-  object_ownership         = "BucketOwnerPreferred"
+  object_ownership         = "BucketOwnerEnforced"
 
   expected_bucket_owner = local.account_id
 
@@ -116,7 +116,7 @@ module "detect_result_bucket" {
   #   policy        = data.aws_iam_policy_document.s3_policy.json
 
   control_object_ownership = true
-  object_ownership         = "BucketOwnerPreferred"
+  object_ownership         = "BucketOwnerEnforced"
 
   expected_bucket_owner = local.account_id
 
