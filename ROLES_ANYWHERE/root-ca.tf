@@ -13,6 +13,7 @@ resource "tls_self_signed_cert" "root_ca" {
   }
 
   validity_period_hours = var.root_cert_validity_period_hours
+  early_renewal_hours   = var.root_cert_early_renewal_hours
 
   allowed_uses = var.root_cert_allowed_uses
 }

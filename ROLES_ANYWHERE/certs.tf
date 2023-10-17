@@ -21,6 +21,7 @@ resource "tls_locally_signed_cert" "user_certs" {
   ca_cert_pem        = tls_self_signed_cert.root_ca.cert_pem
 
   validity_period_hours = var.user_cert_validity_period_hours
+  early_renewal_hours   = var.user_cert_early_renewal_hours
 
   allowed_uses = var.user_cert_allowed_uses
 }

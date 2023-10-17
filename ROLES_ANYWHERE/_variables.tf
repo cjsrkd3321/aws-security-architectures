@@ -61,6 +61,16 @@ variable "user_cert_validity_period_hours" {
   default = 24 * 365 * 2 # 2 years
 }
 
+variable "root_cert_early_renewal_hours" {
+  type    = number
+  default = 24 * 365 * 1 # 1 year
+}
+
+variable "user_cert_early_renewal_hours" {
+  type    = number
+  default = 24 * 60 # 60 days
+}
+
 variable "trust_anchor_enabled" {
   type    = bool
   default = true
